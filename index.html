@@ -3,190 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN | Private Kingdom</title>
+    <title>OBSIDIAN | Entry Portal</title>
     <style>
-        :root {
-            --obsidian-purple: #9A00FF;
-            --obsidian-pink: #FF00E5;
-            --obsidian-dark: #050505;
-            --obsidian-card: #0e0e0e;
-            --obsidian-gray: #777;
-        }
-
-        body {
-            background-color: var(--obsidian-dark);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .header-brand {
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            padding-top: 40px;
-        }
-
-        .lock-logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-            filter: drop-shadow(0 0 15px rgba(154, 0, 255, 0.5));
-        }
-
-        .brand-name {
-            font-size: 32px;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            font-weight: 900;
-            margin: 15px 0 0;
-            background: linear-gradient(to bottom, #fff, #888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .brand-subtitle {
-            font-style: italic;
-            color: var(--obsidian-pink);
-            font-size: 16px;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-        }
-
-        .vault-panel {
-            background: var(--obsidian-card);
-            border: 1px solid #1a1a1a;
-            padding: 20px;
-            border-radius: 4px;
-            width: 85%;
-            max-width: 380px;
-            margin: 0 auto 30px;
-            text-align: center;
-        }
-
-        .creator-tag {
-            font-size: 10px;
-            color: var(--obsidian-pink);
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .balance-value {
-            font-size: 42px;
-            font-weight: bold;
-            margin: 5px 0;
-            font-family: monospace;
-        }
-
-        .post-card {
-            background: var(--obsidian-card);
-            width: 90%;
-            max-width: 480px;
-            border: 1px solid #1a1a1a;
-            margin-bottom: 50px;
-        }
-
-        .media-area {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500');
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .unlock-btn, .access-btn {
-            background: linear-gradient(45deg, var(--obsidian-purple), var(--obsidian-pink));
-            color: white;
-            border: none;
-            padding: 16px 45px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            border-radius: 2px;
-        }
-
-        .access-btn { background: #fff; color: #000; }
-
-        footer { margin-top: auto; padding-bottom: 30px; color: #1a1a1a; font-size: 9px; letter-spacing: 6px; }
+        :root { --p: #9A00FF; --s: #FF00E5; --bg: #050505; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .auth-card { background: #0e0e0e; padding: 40px; border: 1px solid #1a1a1a; border-radius: 8px; width: 100%; max-width: 350px; text-align: center; }
+        .logo { width: 80px; filter: drop-shadow(0 0 10px var(--p)); margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 4px; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 15px; background: linear-gradient(45deg, var(--p), var(--s)); border: none; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .switch { font-size: 12px; color: #555; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="header-brand">
-        <div class="lock-logo">
-            <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M30 45V30C30 18.9543 38.9543 10 50 10C61.0457 10 70 18.9543 70 30V45" stroke="#9A00FF" stroke-width="6"/>
-                <path d="M20 45H80V95C80 100.523 75.5228 105 70 105H30C24.4772 105 20 100.523 20 95V45Z" fill="#0e0e0e" stroke="#9A00FF" stroke-width="3"/>
-                <path d="M50 55L65 70L50 90L35 70L50 55Z" fill="#FF00E5" stroke="#FF00E5" stroke-width="1"/>
-            </svg>
+    <div class="auth-card">
+        <svg class="logo" viewBox="0 0 100 120" fill="none"><path d="M30 45V30C30 18.9543 38.9543 10 50 10C61.0457 10 70 18.9543 70 30V45" stroke="#9A00FF" stroke-width="6"/><path d="M20 45H80V95C80 100.523 75.5228 105 70 105H30C24.4772 105 20 100.523 20 95V45Z" fill="#0e0e0e" stroke="#9A00FF" stroke-width="3"/></svg>
+        <h2 id="auth-title" style="letter-spacing: 5px;">LOGIN</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="pass" placeholder="Password">
+        <div id="reg-fields" style="display:none;">
+            <input type="text" id="username" placeholder="Username">
+            <label style="font-size: 10px; color: #777;"><input type="checkbox" id="isCreator"> SER CREADOR</label>
         </div>
-        
-        <div class="brand-name">OBSIDIAN</div>
-        <div class="brand-subtitle">Private Kingdom</div>
-        
-        <div class="vault-panel">
-            <div id="creator-display" class="creator-tag">SISTEMA ACTIVO</div>
-            <span style="color: var(--obsidian-gray); font-size: 10px; text-transform: uppercase;">Saldo de Sesión</span>
-            <div id="balance-display" class="balance-value">$0.00</div>
-        </div>
+        <button class="btn-main" onclick="handleAuth()">CONTINUAR</button>
+        <div class="switch" onclick="toggleAuth()" id="auth-switch">¿No tienes cuenta? Regístrate</div>
     </div>
-
-    <div class="post-card">
-        <div style="padding: 15px; display: flex; align-items: center; background: #080808;">
-            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--obsidian-pink); margin-right: 12px;"></div>
-            <span style="font-size: 11px; color: #555;">Protocolo de Acceso #001</span>
-        </div>
-        <div class="media-area" id="action-zone">
-            <button class="unlock-btn" onclick="executeTransaction(20.00)">Execute Unlock</button>
-        </div>
-    </div>
-
-    <footer>OBSIDIAN NETWORK</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
-        const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
-        const _obsidian = supabase.createClient(SB_URL, SB_KEY);
+        const _sb = supabase.createClient('https://yzvguhnugravgboaiykk.supabase.co', 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U');
+        let mode = 'login';
 
-        // DETECCIÓN DE CREADOR POR URL
-        const params = new URLSearchParams(window.location.search);
-        const CURRENT_CREATOR = params.get('id') || 'OBSIDIAN_CORE';
-        const LINK_FINAL = "https://t.me/TuCanalPrivado"; // Cambiá esto por tu link real
+        function toggleAuth() {
+            mode = mode === 'login' ? 'reg' : 'login';
+            document.getElementById('auth-title').innerText = mode === 'login' ? 'LOGIN' : 'SIGN UP';
+            document.getElementById('reg-fields').style.display = mode === 'login' ? 'none' : 'block';
+            document.getElementById('auth-switch').innerText = mode === 'login' ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Login';
+        }
 
-        document.getElementById('creator-display').innerText = "CREADOR: " + CURRENT_CREATOR;
-
-        async function executeTransaction(monto) {
-            const fee = monto * 0.15;
-            const neto = monto - fee;
-
-            try {
-                const { error } = await _obsidian.from('balances').insert([{ 
-                    creator_name: CURRENT_CREATOR, 
-                    total_gross: monto, 
-                    platform_fee: fee, 
-                    creator_net: neto 
-                }]);
-
-                if (error) throw error;
-
-                document.getElementById('balance-display').innerText = "$" + neto.toFixed(2);
-                document.getElementById('action-zone').innerHTML = `
-                    <button class="access-btn" onclick="window.open('${LINK_FINAL}', '_blank')">ACCEDER AHORA</button>
-                `;
-                alert("ACCESO CONCEDIDO PARA " + CURRENT_CREATOR);
-
-            } catch (err) {
-                alert("ERROR EN EL PROTOCOLO.");
+        async function handleAuth() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('pass').value;
+            
+            if(mode === 'login') {
+                const { error } = await _sb.auth.signInWithPassword({ email, password });
+                if(error) alert(error.message);
+                else window.location.href = 'app.html';
+            } else {
+                const username = document.getElementById('username').value;
+                const isCreator = document.getElementById('isCreator').checked;
+                const { data, error } = await _sb.auth.signUp({ email, password });
+                if(error) return alert(error.message);
+                
+                // Crear perfil en la tabla que hiciste por SQL
+                await _sb.from('profiles').insert([{ id: data.user.id, username, is_creator: isCreator }]);
+                alert("Cuenta creada. Por favor loguéate.");
+                toggleAuth();
             }
         }
     </script>
