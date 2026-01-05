@@ -16,7 +16,7 @@
         body {
             background-color: var(--obsidian-dark);
             color: white;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -24,7 +24,6 @@
             min-height: 100vh;
         }
 
-        /* Header con el Logo del Candado */
         .header-brand {
             width: 100%;
             max-width: 600px;
@@ -58,26 +57,32 @@
             margin-bottom: 25px;
         }
 
-        /* Panel de Saldo */
         .vault-panel {
             background: var(--obsidian-card);
             border: 1px solid #1a1a1a;
-            padding: 25px;
+            padding: 20px;
             border-radius: 4px;
             width: 85%;
             max-width: 380px;
-            margin: 0 auto 40px;
+            margin: 0 auto 30px;
             text-align: center;
+        }
+
+        .creator-tag {
+            font-size: 10px;
+            color: var(--obsidian-pink);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
         .balance-value {
             font-size: 42px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 5px 0;
             font-family: monospace;
         }
 
-        /* Tarjeta de Contenido */
         .post-card {
             background: var(--obsidian-card);
             width: 90%;
@@ -97,7 +102,7 @@
             justify-content: center;
         }
 
-        .unlock-btn {
+        .unlock-btn, .access-btn {
             background: linear-gradient(45deg, var(--obsidian-purple), var(--obsidian-pink));
             color: white;
             border: none;
@@ -106,21 +111,10 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
-            transition: 0.3s;
             border-radius: 2px;
         }
 
-        .access-btn {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 16px 45px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            border-radius: 2px;
-        }
+        .access-btn { background: #fff; color: #000; }
 
         footer { margin-top: auto; padding-bottom: 30px; color: #1a1a1a; font-size: 9px; letter-spacing: 6px; }
     </style>
@@ -140,21 +134,19 @@
         <div class="brand-subtitle">Private Kingdom</div>
         
         <div class="vault-panel">
-            <span style="color: var(--obsidian-gray); font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Saldo Disponible</span>
+            <div id="creator-display" class="creator-tag">SISTEMA ACTIVO</div>
+            <span style="color: var(--obsidian-gray); font-size: 10px; text-transform: uppercase;">Saldo de Sesión</span>
             <div id="balance-display" class="balance-value">$0.00</div>
         </div>
     </div>
 
     <div class="post-card">
         <div style="padding: 15px; display: flex; align-items: center; background: #080808;">
-            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--obsidian-pink); margin-right: 12px; box-shadow: 0 0 8px var(--obsidian-pink);"></div>
-            <span style="font-size: 11px; letter-spacing: 1px; color: #555;">Protocolo de Sumisión #001</span>
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--obsidian-pink); margin-right: 12px;"></div>
+            <span style="font-size: 11px; color: #555;">Protocolo de Acceso #001</span>
         </div>
         <div class="media-area" id="action-zone">
-            <button class="unlock-btn" onclick="initiateVaultAuth(20.00)">Execute Unlock</button>
-        </div>
-        <div style="padding: 20px; color: var(--obsidian-gray); font-size: 13px; line-height: 1.6; text-align: center;">
-            Contenido de alta jerarquía. Acceso permanente una vez autenticado.
+            <button class="unlock-btn" onclick="executeTransaction(20.00)">Execute Unlock</button>
         </div>
     </div>
 
@@ -166,16 +158,20 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        // CONFIGURÁ TU LINK ACÁ
-        const LINK_AL_CONTENIDO = "https://t.me/TuCanalPrivado"; 
+        // DETECCIÓN DE CREADOR POR URL
+        const params = new URLSearchParams(window.location.search);
+        const CURRENT_CREATOR = params.get('id') || 'OBSIDIAN_CORE';
+        const LINK_FINAL = "https://t.me/TuCanalPrivado"; // Cambiá esto por tu link real
 
-        async function initiateVaultAuth(monto) {
+        document.getElementById('creator-display').innerText = "CREADOR: " + CURRENT_CREATOR;
+
+        async function executeTransaction(monto) {
             const fee = monto * 0.15;
             const neto = monto - fee;
 
             try {
                 const { error } = await _obsidian.from('balances').insert([{ 
-                    creator_name: 'OBSIDIAN_CORE', 
+                    creator_name: CURRENT_CREATOR, 
                     total_gross: monto, 
                     platform_fee: fee, 
                     creator_net: neto 
@@ -183,16 +179,14 @@
 
                 if (error) throw error;
 
-                // Actualizar saldo y cambiar botón
                 document.getElementById('balance-display').innerText = "$" + neto.toFixed(2);
                 document.getElementById('action-zone').innerHTML = `
-                    <button class="access-btn" onclick="window.open('${LINK_AL_CONTENIDO}', '_blank')">VER PROTOCOLO</button>
-                    <p style="color:#00ff00; font-size:10px; margin-top:10px; letter-spacing:2px;">AUTH_SUCCESS</p>
+                    <button class="access-btn" onclick="window.open('${LINK_FINAL}', '_blank')">ACCEDER AHORA</button>
                 `;
-                alert("TRANSACCIÓN EXITOSA. Acceso concedido.");
+                alert("ACCESO CONCEDIDO PARA " + CURRENT_CREATOR);
 
             } catch (err) {
-                alert("ERROR DE CONEXIÓN.");
+                alert("ERROR EN EL PROTOCOLO.");
             }
         }
     </script>
