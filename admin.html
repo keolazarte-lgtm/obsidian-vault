@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>OBSIDIAN | Central Core Admin</title>
+    <style>
+        body { background: #050505; color: white; font-family: 'Inter', sans-serif; padding: 40px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+        .stat-card { background: #0e0e0e; border: 1px solid #1a1a1a; padding: 25px; border-radius: 8px; text-align: center; }
+        .pink-glow { color: #FF00E5; text-shadow: 0 0 10px rgba(255, 0, 229, 0.5); font-size: 32px; font-weight: bold; }
+        h1 { letter-spacing: 7px; text-transform: uppercase; border-bottom: 1px solid #1a1a1a; padding-bottom: 20px; }
+        table { width: 100%; margin-top: 40px; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; color: #777; padding: 10px; border-bottom: 1px solid #222; }
+        td { padding: 15px 10px; border-bottom: 1px solid #111; }
+    </style>
+</head>
+<body>
+    <h1>System Revenue Core</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div style="color: #777; font-size: 12px; margin-bottom: 10px;">TOTAL RED (BRUTO)</div>
+            <div id="total-gross" class="pink-glow">$0.00</div>
+        </div>
+        <div class="stat-card">
+            <div style="color: #777; font-size: 12px; margin-bottom: 10px;">COMISIONES OBSIDIAN (15%)</div>
+            <div id="total-fees" style="color: #9A00FF; font-size: 32px; font-weight: bold;">$0.00</div>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>FECHA</th>
+                <th>CREADOR</th>
+                <th>BRUTO</th>
+                <th>MI COMISIÓN</th>
+            </tr>
+        </thead>
+        <tbody id="transaction-history"></tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
+        const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
+        const _obsidian = supabase.createClient(SB_URL, SB_KEY);
+
+        async function loadCoreStats() {
+            const { data, error } = await _obsidian.from('balances').select('*').order('created_at', { ascending: false });
+            if (error) return;
+
+            let gross = 0;
+            let fees = 0;
+            let html = '';
+
+            data.forEach(row => {
+                gross += row.total_gross;
+                fees += row.platform_fee;
+                html += `
+                    <tr>
+                        <td>${new Date(row.created_at).toLocaleDateString()}</td>
+                        <td>${row.creator_name}</td>
+                        <td>$${row.total_gross.toFixed(2)}</td>
+                        <td style="color: #9A00FF;">$${row.platform_fee.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('total-gross').innerText = "$" + gross.toFixed(2);
+            document.getElementById('total-fees').innerText = "$" + fees.toFixed(2);
+            document.getElementById('transaction-history').innerHTML = html;
+        }
+
+        loadCoreStats();
+    </script>
+</body>
+</html>
