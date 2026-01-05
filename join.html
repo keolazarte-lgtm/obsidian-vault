@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>OBSIDIAN | Join the Kingdom</title>
+    <style>
+        body { background: #050505; color: white; font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
+        .form-card { background: #0e0e0e; padding: 40px; border: 1px solid #1a1a1a; border-radius: 8px; width: 100%; max-width: 400px; text-align: center; }
+        .pink-text { color: #FF00E5; letter-spacing: 2px; text-transform: uppercase; font-size: 12px; }
+        input { width: 100%; padding: 12px; margin: 15px 0; background: #000; border: 1px solid #333; color: white; border-radius: 4px; box-sizing: border-box; }
+        button { background: #9A00FF; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        #result { margin-top: 20px; font-size: 12px; word-break: break-all; padding: 15px; background: #000; display: none; border: 1px dashed #9A00FF; }
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <div class="pink-text">Partner Program</div>
+        <h1 style="letter-spacing: 5px;">RECRUITMENT</h1>
+        <p style="color: #666; font-size: 13px;">Registra tu ID de Creador para empezar a operar bajo el protocolo OBSIDIAN.</p>
+        
+        <input type="text" id="creatorName" placeholder="Tu Nombre de Creador (ej: LUCIA_01)">
+        <button onclick="generateLink()">GENERAR MI LINK DE VENTA</button>
+
+        <div id="result">
+            <p style="color: #FF00E5;">TU LINK PERSONALIZADO:</p>
+            <code id="finalLink"></code>
+            <p style="color: #555; margin-top: 10px;">Cualquier venta en este link te asigna el 85% y 15% a la red.</p>
+        </div>
+    </div>
+
+    <script>
+        function generateLink() {
+            const name = document.getElementById('creatorName').value.trim().toUpperCase().replace(/\s+/g, '_');
+            if(!name) return alert("Ingresa un nombre");
+            
+            const base = window.location.origin;
+            const link = base + "/?id=" + name;
+            
+            document.getElementById('finalLink').innerText = link;
+            document.getElementById('result').style.display = "block";
+        }
+    </script>
+</body>
+</html>
