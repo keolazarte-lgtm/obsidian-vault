@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBSIDIAN | Feed</title>
+    <style>
+        :root { --p: #9A00FF; --s: #FF00E5; --bg: #050505; --card: #0e0e0e; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; display: flex; }
+        
+        /* Sidebar lateral */
+        nav { width: 260px; height: 100vh; background: #000; border-right: 1px solid #1a1a1a; padding: 25px; position: fixed; }
+        .logo { font-size: 24px; letter-spacing: 8px; font-weight: 900; margin-bottom: 40px; }
+        .nav-link { padding: 15px 0; color: #777; cursor: pointer; display: block; text-decoration: none; font-size: 14px; letter-spacing: 2px; }
+        .nav-link:hover { color: var(--s); }
 
+        /* Feed Central */
+        main { margin-left: 280px; width: 100%; max-width: 600px; padding: 20px; }
+        .post-card { background: var(--card); border: 1px solid #1a1a1a; margin-bottom: 25px; border-radius: 4px; }
+        .post-user { padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #111; }
+        .avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--p); margin-right: 12px; }
+        .media-box { width: 100%; min-height: 400px; background: #000; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .blur { filter: blur(40px); opacity: 0.5; width: 100%; height: 100%; position: absolute; }
+        .unlock-btn { position: relative; z-index: 10; background: white; color: black; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; }
+        .post-info { padding: 15px; font-size: 14px; color: #ccc; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">OBSIDIAN</div>
+        <div class="nav-link">EXPLORAR</div>
+        <div class="nav-link">MENSAJES</div>
+        <div class="nav-link" style="color: var(--s);">MI CUENTA</div>
+        <button id="btn-upload" style="display:none; margin-top:30px; width:100%; padding:10px; background:var(--p); border:none; color:white; font-weight:bold; cursor:pointer;">SUBIR POST +</button>
+    </nav>
+
+    <main id="feed-container">
+        <h2 style="color: #444; font-size: 12px; letter-spacing: 5px; margin-bottom: 30px;">GLOBAL FEED</h2>
+        </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const _sb = supabase.createClient('https://yzvguhnugravgboaiykk.supabase.co', 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U');
+
+        async function initApp() {
+            const { data: { user } } = await _sb.auth.getUser();
+            if (!user) { window.location.href = 'index.html'; return; }
+
+            // Verificar si es creador para mostrar el botón de subida
+            const { data: profile } = await _sb.from('profiles').select('*').eq('id', user.id).single();
+            if (profile && profile.is_creator) {
+                document.getElementById('btn-upload').style.display = 'block';
+                document.getElementById('btn-upload').onclick = () => alert("Abriendo panel de subida...");
+            }
+
+            loadPosts();
+        }
+
+        async function loadPosts() {
+            const { data: posts, error } = await _sb.from('posts').select('*, profiles(username)').order('created_at', { ascending: false });
+            if (error) return;
+
+            const feed = document.getElementById('feed-container');
+            feed.innerHTML += posts.map(p => `
+                <div class="post-card">
+                    <div class="post-user"><div class="avatar"></div> <b>@${p.profiles.username}</b></div>
+                    <div class="media-box">
+                        <div class="blur" style="background: url('${p.media_url}') center/cover;"></div>
+                        <button class="unlock-btn">DESBLOQUEAR POR $20</button>
+                    </div>
+                    <div class="post-info">${p.content_text}</div>
+                </div>
+            `).join('');
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
