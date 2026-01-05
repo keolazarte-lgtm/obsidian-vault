@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obsidian | Exclusive Content</title>
+    <title>OBSIDIAN | Secure Vault</title>
     <style>
         :root {
-            --main-purple: #9A00FF;
-            --dark-bg: #050505;
-            --card-bg: #111;
-            --text-gray: #888;
+            --obsidian-purple: #9A00FF;
+            --obsidian-dark: #050505;
+            --obsidian-card: #111;
+            --obsidian-gray: #888;
         }
 
         body {
-            background-color: var(--dark-bg);
+            background-color: var(--obsidian-dark);
             color: white;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -23,100 +23,128 @@
             min-height: 100vh;
         }
 
-        .profile-container {
+        /* Header de Marca */
+        .brand-container {
             width: 100%;
             max-width: 600px;
             text-align: center;
             padding-top: 50px;
         }
 
-        .avatar-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #222;
+        .brand-logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 20px; /* Estilo más tecnológico */
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--main-purple);
-            font-size: 40px;
+            border: 1px solid var(--obsidian-purple);
+            box-shadow: 0 0 20px rgba(154, 0, 255, 0.2);
+            font-size: 35px;
+            font-weight: bold;
+            color: var(--obsidian-purple);
         }
 
-        h1 { margin: 15px 0 5px; font-size: 24px; }
-        .username { color: var(--main-purple); font-weight: bold; margin-bottom: 25px; }
+        h1 { 
+            margin: 20px 0 5px; 
+            font-size: 28px; 
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+        .system-status { 
+            color: var(--obsidian-purple); 
+            font-size: 12px;
+            font-weight: bold; 
+            margin-bottom: 30px; 
+            letter-spacing: 2px;
+        }
 
-        .revenue-card {
-            background: var(--card-bg);
-            border: 1px dashed var(--main-purple);
-            padding: 20px;
-            border-radius: 15px;
+        /* Panel de Bóveda */
+        .vault-card {
+            background: var(--obsidian-card);
+            border: 1px dashed var(--obsidian-purple);
+            padding: 25px;
+            border-radius: 12px;
             width: 85%;
-            max-width: 350px;
-            margin: 0 auto 30px;
+            max-width: 380px;
+            margin: 0 auto 40px;
         }
 
-        .post-card {
-            background: var(--card-bg);
+        /* Tarjeta de Contenido */
+        .content-card {
+            background: var(--obsidian-card);
             width: 90%;
-            max-width: 450px;
-            border-radius: 15px;
+            max-width: 480px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid #222;
+            margin-bottom: 30px;
         }
 
-        .blurred-img {
+        .media-placeholder {
             width: 100%;
-            height: 250px;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=500');
+            height: 280px;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=500');
             background-size: cover;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
         .unlock-btn {
-            background: var(--main-purple);
+            background: var(--obsidian-purple);
             color: white;
             border: none;
-            padding: 15px 35px;
-            border-radius: 30px;
+            padding: 16px 40px;
+            border-radius: 4px; /* Botón más cuadrado/industrial */
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(154, 0, 255, 0.4);
+            transition: all 0.3s;
         }
 
-        footer { margin: 40px 0; color: #222; font-size: 10px; letter-spacing: 3px; }
+        .unlock-btn:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 30px white;
+        }
+
+        footer { margin: auto 0 40px; color: #222; font-size: 10px; letter-spacing: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="profile-container">
-        <div class="avatar-circle">👤</div>
-        <h1>Lucian Vex</h1>
-        <div class="username">@lucianvex_obsidian</div>
+    <div class="brand-container">
+        <div class="brand-logo">Ω</div>
+        <h1>OBSIDIAN</h1>
+        <div class="system-status">CORE SYSTEM ACTIVE</div>
         
-        <div class="revenue-card">
-            <span style="color: var(--text-gray); font-size: 11px; text-transform: uppercase;">Saldo en Bóveda</span>
-            <div id="balance-display" style="font-size: 32px; font-weight: bold; margin: 10px 0;">$0.00</div>
-            <div style="font-size: 10px; color: #444;">Retiro mínimo: $20.00</div>
+        <div class="vault-card">
+            <span style="color: var(--obsidian-gray); font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Vault Balance</span>
+            <div id="balance-display" style="font-size: 38px; font-weight: bold; margin: 10px 0; font-family: monospace;">$0.00</div>
+            <div style="font-size: 9px; color: #444; letter-spacing: 1px;">ENCRYPTED TRANSACTION SYSTEM</div>
         </div>
     </div>
 
-    <div class="post-card">
-        <div style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #222;">
-            <div style="width: 30px; height: 30px; border-radius: 50%; background: var(--main-purple); margin-right: 10px;"></div>
-            <span style="font-size: 14px;">Protocolo de Sumisión #001</span>
+    <div class="content-card">
+        <div style="padding: 15px; display: flex; align-items: center; border-bottom: 1px solid #222; background: #0a0a0a;">
+            <div style="width: 10px; height: 10px; border-radius: 50%; background: #00ff00; margin-right: 12px; box-shadow: 0 0 10px #00ff00;"></div>
+            <span style="font-size: 12px; letter-spacing: 1px; color: #ccc;">PROTOCOL_ENCRYPT_001.MP4</span>
         </div>
-        <div class="blurred-img">
-            <button class="unlock-btn" onclick="registrarVenta(20.00, 'Lucian Vex')">Unlock for $20</button>
+        <div class="media-placeholder">
+            <button class="unlock-btn" onclick="initiateVaultAuth(20.00, 'OBSIDIAN_CORE')">Execute Unlock</button>
+            <div style="margin-top: 15px; font-size: 10px; color: var(--obsidian-purple);">COST: 20.00 USD</div>
         </div>
-        <div style="padding: 15px; color: var(--text-gray); font-size: 13px;">
-            Contenido de alta jerarquía. Acceso permanente una vez desbloqueado.
+        <div style="padding: 20px; color: var(--obsidian-gray); font-size: 13px; line-height: 1.6;">
+            Acceso a nivel de administrador. Contenido clasificado bajo el protocolo Obsidian. 
         </div>
     </div>
 
-    <footer>OBSIDIAN SYSTEM V1.2</footer>
+    <footer>OBSIDIAN NETWORK v1.3</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -124,7 +152,9 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        async function registrarVenta(monto, creador) {
+        async function initiateVaultAuth(monto, systemID) {
+            console.log("Iniciando secuencia de autenticación...");
+            
             const fee = monto * 0.15;
             const neto = monto - fee;
 
@@ -133,7 +163,7 @@
                     .from('balances')
                     .insert([
                         { 
-                            creator_name: creador, 
+                            creator_name: systemID, 
                             total_gross: monto, 
                             platform_fee: fee, 
                             creator_net: neto 
@@ -142,14 +172,12 @@
 
                 if (error) throw error;
 
-                alert("¡PAGO PROCESADO!\nHas desbloqueado el contenido.");
-                
-                // Actualizar saldo en pantalla (Neto para el creador)
+                alert("AUTH_SUCCESS: Contenido desbloqueado.");
                 document.getElementById('balance-display').innerText = "$" + neto.toFixed(2);
 
             } catch (err) {
-                console.error("Error:", err.message);
-                alert("Error de red. Intenta de nuevo.");
+                console.error("Critical System Error:", err.message);
+                alert("AUTH_FAILED: Error en la red Obsidian.");
             }
         }
     </script>
