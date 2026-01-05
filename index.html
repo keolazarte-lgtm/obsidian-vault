@@ -1,45 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN | Lucian Vex Vault</title>
+    <title>Obsidian | Exclusive Content</title>
     <style>
-        :root { --main-purple: #9A00FF; --dark-bg: #0a0a0a; --card-bg: #161616; }
-        body { background: var(--dark-bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 50px; }
-        .banner { width: 100%; height: 150px; background: linear-gradient(45deg, #000, #1a002a); border-bottom: 2px solid var(--main-purple); }
-        .profile-section { margin-top: -60px; text-align: center; }
-        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--main-purple); background: #000; display: inline-block; object-fit: cover; }
-        .verified { color: #00a2ff; font-size: 18px; }
-        .stats { display: flex; justify-content: center; gap: 30px; margin: 20px 0; color: #888; border-bottom: 1px solid #222; padding-bottom: 20px; }
-        .post-card { background: var(--card-bg); max-width: 500px; margin: 20px auto; border-radius: 12px; overflow: hidden; border: 1px solid #222; }
-        .post-content { padding: 40px 20px; text-align: center; }
-        .lock-icon { font-size: 40px; margin-bottom: 15px; display: block; }
-        .btn-unlock { background: var(--main-purple); color: white; border: none; padding: 12px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 16px; width: 80%; transition: 0.3s; }
-        .btn-unlock:hover { box-shadow: 0 0 20px var(--main-purple); transform: translateY(-2px); }
-        .price { font-size: 20px; font-weight: bold; margin: 15px 0; display: block; }
+        :root {
+            --main-purple: #9A00FF;
+            --dark-bg: #050505;
+            --card-bg: #111;
+            --text-gray: #888;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Perfil Header */
+        .profile-container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--main-purple);
+            object-fit: cover;
+        }
+
+        h1 { margin: 10px 0 5px; font-size: 24px; }
+        .username { color: var(--main-purple); font-weight: bold; margin-bottom: 20px; }
+
+        /* Panel de Ganancias (Solo visible para vos/creador) */
+        .revenue-card {
+            background: var(--card-bg);
+            border: 1px dashed var(--main-purple);
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            margin: 20px 0;
+        }
+
+        /* Feed de Contenido Bloqueado */
+        .post-card {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .blurred-img {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://via.placeholder.com/500x300');
+            background-size: cover;
+            filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .unlock-btn {
+            background: var(--main-purple);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--main-purple);
+        }
+
+        footer { margin: 50px 0; color: #333; font-size: 12px; }
     </style>
 </head>
 <body>
-    <div class="banner"></div>
-    <div class="profile-section">
-        <div class="profile-pic"></div> <h2>Lucian Vex <span class="verified">✔</span></h2>
-        <p style="color: #888;">@lucianvex | Obsidian Master</p>
-    </div>
 
-    <div class="stats">
-        <div><strong>13k</strong> Fans</div>
-        <div><strong>248</strong> Posts</div>
+    <div class="profile-container">
+        <img src="https://via.placeholder.com/150" alt="Lucian Vex" class="avatar">
+        <h1>Lucian Vex</h1>
+        <div class="username">@lucianvex_obsidian</div>
+        
+        <div class="revenue-card">
+            <span style="color: var(--text-gray); font-size: 12px;">AVAILABLE BALANCE</span>
+            <div id="balance-display" style="font-size: 32px; font-weight: bold; margin: 10px 0;">$0.00</div>
+            <button id="withdraw-btn" style="background: #222; color: #555; border: none; padding: 8px 15px; border-radius: 5px; width: 100%; cursor: not-allowed;" disabled>Request Withdrawal (Min $20)</button>
+        </div>
     </div>
 
     <div class="post-card">
-        <div class="post-content">
-            <span class="lock-icon">🔒</span>
-            <h3>FIRST PROTOCOL: ADORATION</h3>
-            <p style="color: #666; font-size: 14px;">Unlock this task to begin your training. Includes audio instructions and high-res visuals.</p>
-            <span class="price">20.00 NYRA</span>
-            <button class="btn-unlock" onclick="window.location.href='TU_LINK_DE_THRONE_ACA'">UNLOCK POST</button>
+        <div style="padding: 15px; display: flex; align-items: center;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--main-purple); margin-right: 10px;"></div>
+            <span>Protocolo de Sumisión #001</span>
+        </div>
+        <div class="blurred-img">
+            <button class="unlock-btn" onclick="ejecutarCompra(20, 'Lucian Vex')">Unlock for $20</button>
+        </div>
+        <div style="padding: 15px; color: var(--text-gray); font-size: 14px;">
+            Acceso exclusivo al video tutorial del primer protocolo.
         </div>
     </div>
+
+    <footer>OBSIDIAN VAULT SYSTEM v1.0</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Tus llaves de acceso
+        const SUPABASE_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U'; // Usando la Key pública
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Variables de estado
+        let saldoNetoAcumulado = 0;
+
+        async function ejecutarCompra(monto, creador) {
+            const comisionObsidian = monto * 0.15;
+            const pagoCreador = monto - comisionObsidian;
+
+            try {
+                // 1. Guardar en la Base de Datos
+                const { error } = await _supabase
+                    .from('balances')
+                    .insert([
+                        { 
+                            creator_name: creador, 
+                            total_gross: monto, 
+                            platform_fee: comisionObsidian, 
+                            creator_net: pagoCreador 
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                // 2. Actualizar la interfaz visual
+                saldoNetoAcumulado += pagoCreador;
+                document.getElementById('balance-display').innerText = `$${saldoNetoAcumulado.toFixed(2)}`;
+
+                // 3. Verificar si puede retirar
+                if (saldoNetoAcumulado >= 20) {
+                    const btn = document.getElementById('withdraw-btn');
+                    btn.style.background = var(--main-purple);
+                    btn.style.color = "white";
+                    btn.style.cursor = "pointer";
+                    btn.disabled = false;
+                }
+
+                alert(`¡Éxito! Pago de $${monto} procesado.\nComisión Obsidian (15%): $${comisionObsidian.toFixed(2)} cargada.`);
+
+            } catch (err) {
+                console.error("Error:", err);
+                alert("Hubo un problema con la base de datos.");
+            }
+        }
+    </script>
 </body>
 </html>
