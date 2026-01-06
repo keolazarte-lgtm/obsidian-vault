@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBSIDIAN | Private Kingdom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --obsidian-purple: #9A00FF;
-            --obsidian-dark: #050505;
-            --obsidian-card: #0e0e0e;
-            --obsidian-gray: #888;
+            --p: #9A00FF;
+            --bg: #050505;
+            --card: #0e0e0e;
         }
 
         body {
-            background-color: var(--obsidian-dark);
+            background-color: var(--bg);
             color: white;
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -23,128 +23,123 @@
             min-height: 100vh;
         }
 
-        .brand-container {
-            width: 100%;
-            max-width: 600px;
+        .header {
             text-align: center;
-            padding-top: 50px;
+            padding-top: 60px;
+            width: 100%;
         }
 
-        /* LOGO VECTORIAL: Nunca falla, carga al instante */
-        .main-logo {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto;
-            filter: drop-shadow(0 0 25px var(--obsidian-purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* LOGO: Minimalista y potente */
+        .obsidian-icon {
+            font-size: 60px;
+            color: var(--p);
+            filter: drop-shadow(0 0 20px rgba(154, 0, 255, 0.6));
+            margin-bottom: 10px;
+            display: block;
         }
 
         h1 { 
-            margin: 25px 0 5px; 
-            font-size: 32px; 
-            letter-spacing: 12px;
+            font-family: 'Cinzel', serif;
+            margin: 10px 0 5px; 
+            font-size: 38px; 
+            letter-spacing: 15px;
             text-transform: uppercase;
-            font-weight: 900;
+            color: #fff;
         }
         
-        .system-status { 
-            color: var(--obsidian-purple); 
-            font-size: 11px;
-            font-weight: bold; 
-            margin-bottom: 40px; 
-            letter-spacing: 4px;
+        .status { 
+            color: var(--p); 
+            font-size: 10px;
+            font-weight: 900; 
+            margin-bottom: 50px; 
+            letter-spacing: 5px;
+            opacity: 0.8;
         }
 
-        .vault-card {
-            background: var(--obsidian-card);
-            border: 1px dashed var(--obsidian-purple);
-            padding: 35px;
-            border-radius: 12px;
+        .vault-box {
+            background: linear-gradient(145deg, #111, #080808);
+            border: 1px solid #1a1a1a;
+            padding: 40px;
+            border-radius: 4px; /* Más cuadrado = más serio */
             width: 85%;
-            max-width: 380px;
-            margin: 0 auto 50px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        #balance-display { 
-            font-size: 45px; 
-            font-weight: bold; 
-            margin: 15px 0; 
-            font-family: 'Courier New', monospace;
+        .label {
+            color: #444;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        #balance { 
+            font-size: 52px; 
+            font-weight: 900; 
+            letter-spacing: -2px;
+            font-family: 'Inter', sans-serif;
         }
 
         .content-card {
-            background: var(--obsidian-card);
+            margin-top: 50px;
             width: 90%;
-            max-width: 480px;
-            border-radius: 10px;
+            max-width: 500px;
+            border: 1px solid #111;
+            border-radius: 4px;
             overflow: hidden;
-            border: 1px solid #1a1a1a;
-            margin-bottom: 60px;
         }
 
-        /* Fondo de la caja de video con estilo */
-        .media-preview {
-            width: 100%;
-            height: 280px;
-            background: linear-gradient(45deg, #050505, #150025);
+        .media-area {
+            height: 300px;
+            background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-top: 1px solid #1a1a1a;
+            position: relative;
         }
 
         .unlock-btn {
-            background: var(--obsidian-purple);
-            color: white;
-            border: none;
-            padding: 18px 50px;
-            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--p);
+            padding: 20px 50px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s;
+            font-size: 12px;
         }
 
         .unlock-btn:hover {
-            box-shadow: 0 0 40px var(--obsidian-purple);
-            transform: scale(1.05);
+            background: var(--p);
+            box-shadow: 0 0 30px var(--p);
         }
 
-        footer { margin-top: auto; padding-bottom: 40px; color: #1a1a1a; font-size: 10px; letter-spacing: 8px; }
+        footer { margin-top: auto; padding: 40px; color: #151515; font-size: 9px; letter-spacing: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="brand-container">
-        <div class="main-logo">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 5L15 40L50 95L85 40L50 5Z" stroke="#9A00FF" stroke-width="3" fill="rgba(154, 0, 255, 0.1)"/>
-                <path d="M30 40H70M50 5V95M15 40L85 40" stroke="#9A00FF" stroke-width="2" stroke-opacity="0.5"/>
-                <rect x="40" y="35" width="20" height="25" rx="2" stroke="#fff" stroke-width="2"/>
-                <path d="M45 35V30C45 27.2386 47.2386 25 50 25C52.7614 25 55 27.2386 55 30V35" stroke="#fff" stroke-width="2"/>
-            </svg>
-        </div>
-        
-        <h1>OBSIDIAN</h1>
-        <div class="system-status">PRIVATE KINGDOM ACTIVE</div>
-        
-        <div class="vault-card">
-            <span style="color: var(--obsidian-gray); font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Saldo Disponible</span>
-            <div id="balance-display">$...</div>
-        </div>
+    <div class="header">
+        <span class="obsidian-icon">◈</span> <h1>OBSIDIAN</h1>
+        <div class="status">PRIVATE KINGDOM</div>
+    </div>
+
+    <div class="vault-box">
+        <span class="label">Vault Balance</span>
+        <div id="balance">$17.00</div>
     </div>
 
     <div class="content-card">
-        <div style="padding: 15px; background: #000; border-bottom: 1px solid #111; display: flex; align-items: center;">
-            <div style="width: 8px; height: 8px; background: #00ff00; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00ff00;"></div>
-            <span style="font-size: 11px; color: #444; letter-spacing: 1px;">VAULT_PROTOCOL_001.RAW</span>
+        <div style="padding: 12px; background: #080808; font-size: 10px; color: #333; letter-spacing: 2px;">
+            FILE: ACCESS_PROTOCOL_SH01.POV
         </div>
-        <div class="media-preview">
-            <button class="unlock-btn" onclick="executeUnlock()">Execute Unlock</button>
+        <div class="media-area">
+            <button class="unlock-btn" onclick="pay()">Execute Unlock</button>
         </div>
     </div>
 
@@ -156,26 +151,19 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        async function refreshBalance() {
-            try {
-                const { data, error } = await _obsidian.from('balances').select('creator_net');
-                if (error) throw error;
-                const total = data.reduce((acc, row) => acc + (row.creator_net || 0), 0);
-                document.getElementById('balance-display').innerText = "$" + total.toFixed(2);
-            } catch (e) { document.getElementById('balance-display').innerText = "$17.00"; }
+        async function update() {
+            const { data } = await _obsidian.from('balances').select('creator_net');
+            const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
+            document.getElementById('balance').innerText = "$" + total.toFixed(2);
         }
 
-        async function executeUnlock() {
-            const val = 20.00;
-            const net = val - (val * 0.15);
-            try {
-                await _obsidian.from('balances').insert([{ creator_name: 'OBSIDIAN_CORE', total_gross: val, platform_fee: (val*0.15), creator_net: net }]);
-                alert("ACCESS_GRANTED");
-                refreshBalance();
-            } catch (e) { alert("ERROR"); }
+        async function pay() {
+            const v = 20, n = v * 0.85;
+            await _obsidian.from('balances').insert([{ creator_name: 'CORE', total_gross: v, platform_fee: v*0.15, creator_net: n }]);
+            alert("AUTHORIZED");
+            update();
         }
-
-        refreshBalance();
+        update();
     </script>
 </body>
 </html>
