@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBSIDIAN | Private Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #000;
-            color: white;
+            background: #000;
+            color: #fff;
             font-family: 'Inter', sans-serif;
             margin: 0;
             display: flex;
@@ -16,116 +16,90 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 40%, #1a0033 0%, #000 65%);
+            background-image: radial-gradient(circle at 50% 45%, #15002a 0%, #000 70%);
         }
 
-        /* NÚCLEO CENTRAL */
-        .core {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .diamond {
-            width: 60px;
-            height: 60px;
+        /* EL DESTELLO */
+        .glow-point {
+            width: 40px;
+            height: 40px;
             background: #9A00FF;
             transform: rotate(45deg);
-            box-shadow: 0 0 50px #9A00FF, 0 0 120px rgba(154, 0, 255, 0.5);
-            animation: pulse 2s infinite ease-in-out;
-            border: 2px solid #fff;
-            margin-bottom: 40px;
+            box-shadow: 0 0 60px #9A00FF;
+            animation: pulse 3s infinite ease-in-out;
+            margin-bottom: 30px;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: rotate(45deg) scale(1); filter: brightness(1); }
-            50% { transform: rotate(45deg) scale(1.1); filter: brightness(1.4); box-shadow: 0 0 70px #9A00FF, 0 0 150px #9A00FF; }
+            0%, 100% { opacity: 0.8; transform: rotate(45deg) scale(1); }
+            50% { opacity: 1; transform: rotate(45deg) scale(1.1); }
         }
 
         h1 {
             font-family: 'Cinzel', serif;
-            font-size: 50px;
-            letter-spacing: 25px;
-            margin: 0 0 10px 25px;
-            text-transform: uppercase;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+            font-size: 40px;
+            letter-spacing: 20px;
+            margin: 0 0 50px 20px;
+            font-weight: 700;
+            opacity: 0.9;
         }
 
-        .tag {
-            color: #9A00FF;
-            font-size: 11px;
-            letter-spacing: 12px;
-            text-transform: uppercase;
-            margin-bottom: 80px;
-            font-weight: 900;
-        }
-
-        /* RESERVAS */
-        .reserves {
+        /* SALDO PURO */
+        .vault {
             text-align: center;
         }
 
-        .label {
-            color: #333;
-            font-size: 12px;
-            letter-spacing: 6px;
+        .reserves-label {
+            color: #444;
+            font-size: 10px;
+            letter-spacing: 8px;
             text-transform: uppercase;
             margin-bottom: 10px;
             display: block;
         }
 
         .amount {
-            font-size: 110px;
+            font-size: 120px;
             font-weight: 900;
             letter-spacing: -6px;
             margin: 0;
-            line-height: 0.9;
+            line-height: 1;
         }
 
-        /* ACCIÓN */
-        .btn-box {
-            margin-top: 80px;
-        }
-
-        .btn {
+        /* ACCIÓN DISCRETA */
+        .btn-access {
+            margin-top: 100px;
             background: none;
-            border: 1px solid #222;
-            color: #fff;
-            padding: 25px 80px;
+            border: 1px solid #1a1a1a;
+            color: #444;
+            padding: 15px 40px;
             font-weight: 900;
-            letter-spacing: 8px;
+            letter-spacing: 5px;
             text-transform: uppercase;
             cursor: pointer;
-            transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-            font-size: 13px;
+            transition: 0.3s;
+            font-size: 10px;
         }
 
-        .btn:hover {
+        .btn-access:hover {
+            color: #fff;
             border-color: #9A00FF;
-            color: #9A00FF;
-            box-shadow: 0 0 40px rgba(154, 0, 255, 0.2);
-            padding: 25px 95px;
+            box-shadow: 0 0 30px rgba(154, 0, 255, 0.2);
         }
     </style>
 </head>
 <body>
 
-    <div class="core">
-        <div class="diamond"></div>
-        <h1>OBSIDIAN</h1>
-        <div class="tag">Private Kingdom</div>
+    <div class="glow-point"></div>
+
+    <h1>OBSIDIAN</h1>
+
+    <div class="vault">
+        <span class="reserves-label">Reserves</span>
+        <div class="amount" id="balance">$17.00</div>
     </div>
 
-    <div class="reserves">
-        <span class="label">Total Reserves</span>
-        <div class="amount" id="val">$17.00</div>
-    </div>
-
-    <div class="btn-box">
-        <button class="btn" onclick="run()">Execute Unlock</button>
-    </div>
+    <button class="btn-access" onclick="update()">Execute Unlock</button>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -133,17 +107,17 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        async function update() {
+        async function sync() {
             const { data } = await _obsidian.from('balances').select('creator_net');
             const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-            document.getElementById('val').innerText = "$" + total.toFixed(2);
+            document.getElementById('balance').innerText = "$" + total.toFixed(2);
         }
 
-        function run() {
-            alert("PROTOCOL_INITIATED");
-            update();
+        function update() {
+            // Tu lógica aquí
+            sync();
         }
-        update();
+        sync();
     </script>
 </body>
 </html>
