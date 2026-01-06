@@ -30,19 +30,17 @@
             padding-top: 50px;
         }
 
-        /* FIX DE LOGO: Contenedor con respaldo si falla la imagen */
+        /* DISEÑO DE LOGO CENTRAL */
         .main-logo {
-            width: 140px;
-            height: 140px;
+            width: 160px;
+            height: 160px;
             margin: 0 auto;
             border-radius: 20px;
-            background: #000;
-            border: 1px solid #1a1a1a;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(154, 0, 255, 0.2);
+            filter: drop-shadow(0 0 25px rgba(154, 0, 255, 0.4));
         }
 
         .main-logo img {
@@ -76,6 +74,7 @@
             width: 85%;
             max-width: 380px;
             margin: 0 auto 50px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         }
 
         #balance-display { 
@@ -83,6 +82,7 @@
             font-weight: bold; 
             margin: 15px 0; 
             font-family: 'Courier New', monospace;
+            text-shadow: 0 0 15px rgba(154, 0, 255, 0.3);
         }
 
         .content-card {
@@ -98,7 +98,8 @@
         .media-preview {
             width: 100%;
             height: 280px;
-            background: linear-gradient(45deg, #050505, #111);
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000');
+            background-size: cover;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -129,8 +130,7 @@
 
     <div class="brand-container">
         <div class="main-logo">
-            <img src="259355.jpg" alt="" onerror="this.style.display='none'">
-            <span id="logo-fallback" style="color:var(--obsidian-purple); font-size:40px; font-weight:900;">Ω</span>
+            <img src="https://raw.githubusercontent.com/keolazarte-lgtm/obsidian-vault/main/259355.jpg" alt="OBSIDIAN LOGO">
         </div>
         
         <h1>OBSIDIAN</h1>
@@ -138,13 +138,13 @@
         
         <div class="vault-card">
             <span style="color: var(--obsidian-gray); font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Saldo Disponible</span>
-            <div id="balance-display">$...</div>
+            <div id="balance-display">$17.00</div>
         </div>
     </div>
 
     <div class="content-card">
         <div style="padding: 15px; background: #000; border-bottom: 1px solid #111; display: flex; align-items: center;">
-            <div style="width: 8px; height: 8px; background: #00ff00; border-radius: 50%; margin-right: 10px;"></div>
+            <div style="width: 8px; height: 8px; background: #00ff00; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00ff00;"></div>
             <span style="font-size: 11px; color: #444; letter-spacing: 1px;">VAULT_PROTOCOL_001.RAW</span>
         </div>
         <div class="media-preview">
@@ -166,7 +166,7 @@
                 if (error) throw error;
                 const total = data.reduce((acc, row) => acc + (row.creator_net || 0), 0);
                 document.getElementById('balance-display').innerText = "$" + total.toFixed(2);
-            } catch (e) { document.getElementById('balance-display').innerText = "$0.00"; }
+            } catch (e) { console.log("Cargando..."); }
         }
 
         async function executeUnlock() {
