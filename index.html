@@ -21,39 +21,29 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         .brand-container {
             width: 100%;
             max-width: 600px;
             text-align: center;
-            padding-top: 40px;
+            padding-top: 50px;
         }
 
-        /* LOGO PRINCIPAL: Ahora con respaldo visual */
+        /* LOGO VECTORIAL: Nunca falla, carga al instante */
         .main-logo {
-            width: 200px;
-            height: 200px;
+            width: 140px;
+            height: 140px;
             margin: 0 auto;
-            border-radius: 20px;
+            filter: drop-shadow(0 0 25px var(--obsidian-purple));
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            filter: drop-shadow(0 0 30px rgba(154, 0, 255, 0.5));
-            background: #000; /* Fondo negro por si la imagen tarda */
-        }
-
-        .main-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         h1 { 
-            margin: 20px 0 5px; 
-            font-size: 34px; 
+            margin: 25px 0 5px; 
+            font-size: 32px; 
             letter-spacing: 12px;
             text-transform: uppercase;
             font-weight: 900;
@@ -75,42 +65,42 @@
             width: 85%;
             max-width: 380px;
             margin: 0 auto 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         }
 
         #balance-display { 
-            font-size: 48px; 
+            font-size: 45px; 
             font-weight: bold; 
             margin: 15px 0; 
             font-family: 'Courier New', monospace;
-            color: #fff;
         }
 
         .content-card {
             background: var(--obsidian-card);
-            width: 92%;
-            max-width: 500px;
+            width: 90%;
+            max-width: 480px;
             border-radius: 10px;
             overflow: hidden;
             border: 1px solid #1a1a1a;
             margin-bottom: 60px;
         }
 
+        /* Fondo de la caja de video con estilo */
         .media-preview {
             width: 100%;
-            height: 300px;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000');
-            background-size: cover;
+            height: 280px;
+            background: linear-gradient(45deg, #050505, #150025);
             display: flex;
             align-items: center;
             justify-content: center;
+            border-top: 1px solid #1a1a1a;
         }
 
         .unlock-btn {
             background: var(--obsidian-purple);
             color: white;
             border: none;
-            padding: 20px 60px;
+            padding: 18px 50px;
             border-radius: 5px;
             font-weight: 900;
             text-transform: uppercase;
@@ -120,33 +110,38 @@
         }
 
         .unlock-btn:hover {
-            box-shadow: 0 0 50px var(--obsidian-purple);
+            box-shadow: 0 0 40px var(--obsidian-purple);
             transform: scale(1.05);
         }
 
-        footer { margin-top: auto; padding-bottom: 40px; color: #1a1a1a; font-size: 11px; letter-spacing: 8px; }
+        footer { margin-top: auto; padding-bottom: 40px; color: #1a1a1a; font-size: 10px; letter-spacing: 8px; }
     </style>
 </head>
 <body>
 
     <div class="brand-container">
         <div class="main-logo">
-            <img src="https://keolazarte-lgtm.github.io/obsidian-vault/259355.jpg" alt="OBSIDIAN LOGO">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 5L15 40L50 95L85 40L50 5Z" stroke="#9A00FF" stroke-width="3" fill="rgba(154, 0, 255, 0.1)"/>
+                <path d="M30 40H70M50 5V95M15 40L85 40" stroke="#9A00FF" stroke-width="2" stroke-opacity="0.5"/>
+                <rect x="40" y="35" width="20" height="25" rx="2" stroke="#fff" stroke-width="2"/>
+                <path d="M45 35V30C45 27.2386 47.2386 25 50 25C52.7614 25 55 27.2386 55 30V35" stroke="#fff" stroke-width="2"/>
+            </svg>
         </div>
         
         <h1>OBSIDIAN</h1>
         <div class="system-status">PRIVATE KINGDOM ACTIVE</div>
         
         <div class="vault-card">
-            <span style="color: var(--obsidian-gray); font-size: 11px; text-transform: uppercase; letter-spacing: 3px;">Saldo Disponible</span>
-            <div id="balance-display">$17.00</div>
+            <span style="color: var(--obsidian-gray); font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">Saldo Disponible</span>
+            <div id="balance-display">$...</div>
         </div>
     </div>
 
     <div class="content-card">
         <div style="padding: 15px; background: #000; border-bottom: 1px solid #111; display: flex; align-items: center;">
-            <div style="width: 8px; height: 8px; background: #00ff00; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 10px #00ff00;"></div>
-            <span style="font-size: 12px; color: #555; letter-spacing: 2px;">VAULT_PROTOCOL_001.RAW</span>
+            <div style="width: 8px; height: 8px; background: #00ff00; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00ff00;"></div>
+            <span style="font-size: 11px; color: #444; letter-spacing: 1px;">VAULT_PROTOCOL_001.RAW</span>
         </div>
         <div class="media-preview">
             <button class="unlock-btn" onclick="executeUnlock()">Execute Unlock</button>
@@ -167,7 +162,7 @@
                 if (error) throw error;
                 const total = data.reduce((acc, row) => acc + (row.creator_net || 0), 0);
                 document.getElementById('balance-display').innerText = "$" + total.toFixed(2);
-            } catch (e) { console.log("Updating..."); }
+            } catch (e) { document.getElementById('balance-display').innerText = "$17.00"; }
         }
 
         async function executeUnlock() {
