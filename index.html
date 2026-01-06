@@ -3,63 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN | Entry Portal</title>
+    <title>OBSIDIAN | Secure Vault</title>
     <style>
-        :root { --p: #9A00FF; --s: #FF00E5; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .auth-card { background: #0e0e0e; padding: 40px; border: 1px solid #1a1a1a; border-radius: 8px; width: 100%; max-width: 350px; text-align: center; }
-        .logo { width: 80px; filter: drop-shadow(0 0 10px var(--p)); margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 4px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 15px; background: linear-gradient(45deg, var(--p), var(--s)); border: none; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .switch { font-size: 12px; color: #555; margin-top: 20px; cursor: pointer; }
+        :root {
+            --obsidian-purple: #9A00FF;
+            --obsidian-dark: #050505;
+            --obsidian-card: #111;
+            --obsidian-gray: #888;
+        }
+
+        body {
+            background-color: var(--obsidian-dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .brand-container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        .lock-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            filter: drop-shadow(0 0 15px var(--obsidian-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 { margin: 15px 0 5px; font-size: 24px; letter-spacing: 5px; text-transform: uppercase; }
+        .system-status { color: var(--obsidian-purple); font-size: 11px; font-weight: bold; margin-bottom: 30px; letter-spacing: 2px; }
+
+        .vault-card {
+            background: var(--obsidian-card);
+            border: 1px dashed var(--obsidian-purple);
+            padding: 25px;
+            border-radius: 15px;
+            width: 85%;
+            max-width: 380px;
+            margin: 0 auto 40px;
+        }
+
+        #balance-display { font-size: 38px; font-weight: bold; margin: 10px 0; font-family: monospace; color: white; }
+
+        .content-card {
+            background: var(--obsidian-card);
+            width: 90%;
+            max-width: 450px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .media-placeholder {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=500');
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .unlock-btn {
+            background: var(--obsidian-purple);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        footer { margin-top: 40px; padding-bottom: 30px; color: #222; font-size: 10px; letter-spacing: 5px; }
     </style>
 </head>
 <body>
-    <div class="auth-card">
-        <svg class="logo" viewBox="0 0 100 120" fill="none"><path d="M30 45V30C30 18.9543 38.9543 10 50 10C61.0457 10 70 18.9543 70 30V45" stroke="#9A00FF" stroke-width="6"/><path d="M20 45H80V95C80 100.523 75.5228 105 70 105H30C24.4772 105 20 100.523 20 95V45Z" fill="#0e0e0e" stroke="#9A00FF" stroke-width="3"/></svg>
-        <h2 id="auth-title" style="letter-spacing: 5px;">LOGIN</h2>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="pass" placeholder="Password">
-        <div id="reg-fields" style="display:none;">
-            <input type="text" id="username" placeholder="Username">
-            <label style="font-size: 10px; color: #777;"><input type="checkbox" id="isCreator"> SER CREADOR</label>
+
+    <div class="brand-container">
+        <div class="lock-logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 11V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V11" stroke="#9A00FF" stroke-width="2" stroke-linecap="round"/>
+                <rect x="5" y="11" width="14" height="10" rx="2" stroke="#9A00FF" stroke-width="2"/>
+                <circle cx="12" cy="16" r="1" fill="#9A00FF"/>
+            </svg>
         </div>
-        <button class="btn-main" onclick="handleAuth()">CONTINUAR</button>
-        <div class="switch" onclick="toggleAuth()" id="auth-switch">¿No tienes cuenta? Regístrate</div>
+        
+        <h1>OBSIDIAN</h1>
+        <div class="system-status">SECURE VAULT ACTIVE</div>
+        
+        <div class="vault-card">
+            <span style="color: var(--obsidian-gray); font-size: 10px; text-transform: uppercase;">Saldo Disponible</span>
+            <div id="balance-display">$...</div>
+        </div>
     </div>
+
+    <div class="content-card">
+        <div class="media-placeholder">
+            <button class="unlock-btn" onclick="executeUnlock()">Execute Unlock</button>
+        </div>
+    </div>
+
+    <footer>OBSIDIAN NETWORK</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const _sb = supabase.createClient('https://yzvguhnugravgboaiykk.supabase.co', 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U');
-        let mode = 'login';
+        const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
+        const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
+        const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        function toggleAuth() {
-            mode = mode === 'login' ? 'reg' : 'login';
-            document.getElementById('auth-title').innerText = mode === 'login' ? 'LOGIN' : 'SIGN UP';
-            document.getElementById('reg-fields').style.display = mode === 'login' ? 'none' : 'block';
-            document.getElementById('auth-switch').innerText = mode === 'login' ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Login';
-        }
-
-        async function handleAuth() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('pass').value;
-            
-            if(mode === 'login') {
-                const { error } = await _sb.auth.signInWithPassword({ email, password });
-                if(error) alert(error.message);
-                else window.location.href = 'app.html';
-            } else {
-                const username = document.getElementById('username').value;
-                const isCreator = document.getElementById('isCreator').checked;
-                const { data, error } = await _sb.auth.signUp({ email, password });
-                if(error) return alert(error.message);
+        // FUNCIÓN 1: Leer saldo real al cargar
+        async function loadTotalBalance() {
+            try {
+                const { data, error } = await _obsidian
+                    .from('balances')
+                    .select('creator_net');
                 
-                // Crear perfil en la tabla que hiciste por SQL
-                await _sb.from('profiles').insert([{ id: data.user.id, username, is_creator: isCreator }]);
-                alert("Cuenta creada. Por favor loguéate.");
-                toggleAuth();
+                if (error) throw error;
+
+                const total = data.reduce((sum, row) => sum + (row.creator_net || 0), 0);
+                document.getElementById('balance-display').innerText = "$" + total.toFixed(2);
+            } catch (err) {
+                console.error("Error cargando saldo:", err.message);
+                document.getElementById('balance-display').innerText = "$0.00";
             }
         }
+
+        // FUNCIÓN 2: Ejecutar cobro y recargar
+        async function executeUnlock() {
+            const monto = 20.00;
+            const fee = monto * 0.15;
+            const neto = monto - fee;
+
+            try {
+                const { error } = await _obsidian
+                    .from('balances')
+                    .insert([{ creator_name: 'OBSIDIAN_CORE', total_gross: monto, platform_fee: fee, creator_net: neto }]);
+
+                if (error) throw error;
+                alert("AUTH_SUCCESS");
+                loadTotalBalance(); // Actualiza el saldo automáticamente
+            } catch (err) {
+                alert("Error de red");
+            }
+        }
+
+        // Ejecutar al entrar
+        loadTotalBalance();
     </script>
 </body>
 </html>
