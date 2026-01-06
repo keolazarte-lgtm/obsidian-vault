@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBSIDIAN | Private Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --p: #9A00FF;
@@ -20,136 +20,142 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 30%, #1a0033 0%, #000 70%);
+            background-image: radial-gradient(circle at 50% 20%, #1a0033 0%, #000 60%);
+            overflow-x: hidden;
         }
 
-        /* EL DIAMANTE NEÓN (Animado) */
-        .neon-diamond-box {
-            margin-top: 80px;
-            width: 100px;
-            height: 100px;
+        /* EL DIAMANTE QUE TE GUSTÓ (Refinado) */
+        .neon-wrapper {
+            margin-top: 70px;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
-        .neon-diamond {
-            width: 50px;
-            height: 50px;
+        .diamond-pulse {
+            width: 55px;
+            height: 55px;
             background: var(--p);
             transform: rotate(45deg);
-            box-shadow: 0 0 20px var(--p), 0 0 60px var(--p);
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 30px var(--p), 0 0 70px var(--p);
+            animation: pulse-glow 2.5s infinite ease-in-out;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        @keyframes pulse {
-            0% { transform: rotate(45deg) scale(1); opacity: 1; }
-            50% { transform: rotate(45deg) scale(1.1); opacity: 0.7; box-shadow: 0 0 40px var(--p), 0 0 80px var(--p); }
-            100% { transform: rotate(45deg) scale(1); opacity: 1; }
+        @keyframes pulse-glow {
+            0% { transform: rotate(45deg) scale(1); opacity: 1; box-shadow: 0 0 30px var(--p), 0 0 60px var(--p); }
+            50% { transform: rotate(45deg) scale(1.1); opacity: 0.8; box-shadow: 0 0 50px var(--p), 0 0 100px var(--p); }
+            100% { transform: rotate(45deg) scale(1); opacity: 1; box-shadow: 0 0 30px var(--p), 0 0 60px var(--p); }
         }
 
         h1 { 
             font-family: 'Cinzel', serif;
-            margin: 40px 0 10px; 
-            font-size: 55px; 
-            letter-spacing: 25px;
+            margin: 45px 0 10px; 
+            font-size: 50px; 
+            letter-spacing: 22px;
             text-transform: uppercase;
             font-weight: 900;
-            text-align: center;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
+            padding-left: 22px; /* Centrado óptico por el espaciado */
         }
         
-        .status-bar { 
+        .status-tag { 
             color: var(--p); 
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 900; 
             margin-bottom: 60px; 
-            letter-spacing: 12px;
+            letter-spacing: 10px;
             text-transform: uppercase;
-            opacity: 0.9;
+            opacity: 0.7;
         }
 
-        /* CAJA DE RESERVAS ESTILO TERMINAL */
-        .reserves-box {
-            background: rgba(10, 10, 10, 0.9);
-            border-top: 1px solid #222;
-            border-bottom: 1px solid #222;
-            padding: 50px 0;
-            width: 100%;
-            max-width: 500px;
+        /* CAJA DE RESERVAS - Estilo Minimalista de Élite */
+        .balance-card {
+            background: rgba(8, 8, 8, 0.9);
+            border: 1px solid #111;
+            padding: 50px 80px;
+            border-radius: 4px;
             text-align: center;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+        }
+
+        .balance-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 25%; width: 50%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--p), transparent);
         }
 
         .label {
-            color: #333;
-            font-size: 11px;
+            color: #444;
+            font-size: 10px;
             letter-spacing: 6px;
             text-transform: uppercase;
             margin-bottom: 20px;
             display: block;
         }
 
-        #balance { 
-            font-size: 80px; 
+        #balance-display { 
+            font-size: 85px; 
             font-weight: 900; 
             letter-spacing: -4px;
             margin: 0;
-            color: #fff;
+            line-height: 1;
         }
 
-        /* BOTÓN DE ACCESO AGRESIVO */
-        .unlock-container {
-            margin-top: 70px;
+        /* ACCESO */
+        .action-zone {
+            margin-top: 80px;
+            margin-bottom: 100px;
             width: 100%;
             display: flex;
             justify-content: center;
-            padding-bottom: 100px;
         }
 
-        .btn-core {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 25px 80px;
+        .btn-unlock {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 22px 70px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 6px;
+            letter-spacing: 7px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
+            transition: all 0.4s;
+            font-size: 12px;
         }
 
-        .btn-core:hover {
-            background: var(--p);
-            color: #fff;
-            box-shadow: 0 0 50px var(--p);
-            transform: translateY(-5px);
+        .btn-unlock:hover {
+            border-color: var(--p);
+            color: var(--p);
+            box-shadow: 0 0 40px rgba(154, 0, 255, 0.2);
+            transform: translateY(-3px);
         }
 
-        footer { font-size: 10px; color: #111; letter-spacing: 15px; margin-bottom: 40px; }
+        footer { font-size: 9px; color: #111; letter-spacing: 15px; padding: 40px; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div class="neon-diamond-box">
-        <div class="neon-diamond"></div>
+    <div class="neon-wrapper">
+        <div class="diamond-pulse"></div>
     </div>
 
     <h1>OBSIDIAN</h1>
-    <div class="status-bar">Private Kingdom</div>
+    <div class="status-tag">Private Kingdom</div>
 
-    <div class="reserves-box">
+    <div class="balance-card">
         <span class="label">Total Reserves</span>
-        <div id="balance">$17.00</div>
+        <div id="balance-display">$17.00</div>
     </div>
 
-    <div class="unlock-container">
-        <button class="btn-core" onclick="auth()">Execute Unlock</button>
+    <div class="action-zone">
+        <button class="btn-unlock" onclick="process()">Execute Unlock</button>
     </div>
 
-    <footer>OBSIDIAN NETWORK</footer>
+    <footer>OBSIDIAN CORE SYSTEM</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -157,23 +163,23 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        async function refresh() {
+        async function sync() {
             try {
                 const { data } = await _obsidian.from('balances').select('creator_net');
                 const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-                document.getElementById('balance').innerText = "$" + total.toFixed(2);
-            } catch (e) { console.log("Reconnecting..."); }
+                document.getElementById('balance-display').innerText = "$" + total.toFixed(2);
+            } catch (e) { console.log("Re-syncing..."); }
         }
 
-        async function auth() {
+        async function process() {
             const v = 20, n = 17;
             try {
-                await _obsidian.from('balances').insert([{ creator_name: 'MASTER', total_gross: v, platform_fee: 3, creator_net: n }]);
-                alert("SYSTEM: ACCESS GRANTED");
-                refresh();
-            } catch (e) { alert("CONNECTION FAILED"); }
+                await _obsidian.from('balances').insert([{ creator_name: 'MASTER_CORE', total_gross: v, platform_fee: 3, creator_net: n }]);
+                alert("PROTOCOL: AUTHORIZED");
+                sync();
+            } catch (e) { alert("CONNECTION_ERROR"); }
         }
-        refresh();
+        sync();
     </script>
 </body>
 </html>
