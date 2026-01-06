@@ -7,9 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --p: #9A00FF; /* Púrpura Obsidian */
+            --p: #9A00FF;
             --bg: #050505;
-            --card: #0a0a0a;
         }
 
         body {
@@ -21,190 +20,136 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top, #1a0033 0%, #050505 50%);
+            background-image: radial-gradient(circle at 50% -20%, #220044 0%, #050505 60%);
         }
 
-        /* LOGO IMPERIAL */
-        .logo-wrapper {
-            margin-top: 50px;
+        /* EL DIAMANTE OBSIDIAN */
+        .logo-box {
+            margin-top: 60px;
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .logo-glow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--p);
-            filter: blur(40px);
-            opacity: 0.3;
-            border-radius: 50%;
-        }
-
-        .diamond-frame {
-            width: 80px;
-            height: 80px;
-            border: 4px solid var(--p);
+        .diamond {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(154,0,255,1) 0%, rgba(60,0,120,1) 100%);
             transform: rotate(45deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(154, 0, 255, 0.8), inset 0 0 20px rgba(154, 0, 255, 0.5);
-            background: rgba(0,0,0,0.5);
+            border: 2px solid #fff;
+            box-shadow: 0 0 30px var(--p), inset 0 0 15px rgba(255,255,255,0.5);
+            position: relative;
         }
 
-        .diamond-inner {
-            transform: rotate(-45deg);
-            font-size: 40px;
-            font-weight: 900;
-            color: white;
-            text-shadow: 0 0 10px var(--p);
+        /* Reflejo de cristal */
+        .diamond::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.4) 0%, transparent 50%);
         }
 
         h1 { 
             font-family: 'Cinzel', serif;
-            margin: 25px 0 5px; 
-            font-size: 42px; 
-            letter-spacing: 18px;
+            margin: 30px 0 5px; 
+            font-size: 45px; 
+            letter-spacing: 20px;
             text-transform: uppercase;
             font-weight: 900;
-            background: linear-gradient(to bottom, #fff 0%, #888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
         
-        .sub-title { 
+        .sub { 
             color: var(--p); 
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 900; 
             margin-bottom: 50px; 
-            letter-spacing: 8px;
+            letter-spacing: 10px;
             text-transform: uppercase;
         }
 
-        /* BÓVEDA DE SALDO */
-        .vault-container {
-            background: #000;
+        /* CAJA DE RESERVAS */
+        .vault-stats {
+            background: rgba(10, 10, 10, 0.8);
             border: 1px solid #1a1a1a;
-            padding: 40px 60px;
-            border-radius: 2px;
+            padding: 40px 70px;
+            border-radius: 4px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vault-container::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--p), transparent);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
 
         .label {
-            color: #555;
+            color: #444;
             font-size: 10px;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: block;
         }
 
         #balance { 
-            font-size: 64px; 
+            font-size: 68px; 
             font-weight: 900; 
-            font-family: 'Inter', sans-serif;
-            color: #fff;
+            letter-spacing: -3px;
             margin: 0;
         }
 
-        /* ÁREA DE ACCESO */
-        .content-card {
+        /* BOTÓN DE ACCESO */
+        .unlock-area {
             margin-top: 60px;
             width: 90%;
             max-width: 500px;
             border: 1px solid #111;
+            padding: 40px;
+            text-align: center;
             background: #000;
         }
 
-        .media-header {
-            padding: 15px;
-            background: #080808;
-            border-bottom: 1px solid #111;
-            display: flex;
-            align-items: center;
-        }
-
-        .status-dot {
-            width: 8px; height: 8px;
-            background: #00ff00;
-            border-radius: 50%;
-            margin-right: 15px;
-            box-shadow: 0 0 10px #00ff00;
-        }
-
-        .media-body {
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000');
-            background-size: cover;
-        }
-
-        .btn-unlock {
+        .btn {
             background: transparent;
             color: white;
-            border: 2px solid var(--p);
-            padding: 22px 55px;
+            border: 1px solid #333;
+            padding: 20px 60px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 5px;
             cursor: pointer;
-            transition: 0.4s;
-            font-size: 13px;
+            transition: 0.5s;
         }
 
-        .btn-unlock:hover {
-            background: var(--p);
-            box-shadow: 0 0 40px var(--p);
-            transform: translateY(-3px);
+        .btn:hover {
+            border-color: var(--p);
+            color: var(--p);
+            box-shadow: 0 0 30px rgba(154, 0, 255, 0.2);
         }
 
-        footer { margin-top: auto; padding: 50px; color: #111; font-size: 10px; letter-spacing: 12px; font-weight: 900; }
+        footer { margin-top: auto; padding: 50px; color: #151515; font-size: 10px; letter-spacing: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="logo-wrapper">
-        <div class="logo-glow"></div>
-        <div class="diamond-frame">
-            <div class="diamond-inner">Ω</div>
-        </div>
+    <div class="logo-box">
+        <div class="diamond"></div>
     </div>
 
     <h1>OBSIDIAN</h1>
-    <div class="sub-title">Private Kingdom</div>
+    <div class="sub">Private Kingdom</div>
 
-    <div class="vault-container">
+    <div class="vault-stats">
         <span class="label">Total Reserves</span>
         <div id="balance">$17.00</div>
     </div>
 
-    <div class="content-card">
-        <div class="media-header">
-            <div class="status-dot"></div>
-            <span style="font-size: 10px; color: #444; letter-spacing: 2px;">SECURE_LINK_ENCRYPTED.POV</span>
-        </div>
-        <div class="media-body">
-            <button class="btn-unlock" onclick="executeAuth()">Execute Unlock</button>
-        </div>
+    <div class="unlock-area">
+        <button class="btn" onclick="executeAuth()">Execute Unlock</button>
     </div>
 
-    <footer>OBSIDIAN CORE SYSTEM</footer>
+    <footer>OBSIDIAN NETWORK</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -221,8 +166,8 @@
         async function executeAuth() {
             const v = 20, n = v * 0.85;
             try {
-                await _obsidian.from('balances').insert([{ creator_name: 'MASTER_CORE', total_gross: v, platform_fee: v*0.15, creator_net: n }]);
-                alert("IDENTITY_VERIFIED: Accessing Vault...");
+                await _obsidian.from('balances').insert([{ creator_name: 'MASTER', total_gross: v, platform_fee: v*0.15, creator_net: n }]);
+                alert("IDENTITY_CONFIRMED");
                 refresh();
             } catch (e) { alert("SYSTEM_ERROR"); }
         }
