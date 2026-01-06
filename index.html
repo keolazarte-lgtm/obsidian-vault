@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBSIDIAN | Private Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@800&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
-            background: #000;
-            color: #fff;
+            background-color: #000;
+            color: white;
             font-family: 'Inter', sans-serif;
             margin: 0;
             display: flex;
@@ -16,118 +16,116 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 40%, #1a0033 0%, #000 65%);
         }
 
-        /* FONDO ATMOSFÉRICO */
-        .bg-glow {
-            position: fixed;
-            top: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 30%, #1a0033 0%, #000 70%);
-            z-index: -1;
-        }
-
-        /* EL DIAMANTE QUE LATE (REFINADO) */
-        .diamond-container {
-            position: relative;
-            margin-bottom: 20px;
+        /* NÚCLEO CENTRAL */
+        .core {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         .diamond {
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             background: #9A00FF;
             transform: rotate(45deg);
-            box-shadow: 0 0 40px #9A00FF, 0 0 100px #9A00FF;
+            box-shadow: 0 0 50px #9A00FF, 0 0 120px rgba(154, 0, 255, 0.5);
             animation: pulse 2s infinite ease-in-out;
             border: 2px solid #fff;
+            margin-bottom: 40px;
         }
 
         @keyframes pulse {
             0%, 100% { transform: rotate(45deg) scale(1); filter: brightness(1); }
-            50% { transform: rotate(45deg) scale(1.2); filter: brightness(1.5); box-shadow: 0 0 60px #9A00FF, 0 0 120px #9A00FF; }
+            50% { transform: rotate(45deg) scale(1.1); filter: brightness(1.4); box-shadow: 0 0 70px #9A00FF, 0 0 150px #9A00FF; }
         }
 
         h1 {
             font-family: 'Cinzel', serif;
-            font-size: clamp(30px, 8vw, 55px);
-            letter-spacing: clamp(10px, 4vw, 25px);
-            margin: 20px 0 0 25px; /* Offset para centrar por el spacing */
+            font-size: 50px;
+            letter-spacing: 25px;
+            margin: 0 0 10px 25px;
             text-transform: uppercase;
-            background: linear-gradient(to bottom, #fff, #666);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
-        .sub {
+        .tag {
             color: #9A00FF;
-            font-size: 10px;
+            font-size: 11px;
             letter-spacing: 12px;
             text-transform: uppercase;
-            margin-bottom: 60px;
-            font-weight: bold;
-            opacity: 0.8;
+            margin-bottom: 80px;
+            font-weight: 900;
         }
 
-        /* BALANCE FLOTANTE */
-        .balance-wrap {
+        /* RESERVAS */
+        .reserves {
             text-align: center;
         }
 
-        .balance-label {
+        .label {
             color: #333;
-            font-size: 11px;
-            letter-spacing: 5px;
+            font-size: 12px;
+            letter-spacing: 6px;
             text-transform: uppercase;
+            margin-bottom: 10px;
             display: block;
-            margin-bottom: 5px;
         }
 
-        #balance {
-            font-size: clamp(60px, 15vw, 100px);
+        .amount {
+            font-size: 110px;
             font-weight: 900;
-            letter-spacing: -5px;
+            letter-spacing: -6px;
             margin: 0;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            line-height: 0.9;
         }
 
-        .btn-unlock {
-            margin-top: 60px;
+        /* ACCIÓN */
+        .btn-box {
+            margin-top: 80px;
+        }
+
+        .btn {
             background: none;
             border: 1px solid #222;
             color: #fff;
-            padding: 20px 60px;
+            padding: 25px 80px;
             font-weight: 900;
-            letter-spacing: 6px;
+            letter-spacing: 8px;
             text-transform: uppercase;
             cursor: pointer;
-            transition: 0.4s;
-            font-size: 12px;
+            transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+            font-size: 13px;
         }
 
-        .btn-unlock:hover {
+        .btn:hover {
             border-color: #9A00FF;
             color: #9A00FF;
             box-shadow: 0 0 40px rgba(154, 0, 255, 0.2);
+            padding: 25px 95px;
         }
     </style>
 </head>
 <body>
-    <div class="bg-glow"></div>
-    
-    <div class="diamond-container">
+
+    <div class="core">
         <div class="diamond"></div>
+        <h1>OBSIDIAN</h1>
+        <div class="tag">Private Kingdom</div>
     </div>
 
-    <h1>OBSIDIAN</h1>
-    <div class="sub">Private Kingdom</div>
-
-    <div class="balance-wrap">
-        <span class="balance-label">Total Reserves</span>
-        <div id="balance">$17.00</div>
+    <div class="reserves">
+        <span class="label">Total Reserves</span>
+        <div class="amount" id="val">$17.00</div>
     </div>
 
-    <button class="btn-unlock" onclick="auth()">Execute Unlock</button>
+    <div class="btn-box">
+        <button class="btn" onclick="run()">Execute Unlock</button>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -135,17 +133,17 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        async function sync() {
+        async function update() {
             const { data } = await _obsidian.from('balances').select('creator_net');
             const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-            document.getElementById('balance').innerText = "$" + total.toFixed(2);
+            document.getElementById('val').innerText = "$" + total.toFixed(2);
         }
 
-        function auth() {
-            alert("SYSTEM: AUTHORIZING...");
-            // Aquí iría tu lógica de inserción de Supabase
+        function run() {
+            alert("PROTOCOL_INITIATED");
+            update();
         }
-        sync();
+        update();
     </script>
 </body>
 </html>
