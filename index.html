@@ -20,142 +20,129 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 20%, #1a0033 0%, #000 60%);
+            background-image: radial-gradient(circle at 50% 35%, #120025 0%, #000 65%);
             overflow-x: hidden;
         }
 
-        /* EL DIAMANTE QUE TE GUSTÓ (Refinado) */
-        .neon-wrapper {
-            margin-top: 70px;
-            position: relative;
+        /* NÚCLEO LATIENTE */
+        .core-container {
+            margin-top: 80px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
-        .diamond-pulse {
-            width: 55px;
-            height: 55px;
+        .diamond-core {
+            width: 45px;
+            height: 45px;
             background: var(--p);
             transform: rotate(45deg);
-            box-shadow: 0 0 30px var(--p), 0 0 70px var(--p);
-            animation: pulse-glow 2.5s infinite ease-in-out;
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 30px var(--p), 0 0 80px var(--p);
+            animation: core-pulse 2s infinite ease-in-out;
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
-        @keyframes pulse-glow {
-            0% { transform: rotate(45deg) scale(1); opacity: 1; box-shadow: 0 0 30px var(--p), 0 0 60px var(--p); }
-            50% { transform: rotate(45deg) scale(1.1); opacity: 0.8; box-shadow: 0 0 50px var(--p), 0 0 100px var(--p); }
-            100% { transform: rotate(45deg) scale(1); opacity: 1; box-shadow: 0 0 30px var(--p), 0 0 60px var(--p); }
+        @keyframes core-pulse {
+            0% { transform: rotate(45deg) scale(1); opacity: 1; filter: brightness(1); }
+            50% { transform: rotate(45deg) scale(1.15); opacity: 0.7; filter: brightness(1.5); }
+            100% { transform: rotate(45deg) scale(1); opacity: 1; filter: brightness(1); }
         }
 
         h1 { 
             font-family: 'Cinzel', serif;
-            margin: 45px 0 10px; 
-            font-size: 50px; 
-            letter-spacing: 22px;
+            margin: 35px 0 5px; 
+            font-size: 42px; 
+            letter-spacing: 20px;
             text-transform: uppercase;
             font-weight: 900;
-            text-shadow: 0 0 15px rgba(255,255,255,0.2);
-            padding-left: 22px; /* Centrado óptico por el espaciado */
+            padding-left: 20px;
+            text-shadow: 0 0 20px rgba(154, 0, 255, 0.5);
         }
         
-        .status-tag { 
+        .tagline { 
             color: var(--p); 
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 900; 
-            margin-bottom: 60px; 
-            letter-spacing: 10px;
+            margin-bottom: 80px; 
+            letter-spacing: 12px;
             text-transform: uppercase;
-            opacity: 0.7;
+            opacity: 0.6;
         }
 
-        /* CAJA DE RESERVAS - Estilo Minimalista de Élite */
-        .balance-card {
-            background: rgba(8, 8, 8, 0.9);
-            border: 1px solid #111;
-            padding: 50px 80px;
-            border-radius: 4px;
+        /* EL SALDO (Flotante y Elegante) */
+        .balance-section {
             text-align: center;
             position: relative;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
         }
 
-        .balance-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 25%; width: 50%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--p), transparent);
-        }
-
-        .label {
+        .balance-label {
             color: #444;
-            font-size: 10px;
+            font-size: 9px;
             letter-spacing: 6px;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: block;
         }
 
-        #balance-display { 
-            font-size: 85px; 
+        #balance-val { 
+            font-size: 90px; 
             font-weight: 900; 
-            letter-spacing: -4px;
+            letter-spacing: -5px;
             margin: 0;
-            line-height: 1;
+            background: linear-gradient(to bottom, #fff 60%, #444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* ACCESO */
-        .action-zone {
-            margin-top: 80px;
-            margin-bottom: 100px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        /* BOTÓN DE ACCIÓN */
+        .action-container {
+            margin-top: 90px;
+            margin-bottom: 80px;
         }
 
-        .btn-unlock {
+        .btn-obsidian {
             background: transparent;
             color: #fff;
-            border: 1px solid #333;
-            padding: 22px 70px;
+            border: 1px solid #222;
+            padding: 20px 60px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 7px;
+            letter-spacing: 8px;
             cursor: pointer;
-            transition: all 0.4s;
-            font-size: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 11px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-unlock:hover {
+        .btn-obsidian:hover {
             border-color: var(--p);
             color: var(--p);
-            box-shadow: 0 0 40px rgba(154, 0, 255, 0.2);
-            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(154, 0, 255, 0.15);
+            letter-spacing: 10px;
         }
 
-        footer { font-size: 9px; color: #111; letter-spacing: 15px; padding: 40px; font-weight: 900; }
+        footer { font-size: 9px; color: #111; letter-spacing: 18px; margin-top: auto; padding: 50px; }
     </style>
 </head>
 <body>
 
-    <div class="neon-wrapper">
-        <div class="diamond-pulse"></div>
+    <div class="core-container">
+        <div class="diamond-core"></div>
+        <h1>OBSIDIAN</h1>
+        <div class="tagline">Private Kingdom</div>
     </div>
 
-    <h1>OBSIDIAN</h1>
-    <div class="status-tag">Private Kingdom</div>
-
-    <div class="balance-card">
-        <span class="label">Total Reserves</span>
-        <div id="balance-display">$17.00</div>
+    <div class="balance-section">
+        <span class="balance-label">Current Liquidity</span>
+        <div id="balance-val">$17.00</div>
     </div>
 
-    <div class="action-zone">
-        <button class="btn-unlock" onclick="process()">Execute Unlock</button>
+    <div class="action-container">
+        <button class="btn-obsidian" onclick="authorize()">Execute Unlock</button>
     </div>
 
-    <footer>OBSIDIAN CORE SYSTEM</footer>
+    <footer>OBSIDIAN SYSTEM</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -163,23 +150,22 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
-        async function sync() {
+        async function update() {
             try {
                 const { data } = await _obsidian.from('balances').select('creator_net');
                 const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-                document.getElementById('balance-display').innerText = "$" + total.toFixed(2);
-            } catch (e) { console.log("Re-syncing..."); }
+                document.getElementById('balance-val').innerText = "$" + total.toFixed(2);
+            } catch (e) { console.log("Updating..."); }
         }
 
-        async function process() {
-            const v = 20, n = 17;
+        async function authorize() {
             try {
-                await _obsidian.from('balances').insert([{ creator_name: 'MASTER_CORE', total_gross: v, platform_fee: 3, creator_net: n }]);
-                alert("PROTOCOL: AUTHORIZED");
-                sync();
-            } catch (e) { alert("CONNECTION_ERROR"); }
+                await _obsidian.from('balances').insert([{ creator_name: 'MASTER', total_gross: 20, platform_fee: 3, creator_net: 17 }]);
+                alert("ACCESS GRANTED");
+                update();
+            } catch (e) { alert("FAIL"); }
         }
-        sync();
+        update();
     </script>
 </body>
 </html>
