@@ -20,43 +20,63 @@
             overflow: hidden;
         }
 
-        /* HEADER & LOGO */
-        .header-section { text-align: center; margin-bottom: 40px; }
-        
-        .main-logo {
-            width: 100px;
-            height: auto;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 0 15px #9A00FF);
-            animation: float 4s infinite ease-in-out;
+        /* EL LOGO OMEGA (Recuperado y Blindado) */
+        .logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .diamond-omega {
+            width: 65px;
+            height: 65px;
+            background: #9A00FF;
+            transform: rotate(45deg);
+            box-shadow: 0 0 40px #9A00FF, 0 0 80px rgba(154, 0, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            animation: float-pulse 3s infinite ease-in-out;
+            position: relative;
+        }
+
+        .diamond-omega span {
+            transform: rotate(-45deg);
+            font-family: 'Cinzel', serif;
+            font-size: 35px;
+            font-weight: 900;
+            color: #fff;
+            margin-top: -2px;
+        }
+
+        @keyframes float-pulse {
+            0%, 100% { transform: rotate(45deg) translateY(0) scale(1); }
+            50% { transform: rotate(45deg) translateY(-10px) scale(1.05); filter: brightness(1.2); }
         }
 
         h1 {
             font-family: 'Cinzel', serif;
-            font-size: 45px;
+            font-size: 42px;
             letter-spacing: 20px;
-            margin: 10px 0;
-            padding-left: 20px;
+            margin: 25px 0 5px 20px;
+            text-transform: uppercase;
         }
 
-        .subtitle {
+        .tagline {
             color: #9A00FF;
             font-size: 10px;
             letter-spacing: 12px;
             text-transform: uppercase;
             font-weight: 900;
-            opacity: 0.8;
+            opacity: 0.7;
         }
 
-        /* SALDO ANIMADO */
-        .balance-box { text-align: center; margin: 60px 0; }
+        /* SALDO CON ANIMACIÓN */
+        .balance-area { text-align: center; margin: 60px 0; }
         
-        .reserves-label {
+        .label {
             color: #333;
             font-size: 11px;
             letter-spacing: 6px;
@@ -65,90 +85,82 @@
             display: block;
         }
 
-        .amount {
-            font-size: 120px;
+        #balance-num {
+            font-size: 115px;
             font-weight: 900;
             letter-spacing: -6px;
             margin: 0;
             line-height: 0.8;
-            /* Efecto de brillo suave al número */
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
         }
 
-        /* BOTÓN */
-        .btn-unlock {
+        .btn-system {
             margin-top: 50px;
             background: transparent;
             border: 1px solid #1a1a1a;
             color: #fff;
-            padding: 20px 60px;
-            font-size: 11px;
+            padding: 18px 50px;
+            font-size: 10px;
             font-weight: 900;
-            letter-spacing: 7px;
+            letter-spacing: 6px;
             text-transform: uppercase;
             cursor: pointer;
             transition: 0.4s;
         }
 
-        .btn-unlock:hover {
+        .btn-system:hover {
             border-color: #9A00FF;
-            box-shadow: 0 0 40px rgba(154, 0, 255, 0.2);
+            box-shadow: 0 0 30px rgba(154, 0, 255, 0.2);
             color: #9A00FF;
-            background: rgba(154, 0, 255, 0.05);
         }
     </style>
 </head>
 <body>
 
-    <div class="header-section">
-        <img src="TU_URL_AQUÍ" alt="OBSIDIAN" class="main-logo">
+    <div class="logo-wrapper">
+        <div class="diamond-omega">
+            <span>Ω</span>
+        </div>
         <h1>OBSIDIAN</h1>
-        <div class="subtitle">Private Kingdom</div>
+        <div class="tagline">Private Kingdom</div>
     </div>
 
-    <div class="balance-box">
-        <span class="reserves-label">Vault Reserves</span>
-        <div class="amount" id="db-val">$0.00</div>
+    <div class="balance-area">
+        <span class="label">Vault Reserves</span>
+        <div id="balance-num">$0.00</div>
     </div>
 
-    <button class="btn-unlock" onclick="animateValue(0, currentBalance, 1500)">Refresh System</button>
+    <button class="btn-system" onclick="refreshData()">Refresh System</button>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
-        let currentBalance = 0;
 
-        // Función para animar los números
-        function animateValue(start, end, duration) {
+        function counter(start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 const value = progress * (end - start) + start;
-                document.getElementById('db-val').innerText = "$" + value.toFixed(2);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
+                document.getElementById('balance-num').innerText = "$" + value.toFixed(2);
+                if (progress < 1) window.requestAnimationFrame(step);
             };
             window.requestAnimationFrame(step);
         }
 
-        async function sync() {
+        async function refreshData() {
             try {
                 const { data } = await _obsidian.from('balances').select('creator_net');
                 const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-                currentBalance = total;
-                // Inicia la animación desde 0 hasta el total de la DB
-                animateValue(0, total, 2000); 
-            } catch (e) { 
-                console.log("Offline Mode");
-                document.getElementById('db-val').innerText = "$17.00";
+                counter(0, total, 2000);
+            } catch (e) {
+                counter(0, 17, 1500);
             }
         }
 
-        sync();
+        refreshData();
     </script>
 </body>
 </html>
