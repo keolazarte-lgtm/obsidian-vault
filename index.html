@@ -2,341 +2,109 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OBSIDIAN PRO | Shielded</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
-        /* Estilos CSS existentes - NO MODIFICAR NI BORRAR */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        .logo {
-            text-align: center;
-            margin: 20px 0;
-            animation: heartbeat 1.5s infinite;
-        }
-        .logo img {
-            width: 100px;
-            height: 100px;
-        }
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px;
-        }
-        .login-container input {
-            margin: 10px;
-            padding: 10px;
-            width: 200px;
-        }
-        .login-container button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .stories-bar {
-            display: flex;
-            overflow-x: auto;
-            padding: 10px;
-            background-color: #fff;
-            border-bottom: 1px solid #ccc;
-        }
-        .story {
-            min-width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #ddd;
-            margin: 0 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .central-button {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #fff;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #ccc;
-        }
-        .nav-item {
-            flex: 1;
-            text-align: center;
-            cursor: pointer;
-        }
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
-        .message {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: #e1e1e1;
-        }
-        .message.premium {
-            background-color: #FFD700;
-            position: relative;
-        }
-        .message.premium::after {
-            content: '💎';
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-        .chat-input {
-            display: flex;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 10px;
-        }
-        .chat-input button {
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .preview-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .preview-image {
-            max-width: 80%;
-            max-height: 60%;
-        }
-        .preview-options {
-            margin-top: 20px;
-        }
-        .preview-options button {
-            margin: 0 10px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .hidden {
-            display: none;
-        }
+        /* [MODULO 2: VARIABLES & RESET] */
+        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --gold: #FFD700; }
+        body, html { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; }
+
+        /* [MODULO 3: LOGIN & GLOW ANIMATIONS] */
+        #login-view { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a0033 0%, #000 100%); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .logo-container { position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 50px; }
+        .logo-glow { position: absolute; width: 140px; height: 140px; background: var(--accent); filter: blur(60px); opacity: 0.5; border-radius: 50%; animation: pulse-glow 3s infinite; }
+        .diamond-logo { position: relative; width: 85px; height: 85px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 25px var(--accent); animation: heartbeat 2s infinite; z-index: 2; }
+        .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 38px; color: var(--accent); }
+        @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.4); opacity: 0.7; } }
+        @keyframes heartbeat { 0%, 28%, 70% { transform: rotate(45deg) scale(1); } 14%, 42% { transform: rotate(45deg) scale(1.1); } }
+
+        /* [MODULO 4: INPUTS & BUTTONS] */
+        .input-group { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; margin-bottom: 40px; }
+        .input-group input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; text-align: center; letter-spacing: 5px; outline: none; font-size: 18px; }
+        .btn-show { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; padding: 10px; z-index: 10; }
+
+        /* [MODULO 5: APP CORE UI] */
+        #main-app { display: none; height: 100vh; flex-direction: column; }
+        .header { height: 65px; background: rgba(0,0,0,0.98); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+        .content { flex: 1; overflow-y: auto; padding-bottom: 90px; }
+
+        /* [MODULO 6: STORIES & NAVIGATION] */
+        .stories-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border); }
+        .story-circle { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); padding: 3px; position: relative; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 30px; border: 4px solid #000; box-shadow: 0 0 20px rgba(154,0,255,0.4); cursor: pointer; }
+        .nav-btn { color: #555; font-size: 22px; cursor: pointer; }
+        .active { color: var(--accent); }
     </style>
 </head>
 <body>
-    <!-- Logo con animación heartbeat -->
-    <div class="logo">
-        <img src="https://via.placeholder.com/100?text=Diamond" alt="Logo Diamante">
-    </div>
 
-    <!-- Contenedor de Login -->
-    <div class="login-container" id="loginContainer">
-        <input type="text" placeholder="Usuario" id="username">
-        <input type="password" placeholder="Contraseña" id="password">
-        <button id="showHideBtn">SHOW/HIDE</button>
-        <button onclick="login()">Iniciar Sesión</button>
-    </div>
-
-    <!-- Barra de Historias -->
-    <div class="stories-bar" id="storiesBar">
-        <div class="story">Historia 1</div>
-        <div class="story">Historia 2</div>
-        <div class="story">Historia 3</div>
-        <!-- Más historias aquí -->
-    </div>
-
-    <!-- Contenedor de Chat -->
-    <div class="chat-container" id="chatContainer" style="display: none;">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input">
-            <input type="text" id="messageInput" placeholder="Escribe un mensaje...">
-            <button onclick="sendMessage()">Enviar</button>
+    <div id="login-view">
+        <div class="logo-container">
+            <div class="logo-glow"></div>
+            <div class="diamond-logo"><span>Ω</span></div>
         </div>
-    </div>
-
-    <!-- Botón Central (+) -->
-    <button class="central-button" id="centralBtn">+</button>
-
-    <!-- Navegación Inferior -->
-    <div class="bottom-nav">
-        <div class="nav-item" onclick="showTab('home')">Inicio</div>
-        <div class="nav-item" onclick="showTab('chat')">Chat</div>
-        <div class="nav-item" onclick="showTab('profile')">Perfil</div>
-        <div class="nav-item" id="plusBtn">+ <!-- Este es el botón blanco (+) --></div>
-    </div>
-
-    <!-- Preview de Imagen -->
-    <div class="preview-container" id="previewContainer">
-        <img id="previewImage" class="preview-image" src="" alt="Preview">
-        <div class="preview-options">
-            <button onclick="publish('Gratis')">Gratis</button>
-            <button onclick="publish('Premium')">Premium</button>
-            <button onclick="closePreview()">Cancelar</button>
+        <div class="input-group">
+            <input type="password" id="pass-field" placeholder="ACCESS KEY">
+            <button class="btn-show" onclick="togglePass()">SHOW</button>
         </div>
+        <button onclick="enterApp()" style="background:none; border:none; color:var(--accent); font-size:45px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
-    <!-- Audio para sonido de monedas -->
-    <audio id="cashSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" preload="auto"></audio> <!-- Reemplaza con un sonido de monedas real si es posible -->
+    <div id="main-app">
+        <div class="header">
+            <i class="fas fa-bars"></i>
+            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
+            <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--accent); background: #222;"></div>
+        </div>
+
+        <div class="content">
+            <div class="stories-bar" id="stories-area">
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=1"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=2"></div>
+            </div>
+            </div>
+
+        <nav>
+            <i class="fas fa-home nav-btn active"></i>
+            <i class="fas fa-search nav-btn"></i>
+            <div class="nav-add" onclick="triggerFile()"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope nav-btn"></i>
+            <i class="fas fa-cog nav-btn"></i>
+        </nav>
+    </div>
+
+    <input type="file" id="global-file" hidden onchange="handleFile(this)">
+    <audio id="snd-cash" src="https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3"></audio>
 
     <script>
-        // Variables globales
-        let currentTab = 'home';
-        let selectedImage = null;
-
-        // Función para mostrar/ocultar contraseña en login
-        document.getElementById('showHideBtn').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                this.textContent = 'HIDE';
-            } else {
-                passwordInput.type = 'password';
-                this.textContent = 'SHOW';
-            }
-        });
-
-        // Función de login (simulada)
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            if (username && password) {
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('chatContainer').style.display = 'flex';
-                showTab('home'); // Mostrar pestaña inicial
-            } else {
-                alert('Por favor, ingresa usuario y contraseña.');
-            }
+        /* [LOGICA 1: ACCESO] */
+        function togglePass() {
+            const f = document.getElementById('pass-field');
+            f.type = f.type === 'password' ? 'text' : 'password';
+            document.querySelector('.btn-show').innerText = f.type === 'password' ? 'SHOW' : 'HIDE';
         }
 
-        // Función para mostrar pestañas (navegación inferior)
-        function showTab(tab) {
-            currentTab = tab;
-            // Ocultar todos los contenedores
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('chatContainer').style.display = 'none';
-            // Mostrar el correspondiente
-            if (tab === 'chat') {
-                document.getElementById('chatContainer').style.display = 'flex';
-            } else if (tab === 'home') {
-                // Mostrar barra de historias y ocultar chat
-                document.getElementById('storiesBar').style.display = 'flex';
-                document.getElementById('chatContainer').style.display = 'none';
-            } else if (tab === 'profile') {
-                // Lógica para perfil (simulada)
-                alert('Perfil seleccionado');
+        function enterApp() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+        }
+
+        /* [LOGICA 2: MEDIA] */
+        function triggerFile() { document.getElementById('global-file').click(); }
+        
+        function handleFile(input) {
+            if(input.files && input.files[0]) {
+                document.getElementById('snd-cash').play();
+                alert("Vault: Contenido detectado. Iniciando encriptación...");
             }
         }
-
-        // Función para el botón central (+)
-        document.getElementById('centralBtn').addEventListener('click', function() {
-            // Lógica para el botón central (ej. abrir menú o algo)
-            alert('Botón central presionado');
-        });
-
-        // Función para el botón (+) de la navegación inferior
-        document.getElementById('plusBtn').addEventListener('click', function() {
-            // Abrir galería de fotos (usando input file simulado para móvil)
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    selectedImage = file;
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('previewImage').src = e.target.result;
-                        document.getElementById('previewContainer').style.display = 'flex';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            input.click();
-        });
-
-        // Función para publicar imagen
-        function publish(type) {
-            if (selectedImage) {
-                alert(`Imagen publicada como ${type}`);
-                closePreview();
-            }
-        }
-
-        // Función para cerrar preview
-        function closePreview() {
-            document.getElementById('previewContainer').style.display = 'none';
-            selectedImage = null;
-        }
-
-        // Función para enviar mensaje en chat
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const messageText = input.value.trim();
-            if (messageText) {
-                const messagesDiv = document.getElementById('chatMessages');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message';
-                messageDiv.textContent = messageText;
-
-                // Verificar si contiene 'PROPINA'
-                if (messageText.toUpperCase().includes('PROPINA')) {
-                    messageDiv.classList.add('premium');
-                    // Reproducir sonido de monedas
-                    document.getElementById('cashSound').play();
-                }
-
-                messagesDiv.appendChild(messageDiv);
-                input.value = '';
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            }
-        }
-
-        // Inicializar mostrando login
-        showTab('home');
     </script>
 </body>
 </html>
