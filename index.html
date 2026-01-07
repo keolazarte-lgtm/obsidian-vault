@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN | Private Network</title>
+    <title>OBSIDIAN | Exclusive Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@200;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #9A00FF; --bg: #000; --card: #0a0a0a; }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
 
-        /* LOGIN VIEW REFORZADO */
+        /* LOGIN VIEW CON LOGO */
         #login-view { 
             height: 100vh; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; text-align: center; 
             background: radial-gradient(circle at center, #0d001a 0%, #000 70%);
         }
         
+        .logo-placeholder {
+            font-family: 'Cinzel', serif; font-size: 28px; letter-spacing: 15px;
+            color: #fff; margin-bottom: 10px; text-shadow: 0 0 20px var(--accent);
+        }
+        .subtitle { font-size: 8px; letter-spacing: 5px; color: rgba(255,255,255,0.3); margin-bottom: 50px; text-transform: uppercase; }
+
         .login-container { position: relative; width: 300px; }
         
         .access-input { 
@@ -37,9 +43,9 @@
         header h1 { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 8px; margin: 0; color: var(--accent); }
 
         .feed { max-width: 500px; margin: 0 auto; padding: 15px; }
-        .post { background: var(--card); border-radius: 12px; margin-bottom: 25px; overflow: hidden; border: 1px solid #151515; animation: fadeIn 1s ease; }
+        .post { background: var(--card); border-radius: 12px; margin-bottom: 25px; overflow: hidden; border: 1px solid #151515; animation: fadeIn 0.8s ease; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .content-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #050505; }
         .post-img { width: 100%; height: 100%; object-fit: cover; }
@@ -55,9 +61,17 @@
         }
 
         /* NAV */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: #050505; border-top: 1px solid #111; display: flex; justify-content: space-around; align-items: center; }
-        .nav-item { color: #333; font-size: 22px; cursor: pointer; }
-        .nav-item.active { color: var(--accent); }
+        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: #050505; border-top: 1px solid #111; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-item { color: #333; font-size: 24px; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+
+        /* PANEL SUBIDA (MODAL) */
+        #upload-panel {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .modal-content { width: 90%; max-width: 400px; text-align: center; }
+        .upload-input { width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 15px; margin: 10px 0; border-radius: 8px; }
 
         .hidden { display: none !important; }
     </style>
@@ -65,9 +79,10 @@
 <body>
 
     <div id="login-view">
-        <div style="font-family: 'Cinzel', serif; letter-spacing: 12px; font-size: 18px; margin-bottom: 40px; color: rgba(255,255,255,0.2);">OBSIDIAN</div>
+        <div class="logo-placeholder">OBSIDIAN</div>
+        <div class="subtitle">Private Kingdom Protocol</div>
         <div class="login-container">
-            <input type="password" id="pass" class="access-input" placeholder="PASSWORD" onkeypress="handleKey(event)">
+            <input type="password" id="pass" class="access-input" placeholder="PASSWORD" onkeypress="handleKey(event)" autofocus>
             <button class="toggle-btn" onclick="togglePass()">Show</button>
         </div>
     </div>
@@ -75,10 +90,24 @@
     <div id="main-app" class="hidden">
         <header><h1>OBSIDIAN</h1></header>
         <div class="feed" id="feed-container"></div>
+        
+        <div id="upload-panel">
+            <div class="modal-content">
+                <h2 style="font-family: 'Cinzel'; font-size: 14px; letter-spacing: 5px;">NEW POST</h2>
+                <input type="text" id="post-url" class="upload-input" placeholder="Image URL">
+                <input type="text" id="post-desc" class="upload-input" placeholder="Description">
+                <label style="display:block; margin: 20px 0; font-size: 12px; color: #555;">
+                    <input type="checkbox" id="post-premium"> Premium Content (Locked)
+                </label>
+                <button onclick="publishPost()" style="background:var(--accent); color:#fff; border:none; padding:15px 40px; border-radius:30px; font-weight:bold; width:100%;">PUBLISH</button>
+                <button onclick="toggleUpload()" style="background:none; border:none; color:#444; margin-top:20px; font-size:10px;">CANCEL</button>
+            </div>
+        </div>
+
         <nav>
-            <div class="nav-item active">⌂</div>
+            <div class="nav-item active" onclick="showFeed()">⌂</div>
             <div class="nav-item">⌕</div>
-            <div class="nav-item">⊕</div>
+            <div class="nav-item" onclick="toggleUpload()" style="font-size:32px; color: #fff;">⊕</div>
             <div class="nav-item">✉</div>
             <div class="nav-item" onclick="location.reload()">👤</div>
         </nav>
@@ -93,27 +122,19 @@
         function togglePass() {
             const input = document.getElementById('pass');
             const btn = document.querySelector('.toggle-btn');
-            if (input.type === "password") {
-                input.type = "text";
-                btn.innerText = "Hide";
-            } else {
-                input.type = "password";
-                btn.innerText = "Show";
-            }
+            input.type = input.type === "password" ? "text" : "password";
+            btn.innerText = input.type === "password" ? "Show" : "Hide";
         }
 
         async function handleKey(e) {
             if (e.key === 'Enter') {
-                const key = e.target.value;
-                const { data, error } = await _supabase.from('users').select('*').eq('access_key', key).single();
-
+                const { data } = await _supabase.from('users').select('*').eq('access_key', e.target.value).single();
                 if (data) {
                     document.getElementById('login-view').classList.add('hidden');
                     document.getElementById('main-app').classList.remove('hidden');
                     loadPosts();
                 } else {
-                    e.target.value = "";
-                    e.target.placeholder = "DENIED";
+                    e.target.value = ""; e.target.placeholder = "DENIED";
                 }
             }
         }
@@ -122,29 +143,46 @@
             const { data: posts } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
             const container = document.getElementById('feed-container');
             container.innerHTML = "";
-
-            if (posts && posts.length > 0) {
-                posts.forEach(post => {
-                    container.innerHTML += `
-                        <div class="post">
-                            <div style="padding:15px; font-size:11px; color:#444; letter-spacing:2px;">ANONYMOUS CREATOR</div>
-                            <div class="content-container">
-                                <img src="${post.content_url}" class="post-img">
-                                ${post.is_premium ? `
-                                    <div class="premium-overlay">
-                                        <div style="font-size:24px; margin-bottom:15px;">🔒</div>
-                                        <button class="unlock-btn">Unlock for $${post.price}</button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <div style="padding:15px;">
-                                <p style="font-size:13px; color:#888; margin:0;">${post.description || ''}</p>
-                            </div>
+            posts?.forEach(post => {
+                container.innerHTML += `
+                    <div class="post">
+                        <div style="padding:15px; font-size:10px; color:#444; letter-spacing:2px; font-weight:bold;">AUTHORIZED CREATOR</div>
+                        <div class="content-container">
+                            <img src="${post.content_url}" class="post-img">
+                            ${post.is_premium ? `
+                                <div class="premium-overlay">
+                                    <div style="font-size:24px; margin-bottom:15px;">🔒</div>
+                                    <button class="unlock-btn">Unlock for $${post.price || '10.00'}</button>
+                                </div>` : ''}
                         </div>
-                    `;
-                });
-            } else {
-                container.innerHTML = "<p style='text-align:center; opacity:0.2;'>No hay publicaciones aún.</p>";
+                        <div style="padding:15px;">
+                            <p style="font-size:13px; color:#999; margin:0;">${post.description || ''}</p>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function toggleUpload() {
+            const panel = document.getElementById('upload-panel');
+            panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        async function publishPost() {
+            const url = document.getElementById('post-url').value;
+            const desc = document.getElementById('post-desc').value;
+            const premium = document.getElementById('post-premium').checked;
+
+            if(!url) return alert("Please add an Image URL");
+
+            const { error } = await _supabase.from('posts').insert([
+                { content_url: url, description: desc, is_premium: premium, price: premium ? 10.00 : 0 }
+            ]);
+
+            if(!error) {
+                toggleUpload();
+                loadPosts();
+                document.getElementById('post-url').value = "";
+                document.getElementById('post-desc').value = "";
             }
         }
     </script>
