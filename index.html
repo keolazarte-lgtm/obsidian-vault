@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN v32 | Recovery</title>
+    <title>OBSIDIAN v33 | Final Polish</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,7 +12,7 @@
             --bg-deep: #05000a; 
             --border: rgba(154, 0, 255, 0.3); 
             --gold: #FFD700; 
-            --glass: rgba(15, 15, 15, 0.8); 
+            --glass: rgba(15, 15, 15, 0.9); 
         }
 
         * { box-sizing: border-box; }
@@ -22,7 +22,7 @@
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; 
         }
 
-        /* --- LOGIN (BLINDADO) --- */
+        /* --- LOGIN --- */
         #login-view { 
             position: fixed; inset: 0; background: #000; z-index: 10000; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
@@ -31,32 +31,41 @@
         .logo-glow { position: absolute; width: 140px; height: 140px; background: var(--accent); filter: blur(60px); opacity: 0.5; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 3s infinite; }
         .diamond-logo { position: relative; width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 20px var(--accent); z-index: 2; }
         .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
-        @keyframes pulse { 0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.3); } }
+        
+        .input-wrapper { position: relative; width: 280px; border-bottom: 1px solid var(--accent); margin-bottom: 30px; display: flex; align-items: center; }
+        #pass { background:none; border:none; color:var(--accent); text-align:center; padding:15px; letter-spacing:5px; outline:none; width: 100%; font-size: 16px; }
+        .btn-t { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; padding: 10px; }
 
         /* --- APP CORE --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
         .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
-        .content { flex: 1; overflow-y: auto; padding-bottom: 90px; }
+        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 
-        /* --- FEED POSTS --- */
-        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px; border-radius: 20px; overflow: hidden; }
-        .post-img { width: 100%; aspect-ratio: 1/1; position: relative; background: #111; }
+        /* --- FEED COMPACTO --- */
+        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px auto; width: 90%; max-width: 400px; border-radius: 20px; overflow: hidden; }
+        .post-header { padding: 10px 15px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+        .post-img { width: 100%; aspect-ratio: 4/3; position: relative; background: #111; }
         .post-img img { width: 100%; height: 100%; object-fit: cover; }
-        .locked { position: absolute; inset: 0; backdrop-filter: blur(25px); background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
-        /* --- FLOATING MENU --- */
+        .locked { position: absolute; inset: 0; backdrop-filter: blur(20px); background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .post-actions { padding: 12px 15px; display: flex; gap: 20px; color: rgba(255,255,255,0.5); font-size: 18px; }
+
+        /* --- SIDEBAR RECONSTRUIDO --- */
         #sidebar { 
-            position: fixed; top: 75px; left: 15px; width: 220px; background: var(--glass); 
+            position: fixed; top: 75px; left: 15px; width: 240px; background: var(--glass); 
             backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 15px; 
-            z-index: 20000; padding: 15px; transition: 0.3s;
-            opacity: 0; visibility: hidden; transform: translateY(-10px);
+            z-index: 20000; padding: 20px; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0; visibility: hidden; transform: translateX(-20px);
         }
-        #sidebar.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        #sidebar.active { opacity: 1; visibility: visible; transform: translateX(0); }
+        .sidebar-item { padding: 12px 5px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: #ccc; cursor: pointer; }
+        .sidebar-item i { color: var(--accent); width: 20px; text-align: center; }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 19000; }
 
         /* --- NAV --- */
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(0,0,0,0.9); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
         .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 30px; border: 4px solid #000; box-shadow: 0 0 20px var(--accent); cursor: pointer; }
+        
+        @keyframes pulse { 0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.3); } }
     </style>
 </head>
 <body>
@@ -66,57 +75,96 @@
             <div class="logo-glow"></div>
             <div class="diamond-logo"><span>Ω</span></div>
         </div>
-        <input type="password" id="pass" placeholder="ACCESS KEY" style="background:none; border:none; border-bottom:1px solid var(--accent); color:var(--accent); text-align:center; padding:10px; letter-spacing:5px; outline:none; margin-bottom:30px;">
-        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:40px; cursor:pointer;"><i class="fas fa-chevron-circle-right"></i></button>
+        <div class="input-wrapper">
+            <input type="password" id="pass" placeholder="ACCESS KEY">
+            <button class="btn-t" id="btn-t" onclick="togglePass()">SHOW</button>
+        </div>
+        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:45px; cursor:pointer;"><i class="fas fa-chevron-circle-right"></i></button>
     </div>
 
     <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
     <div id="sidebar">
-        <p style="color:var(--accent); font-size:10px; margin:0; text-align:center;">VAULT BALANCE</p>
-        <h3 style="text-align:center; margin:10px 0;">$ 1,240.50</h3>
+        <div style="text-align:center; padding-bottom: 15px; border-bottom: 1px solid var(--border); margin-bottom: 10px;">
+            <p style="color:var(--accent); font-size:10px; margin:0;">VAULT BALANCE</p>
+            <h2 style="margin:5px 0; font-family:'Cinzel';">$ 1,240.50</h2>
+        </div>
+        <div class="sidebar-item"><i class="fas fa-gem"></i> VIP Area</div>
+        <div class="sidebar-item"><i class="fas fa-chart-line"></i> Estadísticas</div>
+        <div class="sidebar-item"><i class="fas fa-wallet"></i> Billetera</div>
+        <div class="sidebar-item"><i class="fas fa-cog"></i> Ajustes</div>
         <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
-        <div onclick="location.reload()" style="color:#ff4444; font-size:13px; cursor:pointer;"><i class="fas fa-power-off"></i> CERRAR SESIÓN</div>
+        <div class="sidebar-item" onclick="location.reload()" style="color:#ff4444;"><i class="fas fa-power-off"></i> Cerrar Sesión</div>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" onclick="toggleSidebar()" style="color:var(--accent); font-size:20px;"></i>
-            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:30px; height:30px; border-radius:50%; background:var(--accent);"></div>
+            <i class="fas fa-bars" onclick="toggleSidebar()" style="color:var(--accent); font-size:20px; cursor:pointer;"></i>
+            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
+            <div style="width:32px; height:32px; border-radius:50%; border:1px solid var(--accent); background:url('https://i.pravatar.cc/100?u=leo') center/cover;"></div>
         </div>
         
         <div class="content">
             <div class="post-card">
-                <div style="padding:10px; font-size:12px; font-weight:bold;">Diamond_Girl</div>
+                <div class="post-header">Diamond_Girl</div>
                 <div class="post-img">
                     <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=500">
                     <div class="locked">
-                        <i class="fas fa-lock" style="color:var(--gold); font-size:30px;"></i>
-                        <button style="background:var(--gold); border:none; padding:10px 20px; border-radius:20px; margin-top:15px; font-weight:bold;">UNLOCK $15.00</button>
+                        <i class="fas fa-lock" style="color:var(--gold); font-size:24px;"></i>
+                        <button style="background:var(--gold); border:none; padding:8px 16px; border-radius:20px; margin-top:12px; font-weight:bold; font-size:12px; cursor:pointer;">UNLOCK $15.00</button>
                     </div>
+                </div>
+                <div class="post-actions">
+                    <i class="far fa-heart"></i>
+                    <i class="far fa-comment"></i>
+                    <i class="far fa-paper-plane"></i>
+                </div>
+            </div>
+
+            <div class="post-card">
+                <div class="post-header">Obsidian_Admin</div>
+                <div class="post-img">
+                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=500">
+                </div>
+                <div class="post-actions">
+                    <i class="fas fa-heart" style="color:red;"></i>
+                    <i class="far fa-comment"></i>
+                    <i class="far fa-paper-plane"></i>
                 </div>
             </div>
         </div>
 
         <nav>
-            <i class="fas fa-home" style="color:var(--accent)"></i>
-            <i class="fas fa-search" style="color:#555"></i>
+            <i class="fas fa-home" style="color:var(--accent); font-size:22px;"></i>
+            <i class="fas fa-search" style="color:#555; font-size:22px;"></i>
             <div class="nav-add"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" style="color:#555"></i>
-            <i class="fas fa-cog" style="color:#555" onclick="toggleSidebar()"></i>
+            <i class="fas fa-envelope" style="color:#555; font-size:22px;"></i>
+            <i class="fas fa-cog" style="color:#555; font-size:22px;" onclick="toggleSidebar()"></i>
         </nav>
     </div>
 
     <script>
+        function togglePass() {
+            const p = document.getElementById('pass');
+            const b = document.getElementById('btn-t');
+            if (p.type === 'password') {
+                p.type = 'text';
+                b.innerText = 'HIDE';
+            } else {
+                p.type = 'password';
+                b.innerText = 'SHOW';
+            }
+        }
+
         function enter() {
             document.getElementById('login-view').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
         }
+
         function toggleSidebar() {
             const s = document.getElementById('sidebar');
             const o = document.getElementById('overlay');
-            const active = s.classList.toggle('active');
-            o.style.display = active ? 'block' : 'none';
+            const isActive = s.classList.toggle('active');
+            o.style.display = isActive ? 'block' : 'none';
         }
     </script>
 </body>
