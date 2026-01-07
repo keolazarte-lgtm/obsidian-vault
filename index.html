@@ -3,173 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>OBSIDIAN | Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    
+
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --card: #0a0a0a; }
+        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --card: #0d0d0d; }
         
-        /* FONDO PREMIUM RADIAL */
-        body { 
+        body, html { 
             background: radial-gradient(circle at center, #1a0033 0%, #000 100%) no-repeat fixed;
-            color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh;
+            color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden;
         }
 
-        /* LOGIN CON LATIDO */
+        /* --- LOGIN CON LATIDO REAL --- */
         #login-view { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .diamond-pulse { 
+        .diamond-logo { 
             width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); 
-            display: flex; align-items: center; justify-content: center; margin-bottom: 40px; 
-            animation: pulse 2s infinite ease-in-out; box-shadow: 0 0 20px var(--accent);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 50px; 
+            box-shadow: 0 0 20px var(--accent); animation: heartbeat 2s infinite;
         }
-        .diamond-pulse span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
-        @keyframes pulse {
-            0% { transform: rotate(45deg) scale(0.95); box-shadow: 0 0 10px var(--accent); }
-            50% { transform: rotate(45deg) scale(1.05); box-shadow: 0 0 40px var(--accent); }
-            100% { transform: rotate(45deg) scale(0.95); box-shadow: 0 0 10px var(--accent); }
+        .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
+        @keyframes heartbeat {
+            0% { transform: rotate(45deg) scale(1); box-shadow: 0 0 10px var(--accent); }
+            14% { transform: rotate(45deg) scale(1.1); box-shadow: 0 0 30px var(--accent); }
+            28% { transform: rotate(45deg) scale(1); box-shadow: 0 0 10px var(--accent); }
+            42% { transform: rotate(45deg) scale(1.1); box-shadow: 0 0 30px var(--accent); }
+            70% { transform: rotate(45deg) scale(1); box-shadow: 0 0 10px var(--accent); }
         }
 
-        .login-box { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; }
-        .login-input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; outline: none; text-align: center; font-size: 18px; letter-spacing: 4px; }
-        .show-btn { position: absolute; right: 0; background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .input-group { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; }
+        .input-group input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; outline: none; text-align: center; font-size: 18px; letter-spacing: 5px; }
+        .btn-toggle { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; }
 
-        /* ESTRUCTURA OF */
-        .header { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 1000; }
-        .sidebar-btn { font-size: 20px; cursor: pointer; }
+        /* --- UI PRINCIPAL --- */
+        #main-app { display: none; height: 100vh; flex-direction: column; }
+        .header { height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; }
         
-        .main-app { height: 100vh; overflow-y: auto; padding-top: 60px; padding-bottom: 80px; }
-        
-        /* EDITOR PROFESIONAL */
-        #editor-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
-        .editor-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--border); }
-        .editor-body { flex: 1; display: flex; align-items: center; justify-content: center; background: #050505; position: relative; overflow: hidden; }
-        #image-to-edit { max-width: 100%; max-height: 80vh; }
-        
-        .editor-footer { background: #000; padding: 20px; border-top: 1px solid var(--border); }
-        .tool-bar { display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; }
-        .publish-btn { width: 100%; background: #fff; color: #000; border: none; padding: 15px; border-radius: 30px; font-weight: bold; text-transform: uppercase; }
+        /* HISTORIAS */
+        .stories-container { display: flex; gap: 15px; padding: 15px; background: rgba(255,255,255,0.02); }
+        .story-circle { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); position: relative; padding: 2px; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .add-story { position: absolute; bottom: 0; right: 0; background: var(--accent); width: 20px; height: 20px; border-radius: 50%; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 10px; }
 
-        /* NAVBAR INFERIOR */
+        /* FEED */
+        .feed { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+        .post-card { background: var(--card); margin-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .post-header { padding: 12px; display: flex; align-items: center; gap: 10px; }
+        .post-img { width: 100%; display: block; }
+
+        /* CONFIGURACIÓN */
+        #settings-view { display: none; padding: 20px; }
+        .setting-item { background: #0a0a0a; padding: 20px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1a1a1a; display: flex; justify-content: space-between; }
+
+        /* EDITOR PRO */
+        #editor-view { position: fixed; inset: 0; background: #000; z-index: 20000; display: none; flex-direction: column; }
+        .editor-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #1a1a1a; }
+        .editor-canvas { flex: 1; display: flex; align-items: center; justify-content: center; background: #050505; overflow: hidden; }
+        #image-edit { max-width: 100%; }
+
+        /* BOTTOM NAV */
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-add { width: 48px; height: 48px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 15px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
-
-        .hidden { display: none !important; }
+        .nav-center { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
     <div id="login-view">
-        <div class="diamond-pulse"><span>Ω</span></div>
-        <div class="login-box">
-            <input type="password" id="access-pass" class="login-input" placeholder="••••••••">
-            <button class="show-btn" onclick="togglePass()">SHOW</button>
+        <div class="diamond-logo"><span>Ω</span></div>
+        <div class="input-group">
+            <input type="password" id="pass-field" placeholder="ACCESS KEY">
+            <button class="btn-toggle" onclick="togglePass()">SHOW</button>
         </div>
-        <button onclick="doLogin()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
+        <button onclick="enterApp()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
-    <div id="app-content" class="hidden">
+    <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars sidebar-btn"></i>
+            <i class="fas fa-bars" onclick="alert('Menu Lateral en construcción')"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:30px; height:30px; border-radius:50%; border:1px solid var(--accent); background: url('https://i.pravatar.cc/100?u=9') center/cover;"></div>
+            <img src="https://i.pravatar.cc/100?u=12" style="width:30px; border-radius:50%; border:1px solid var(--accent);">
         </div>
 
-        <div class="main-app">
-            <div id="feed" style="margin-top:100px; text-align:center; color:#222; font-family:'Cinzel';">THE VAULT IS LOCKED</div>
+        <div id="home-view" class="feed">
+            <div class="stories-container">
+                <div class="story-circle" onclick="openFile()">
+                    <img src="https://i.pravatar.cc/100?u=12">
+                    <div class="add-story"><i class="fas fa-plus"></i></div>
+                </div>
+            </div>
+            <div class="post-card">
+                <div class="post-header">
+                    <div style="width:35px; height:35px; border-radius:50%; background:var(--accent);"></div>
+                    <span style="font-weight:bold; font-size:14px;">OBSIDIAN_OFFICIAL</span>
+                </div>
+                <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=800" class="post-img">
+                <div style="padding:15px; font-size:12px; color:#888;">Bienvenido al Vault privado.</div>
+            </div>
+        </div>
+
+        <div id="settings-view">
+            <h2 style="font-family:'Cinzel'; margin-bottom:30px;">SETTINGS</h2>
+            <div class="setting-item"><span>Privacidad</span><i class="fas fa-shield-alt"></i></div>
+            <div class="setting-item"><span>Idioma</span><span>Español</span></div>
+            <div class="setting-item" onclick="location.reload()" style="color:#ff4444;"><span>Cerrar Sesión</span><i class="fas fa-power-off"></i></div>
         </div>
 
         <nav>
-            <i class="fas fa-home"></i>
+            <i class="fas fa-home" onclick="showTab('home')"></i>
             <i class="fas fa-search"></i>
-            <div class="nav-add" onclick="triggerFile()"><i class="fas fa-plus"></i></div>
+            <div class="nav-center" onclick="openFile()"><i class="fas fa-plus"></i></div>
             <i class="fas fa-envelope"></i>
-            <i class="fas fa-cog" onclick="alert('Configuración: Idioma, Privacidad, Perfil')"></i>
+            <i class="fas fa-cog" onclick="showTab('settings')"></i>
         </nav>
     </div>
 
     <div id="editor-view">
         <div class="editor-header">
-            <i class="fas fa-times" onclick="closeEditor()" style="font-size:20px;"></i>
-            <span style="font-family:'Cinzel'; font-size:12px;">NUEVA PUBLICACIÓN</span>
-            <i class="fas fa-check" style="color:var(--accent);" onclick="applyCrop()"></i>
+            <i class="fas fa-times" onclick="closeEditor()"></i>
+            <span style="font-family:'Cinzel'; font-size:12px;">EDITOR</span>
+            <button onclick="publish()" style="background:var(--accent); color:#fff; border:none; padding:8px 15px; border-radius:20px; font-weight:bold;">POST</button>
         </div>
-        <div class="editor-body">
-            <img id="image-to-edit" src="">
+        <div class="editor-canvas">
+            <img id="image-edit" src="">
         </div>
-        <div class="editor-footer">
-            <div class="tool-bar">
-                <i class="fas fa-crop-alt" style="font-size:22px;" onclick="startCropping()"></i>
-                <i class="fas fa-sun" style="font-size:22px;" onclick="adjustBrightness()"></i>
-                <i class="fas fa-font" style="font-size:22px;" onclick="alert('Texto habilitado')"></i>
-            </div>
-            <button class="publish-btn" onclick="publish()">PUBLICAR AHORA</button>
+        <div style="padding:20px; display:flex; justify-content:space-around; background:#000;">
+            <i class="fas fa-crop-alt" style="font-size:22px;" onclick="initCropper()"></i>
+            <i class="fas fa-check" style="font-size:22px; color:var(--accent);" onclick="applyCrop()"></i>
+            <i class="fas fa-sun" style="font-size:22px;" onclick="alert('Brillo ajustado automáticamente')"></i>
         </div>
     </div>
 
-    <input type="file" id="file-input" hidden accept="image/*,video/*" onchange="handleMedia(event)">
+    <input type="file" id="input-file" hidden accept="image/*" onchange="loadMedia(event)">
 
     <script>
-        let cropper;
+        let myCropper;
 
-        // LOGIN ENGINE
+        // --- FUNCIONES DE LOGIN ---
         function togglePass() {
-            const p = document.getElementById('access-pass');
-            p.type = p.type === 'password' ? 'text' : 'password';
+            const field = document.getElementById('pass-field');
+            const btn = document.querySelector('.btn-toggle');
+            if(field.type === 'password') {
+                field.type = 'text';
+                btn.innerText = 'HIDE';
+            } else {
+                field.type = 'password';
+                btn.innerText = 'SHOW';
+            }
         }
 
-        function doLogin() {
-            document.getElementById('login-view').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('hidden');
+        function enterApp() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
         }
 
-        // MEDIA ENGINE
-        function triggerFile() { document.getElementById('file-input').click(); }
+        // --- FUNCIONES DE NAVEGACIÓN ---
+        function showTab(tab) {
+            document.getElementById('home-view').style.display = tab === 'home' ? 'block' : 'none';
+            document.getElementById('settings-view').style.display = tab === 'settings' ? 'block' : 'none';
+        }
 
-        function handleMedia(e) {
-            const file = e.target.files[0];
+        // --- FUNCIONES DEL EDITOR ---
+        function openFile() { document.getElementById('input-file').click(); }
+
+        function loadMedia(e) {
             const reader = new FileReader();
             reader.onload = function(f) {
-                document.getElementById('image-to-edit').src = f.target.result;
+                document.getElementById('image-edit').src = f.target.result;
                 document.getElementById('editor-view').style.display = 'flex';
-                document.getElementById('app-content').classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
+            }
+            reader.readAsDataURL(e.target.files[0]);
         }
 
-        // CROP ENGINE (RECORTE LIBRE)
-        function startCropping() {
-            if(cropper) cropper.destroy();
-            cropper = new Cropper(document.getElementById('image-to-edit'), {
-                aspectRatio: NaN, // LIBRE
-                viewMode: 1,
-                background: false
+        function initCropper() {
+            if(myCropper) myCropper.destroy();
+            myCropper = new Cropper(document.getElementById('image-edit'), {
+                aspectRatio: NaN,
+                viewMode: 1
             });
         }
 
         function applyCrop() {
-            if(!cropper) return;
-            const canvas = cropper.getCroppedCanvas();
-            document.getElementById('image-to-edit').src = canvas.toDataURL();
-            cropper.destroy();
-            cropper = null;
-        }
-
-        function adjustBrightness() {
-            const img = document.getElementById('image-to-edit');
-            img.style.filter = "brightness(1.2) contrast(1.1)";
+            if(!myCropper) return;
+            const canvas = myCropper.getCroppedCanvas();
+            document.getElementById('image-edit').src = canvas.toDataURL();
+            myCropper.destroy();
+            myCropper = null;
         }
 
         function closeEditor() {
-            if(cropper) cropper.destroy();
+            if(myCropper) myCropper.destroy();
             document.getElementById('editor-view').style.display = 'none';
-            document.getElementById('app-content').classList.remove('hidden');
         }
 
         function publish() {
-            alert("✅ CONTENIDO PUBLICADO EN EL VAULT");
+            alert("Publicando en tu Vault...");
             closeEditor();
         }
     </script>
