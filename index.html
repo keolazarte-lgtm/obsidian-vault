@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBSIDIAN | Private Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@200;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@200;400;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #9A00FF; --bg: #000; }
         
@@ -14,7 +14,7 @@
             min-height: 100vh; overflow: hidden; position: relative;
         }
 
-        /* FONDO ATMOSFÉRICO REFINADO */
+        /* FONDO ATMOSFÉRICO */
         body::before {
             content: ""; position: absolute; width: 200%; height: 200%;
             background: radial-gradient(circle at 50% 50%, #0d001a 0%, #000 70%);
@@ -22,54 +22,61 @@
         }
         @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* PANTALLA DE ACCESO (DIAMANTE) */
-        #access-screen { text-align: center; z-index: 10; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* PANTALLA DE ACCESO */
+        #access-screen { text-align: center; z-index: 10; transition: 1.5s ease; width: 100%; max-width: 400px; }
         
         .gate-diamond { 
             width: 60px; height: 60px; border: 1px solid rgba(255,255,255,0.2); 
             transform: rotate(45deg); display: flex; align-items: center; justify-content: center; 
             margin: 0 auto 50px; box-shadow: 0 0 50px rgba(154, 0, 255, 0.1); 
-            transition: 0.5s;
         }
         .gate-diamond span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 24px; color: rgba(255,255,255,0.5); }
         
-        .access-input { 
-            background: none; border: none; border-bottom: 1px solid #111; 
-            color: var(--accent); font-family: 'JetBrains Mono', monospace; 
-            text-align: center; font-size: 11px; letter-spacing: 6px; 
-            width: 200px; padding: 15px; outline: none; transition: 0.5s; 
-        }
-        .access-input:focus { border-color: var(--accent); width: 240px; }
+        /* CONTENEDOR INPUT CON OJO */
+        .input-wrapper { position: relative; width: 280px; margin: 0 auto; }
 
-        /* DASHBOARD MINIMALISTA */
+        .access-input { 
+            background: none; border: none; border-bottom: 1px solid #222; 
+            color: var(--accent); font-family: 'JetBrains Mono', monospace; 
+            text-align: center; font-size: 18px; /* LETRA MÁS GRANDE */
+            letter-spacing: 4px; width: 100%; padding: 15px 0; outline: none; transition: 0.5s; 
+        }
+        .access-input:focus { border-color: var(--accent); }
+
+        .toggle-pass {
+            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #444; cursor: pointer;
+            font-size: 12px; font-family: 'Inter', sans-serif; text-transform: uppercase;
+            letter-spacing: 1px; transition: 0.3s;
+        }
+        .toggle-pass:hover { color: var(--accent); }
+
+        /* DASHBOARD */
         #dashboard { display: none; text-align: center; opacity: 0; transition: 2.5s ease; width: 100%; }
         
         .vault-header {
-            font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 15px;
-            color: rgba(255,255,255,0.15); margin-bottom: 30px; text-transform: uppercase;
+            font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 15px;
+            color: rgba(255,255,255,0.15); margin-bottom: 30px;
         }
 
         #balance {
             font-size: clamp(80px, 20vw, 160px); font-weight: 200; letter-spacing: -10px;
             background: linear-gradient(180deg, #fff 40%, #333 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 10px 0; filter: drop-shadow(0 0 40px rgba(154, 0, 255, 0.05));
+            margin: 10px 0;
         }
 
         #user-tag {
-            font-family: 'JetBrains Mono', monospace; font-size: 7px; letter-spacing: 6px;
-            color: #1a1a1a; text-transform: uppercase; margin-top: 30px; display: block;
-            transition: 1s;
+            font-family: 'JetBrains Mono', monospace; 
+            font-size: 12px; /* LETRA MÁS GRANDE */
+            letter-spacing: 4px; color: #444; text-transform: uppercase; margin-top: 30px; display: block;
         }
-        #dashboard:hover #user-tag { color: #444; }
 
-        /* BOTÓN DE SALIDA SEMI-INVISIBLE */
         .btn-logout {
             position: fixed; top: 40px; right: 40px; background: none; border: none;
-            color: #000; font-size: 7px; letter-spacing: 4px; text-transform: uppercase;
-            cursor: pointer; opacity: 0; transition: 1s; z-index: 100;
+            color: #222; font-size: 9px; letter-spacing: 4px; cursor: pointer; opacity: 0; transition: 1s;
         }
-        body:hover .btn-logout { opacity: 0.3; }
+        body:hover .btn-logout { opacity: 0.5; }
         .btn-logout:hover { color: var(--accent); opacity: 1; }
 
         .hidden { display: none !important; }
@@ -77,17 +84,20 @@
 </head>
 <body>
 
-    <button id="logout-btn" class="btn-logout hidden" onclick="location.reload()">Terminate Session</button>
+    <button id="logout-btn" class="btn-logout hidden" onclick="location.reload()">Terminate</button>
 
     <div id="access-screen">
         <div class="gate-diamond"><span>Ω</span></div>
-        <input type="password" id="pass" class="access-input" placeholder="ACCESS KEY" onkeypress="handleKey(event)">
+        <div class="input-wrapper">
+            <input type="password" id="pass" class="access-input" placeholder="PASSWORD" onkeypress="handleKey(event)">
+            <button class="toggle-pass" onclick="toggleVisibility()">Show</button>
+        </div>
     </div>
 
     <div id="dashboard">
         <div class="vault-header">Obsidian Kingdom</div>
         <div id="balance">$0.00</div>
-        <span id="user-tag">Authorized Protocol</span>
+        <span id="user-tag">Initializing...</span>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -96,33 +106,42 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
 
+        function toggleVisibility() {
+            const input = document.getElementById('pass');
+            const btn = document.querySelector('.toggle-pass');
+            if (input.type === "password") {
+                input.type = "text";
+                btn.innerText = "Hide";
+            } else {
+                input.type = "password";
+                btn.innerText = "Show";
+            }
+        }
+
         async function handleKey(e) {
             if (e.key === 'Enter') {
                 const input = document.getElementById('pass');
                 const key = input.value;
-                input.placeholder = "VERIFYING...";
+                input.placeholder = "WAIT...";
                 
                 const { data } = await _obsidian.from('users').select('*').eq('access_key', key).single();
 
                 if (data) {
-                    document.getElementById('user-tag').innerText = `Welcome, ${data.user_name}`;
+                    document.getElementById('user-tag').innerText = `Authorized: ${data.user_name}`;
                     unlock();
                 } else {
                     input.value = "";
-                    input.placeholder = "DENIED";
+                    input.placeholder = "WRONG KEY";
                 }
             }
         }
 
         function unlock() {
             document.getElementById('access-screen').style.opacity = "0";
-            document.getElementById('access-screen').style.transform = "scale(0.9)";
-            
             setTimeout(() => {
                 document.getElementById('access-screen').classList.add('hidden');
                 document.getElementById('dashboard').style.display = "block";
                 document.getElementById('logout-btn').classList.remove('hidden');
-                
                 setTimeout(() => { 
                     document.getElementById('dashboard').style.opacity = "1"; 
                     syncBalance(); 
@@ -135,9 +154,8 @@
             const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
             
             let start = 0;
-            const duration = 60; 
             const step = () => {
-                start += total / duration;
+                start += total / 60;
                 if (start < total) {
                     document.getElementById('balance').innerText = "$" + start.toFixed(2);
                     requestAnimationFrame(step);
