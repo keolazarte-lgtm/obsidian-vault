@@ -4,46 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OBSIDIAN | Private Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --card: #0a0a0a; }
+        :root { --accent: #9A00FF; --bg: #000; --sidebar: #0a0a0a; --border: #1a1a1a; }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        .view { display: none; min-height: 100vh; padding-bottom: 90px; }
+        /* SIDEBAR ESTILO ONLYFANS */
+        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100vh; background: var(--sidebar); border-right: 1px solid var(--border); transition: 0.3s; z-index: 3000; padding: 20px; box-sizing: border-box; }
+        .sidebar.open { left: 0; }
+        .sidebar-header { display: flex; align-items: center; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+        .profile-pic { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .nav-link { display: flex; align-items: center; gap: 15px; padding: 12px; color: #ccc; text-decoration: none; font-size: 14px; border-radius: 10px; transition: 0.2s; cursor: pointer; }
+        .nav-link:hover { background: #151515; color: var(--accent); }
+        .nav-link i { width: 20px; text-align: center; }
+
+        /* VISTAS */
+        .view { display: none; min-height: 100vh; padding-top: 60px; padding-bottom: 90px; }
         .active-view { display: block; }
 
-        /* LOGIN CON "SHOW" RESTAURADO */
-        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); }
-        .logo-diamond { width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154,0,255,0.3); }
-        .logo-diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 32px; color: var(--accent); }
+        /* HEADER SUPERIOR FIJO */
+        .top-bar { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; z-index: 2000; }
+        
+        /* LOGIN CON "SHOW" */
+        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); padding-top: 0; }
         .login-box { position: relative; width: 280px; border-bottom: 1px solid #333; display: flex; align-items: center; }
         .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono'; text-align: center; font-size: 18px; width: 100%; padding: 15px 0; outline: none; letter-spacing: 5px; }
         .show-btn { position: absolute; right: 45px; background: none; border: none; color: #444; font-size: 9px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
-        .login-btn { background: none; border: none; color: var(--accent); font-size: 20px; cursor: pointer; padding: 10px; opacity: 0.3; transition: 0.3s; }
-        .login-btn.active { opacity: 1; text-shadow: 0 0 10px var(--accent); }
 
-        /* CONFIGURACIÓN EXPANDIDA */
-        .settings-container { padding: 20px; }
-        .settings-card { background: #080808; border-radius: 20px; border: 1px solid #111; overflow: hidden; margin-bottom: 20px; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid #111; }
-        .setting-row:last-child { border-bottom: none; }
-        .setting-info { display: flex; align-items: center; gap: 15px; }
-        .setting-info i { color: var(--accent); width: 20px; text-align: center; }
-        .setting-label { font-size: 13px; font-weight: 500; }
-        
-        select { background: #000; color: #fff; border: 1px solid #222; padding: 5px 10px; border-radius: 5px; font-size: 11px; outline: none; }
+        /* PERFIL / CONFIGURACIÓN */
+        .profile-editor { padding: 20px; max-width: 600px; margin: auto; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input, .input-group textarea { width: 100%; background: #080808; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; }
 
-        /* NAV CON ICONOS FIJOS */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #111; z-index: 1000; }
-        .nav-item { font-size: 22px; color: #333; transition: 0.3s; cursor: pointer; }
-        .nav-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        /* NAV BAR INFERIOR */
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
+        .nav-item { font-size: 20px; color: #444; cursor: pointer; }
+        .nav-item.active { color: var(--accent); }
 
-        /* EDITOR MAESTRO */
-        #upload-panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
-        .canvas-area { position: relative; flex-grow: 1; background: #050505; display: flex; align-items: center; justify-content: center; touch-action: none; }
-        #canvas-editor { max-width: 100%; max-height: 60vh; background: #000; box-shadow: 0 0 50px rgba(0,0,0,1); }
-
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 2500; }
         .hidden { display: none !important; }
         .loading-spin { animation: spin 1s linear infinite; }
         @keyframes spin { from {transform: rotate(0deg)} to {transform: rotate(360deg)} }
@@ -51,84 +51,67 @@
 </head>
 <body>
 
-    <div id="login-view" class="view active-view">
-        <div class="logo-diamond"><span>Ω</span></div>
-        <div class="login-box">
-            <input type="password" id="pass" class="access-input" placeholder="••••••••" oninput="checkInput(this)" onkeypress="handleKey(event)">
-            <button class="show-btn" onclick="togglePass(this)">Show</button>
-            <button id="enter-btn" class="login-btn" onclick="validateAccess()"><i class="fas fa-arrow-right"></i></button>
+    <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://via.placeholder.com/50" class="profile-pic" id="side-avatar">
+            <div>
+                <div id="side-name" style="font-weight: 600; font-size: 14px;">User</div>
+                <div id="side-handle" style="font-size: 12px; color: #666;">@obsidian_user</div>
+            </div>
         </div>
-        <div id="login-error" style="color: #ff4444; font-size: 10px; margin-top: 20px; letter-spacing: 2px;"></div>
+        <div class="nav-link" onclick="showView('home')"><i class="fas fa-home"></i> Inicio</div>
+        <div class="nav-link" onclick="showView('profile-edit')"><i class="fas fa-user-circle"></i> Mi Perfil</div>
+        <div class="nav-link"><i class="fas fa-bookmark"></i> Colecciones</div>
+        <div class="nav-link"><i class="fas fa-vault"></i> Bóveda</div>
+        <div class="nav-link" id="admin-only-link" onclick="toggleUpload()"><i class="fas fa-plus-square"></i> Nueva Publicación</div>
+        <div class="nav-link" style="margin-top: 20px; color: #ff4444;" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</div>
+    </div>
+
+    <div id="login-view" class="view active-view">
+        <div style="width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px;">
+            <span style="transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 32px; color: var(--accent);">Ω</span>
+        </div>
+        <div class="login-box">
+            <input type="password" id="pass" class="access-input" placeholder="••••••••" oninput="checkInput(this)">
+            <button class="show-btn" onclick="togglePass(this)">Show</button>
+            <button id="enter-btn" style="background:none; border:none; color:var(--accent); font-size:20px; opacity:0.3;" onclick="validateAccess()"><i class="fas fa-arrow-right"></i></button>
+        </div>
     </div>
 
     <div id="main-app" class="hidden">
-        
+        <div class="top-bar">
+            <i class="fas fa-bars" onclick="toggleMenu()" style="font-size: 20px; cursor: pointer;"></i>
+            <span style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 14px;">OBSIDIAN</span>
+            <i class="fas fa-search" style="font-size: 18px; color: #444;"></i>
+        </div>
+
         <div id="view-home" class="view active-view">
-            <header style="padding:15px; text-align:center; border-bottom:1px solid #111;">
-                <h1 style="font-family:'Cinzel'; font-size:14px; letter-spacing:8px; color:var(--accent); margin:0;">OBSIDIAN</h1>
-            </header>
-            <div id="feed-container" style="padding:10px;"></div>
+            <div id="feed-container" style="padding: 10px;"></div>
         </div>
 
-        <div id="view-msgs" class="view">
-            <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">INBOX</h2></header>
-            <div style="padding:40px; text-align:center; color:#333; font-size:11px; letter-spacing:1px;">NO RECENT MESSAGES</div>
-        </div>
-
-        <div id="view-settings" class="view">
-            <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">SETTINGS</h2></header>
-            <div class="settings-container">
-                <div class="settings-card">
-                    <div class="setting-row">
-                        <div class="setting-info"><i class="fas fa-user-shield"></i> <span class="setting-label">Account Type</span></div>
-                        <span id="role-tag" style="font-size:9px; background:var(--accent); padding:3px 8px; border-radius:10px; font-weight:bold;">USER</span>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-info"><i class="fas fa-globe"></i> <span class="setting-label">Language</span></div>
-                        <select onchange="updateLang(this.value)">
-                            <option value="es">Español</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-info"><i class="fas fa-bell"></i> <span class="setting-label">Notifications</span></div>
-                        <input type="checkbox" checked>
-                    </div>
+        <div id="view-profile-edit" class="view">
+            <div class="profile-editor">
+                <h3 style="font-family: 'Cinzel'; font-size: 14px; border-bottom: 1px solid #111; padding-bottom: 10px;">EDITAR PERFIL</h3>
+                <div class="input-group">
+                    <label>Nombre de usuario</label>
+                    <input type="text" id="edit-handle" value="@ianvega21">
                 </div>
-
-                <div class="settings-card">
-                    <div class="setting-row" onclick="location.reload()" style="color:#ff4444;">
-                        <div class="setting-info"><i class="fas fa-power-off"></i> <span class="setting-label">Logout</span></div>
-                    </div>
+                <div class="input-group">
+                    <label>Biografía</label>
+                    <textarea id="edit-bio" rows="4">I take control — you feel the pleasure.</textarea>
                 </div>
+                <div class="input-group">
+                    <label>Idioma de la plataforma</label>
+                    <select style="width:100%; background:#080808; border:1px solid #1a1a1a; color:#fff; padding:12px; border-radius:8px;">
+                        <option>Español</option>
+                        <option>English</option>
+                    </select>
+                </div>
+                <button style="width:100%; background:var(--accent); border:none; color:#fff; padding:15px; border-radius:30px; font-weight:600;">GUARDAR CAMBIOS</button>
             </div>
         </div>
-
-        <div id="upload-panel">
-            <div style="display:flex; justify-content:space-between; padding:20px; background:#000;">
-                <button onclick="toggleUpload()" style="background:none; border:none; color:#555;"><i class="fas fa-times"></i></button>
-                <button onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 25px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLISH</button>
-            </div>
-            <div class="canvas-area"><canvas id="canvas-editor"></canvas></div>
-            <div style="padding:15px; display:flex; gap:20px; justify-content:center; background:#000; border-top:1px solid #111;">
-                <span style="font-size:24px;" onclick="addLayer('🔥')">🔥</span>
-                <span style="font-size:24px;" onclick="addLayer('😈')">😈</span>
-                <span style="font-size:24px;" onclick="addLayer('🔒')">🔒</span>
-                <button onclick="addLayer(prompt('Texto:'))" style="background:#111; color:#fff; border:1px solid #333; border-radius:5px; padding:5px 15px;">T</button>
-            </div>
-            <div style="padding:20px;">
-                <input type="file" id="file-upload" hidden onchange="handleFile(event)">
-                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:15px; background:#111; color:#fff; border:1px solid #222; border-radius:12px; margin-bottom:10px; font-size:12px;">SELECT FROM GALLERY</button>
-                <input type="text" id="post-title" placeholder="Drop Title" style="width:100%; background:#000; border:1px solid #222; color:#fff; padding:15px; border-radius:12px; box-sizing:border-box;">
-            </div>
-        </div>
-
-        <nav>
-            <i class="fas fa-home nav-item active" onclick="showView('home', this)"></i>
-            <i id="nav-upload" class="fas fa-plus-circle nav-item hidden" style="font-size:35px; color:#fff;" onclick="toggleUpload()"></i>
-            <i class="fas fa-envelope nav-item" onclick="showView('msgs', this)"></i>
-            <i class="fas fa-cog nav-item" onclick="showView('settings', this)"></i>
-        </nav>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -139,16 +122,20 @@
 
         let userRole = 'user';
 
-        // --- LOGIN LOGIC ---
-        function checkInput(el) { document.getElementById('enter-btn').style.opacity = el.value.length > 3 ? "1" : "0.3"; }
-        
-        function togglePass(btn) { 
-            const p = document.getElementById('pass'); 
+        function toggleMenu() {
+            const side = document.getElementById('sidebar');
+            const over = document.getElementById('overlay');
+            side.classList.toggle('open');
+            over.style.display = side.classList.contains('open') ? 'block' : 'none';
+        }
+
+        function togglePass(btn) {
+            const p = document.getElementById('pass');
             p.type = p.type === 'password' ? 'text' : 'password';
             btn.innerText = p.type === 'password' ? 'Show' : 'Hide';
         }
 
-        async function handleKey(e) { if (e.key === 'Enter') validateAccess(); }
+        function checkInput(el) { document.getElementById('enter-btn').style.opacity = el.value.length > 3 ? "1" : "0.3"; }
 
         async function validateAccess() {
             const pass = document.getElementById('pass').value;
@@ -159,67 +146,36 @@
             
             if (data) {
                 userRole = data.role;
-                setupInterface();
+                if(userRole !== 'creator') document.getElementById('admin-only-link').style.display = 'none';
+                document.getElementById('side-name').innerText = data.full_name || 'Authorized User';
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 loadPosts();
             } else {
                 btn.innerHTML = '<i class="fas fa-arrow-right"></i>';
-                document.getElementById('login-error').innerText = "ACCESS DENIED";
-                setTimeout(() => document.getElementById('login-error').innerText = "", 2000);
+                alert("ACCESS DENIED");
             }
         }
 
-        function setupInterface() {
-            if(userRole === 'creator') {
-                document.getElementById('nav-upload').classList.remove('hidden');
-                document.getElementById('role-tag').innerText = "CREATOR";
-            }
-        }
-
-        function showView(v, el) {
+        function showView(v) {
             document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
             document.getElementById('view-'+v).classList.add('active-view');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        // (Lógica de Editor y Feed mantenida de v3.5...)
-        const canvas = document.getElementById('canvas-editor');
-        const ctx = canvas.getContext('2d');
-        let img = new Image(); let layers = [];
-        
-        function toggleUpload() { 
-            const p = document.getElementById('upload-panel'); 
-            p.style.display = p.style.display === 'flex' ? 'none' : 'flex'; 
-            if(p.style.display === 'flex') { canvas.width = 1000; canvas.height = 1000; }
-        }
-
-        function handleFile(e) {
-            const reader = new FileReader();
-            reader.onload = (f) => { img.onload = () => draw(); img.src = f.target.result; };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-
-        function addLayer(val) { if(val) { layers.push({val, x:500, y:500}); draw(); } }
-
-        function draw() {
-            ctx.clearRect(0,0,1000,1000);
-            if(img.src) ctx.drawImage(img, 0, 0, 1000, 1000);
-            layers.forEach(l => {
-                ctx.fillStyle = "white"; ctx.font = "bold 80px Inter"; ctx.textAlign = "center";
-                ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 20;
-                ctx.fillText(l.val, l.x, l.y);
-            });
+            toggleMenu();
         }
 
         async function loadPosts() {
             const { data } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
             const container = document.getElementById('feed-container');
             container.innerHTML = data.map(p => `
-                <div style="background:#0a0a0a; border-radius:20px; margin-bottom:25px; border:1px solid #111; overflow:hidden;">
-                    <div style="padding:15px; font-family:'Cinzel'; font-size:10px; color:var(--accent); letter-spacing:2px;">${p.title}</div>
-                    <img src="${p.content_url}" style="width:100%; aspect-ratio:1/1; object-fit:cover;">
+                <div style="background:#0a0a0a; border-radius:15px; margin-bottom:20px; border:1px solid #111; overflow:hidden;">
+                    <div style="padding:15px; display:flex; align-items:center; gap:10px;">
+                        <img src="https://via.placeholder.com/30" style="border-radius:50%;">
+                        <span style="font-size:12px; font-weight:600; color:var(--accent);">${p.title}</span>
+                    </div>
+                    <div style="position:relative;">
+                        <img src="${p.content_url}" style="width:100%; filter: blur(${p.is_premium ? '20px' : '0'});">
+                        ${p.is_premium ? `<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><button style="background:#fff; color:#000; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; font-size:12px;"><i class="fas fa-lock"></i> UNLOCK FOR $10</button></div>` : ''}
+                    </div>
                 </div>`).join('');
         }
     </script>
