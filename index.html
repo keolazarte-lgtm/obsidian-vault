@@ -3,64 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Private Protocol</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>OBSIDIAN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-
+    
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --panel: #0a0a0a; --border: #1a1a1a; }
+        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --card: #0a0a0a; }
         
-        body, html { 
-            background: radial-gradient(circle at center, #1a0033 0%, #000 100%) no-repeat fixed; 
+        /* FONDO PREMIUM RADIAL */
+        body { 
+            background: radial-gradient(circle at center, #1a0033 0%, #000 100%) no-repeat fixed;
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh;
         }
 
-        /* --- LOGIN & LOGO ANIMATION --- */
-        #login-view { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; }
-        
-        .diamond-logo { 
+        /* LOGIN CON LATIDO */
+        #login-view { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .diamond-pulse { 
             width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); 
-            display: flex; align-items: center; justify-content: center; margin-bottom: 50px; 
-            box-shadow: 0 0 30px var(--accent); animation: pulse 2s infinite ease-in-out;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 40px; 
+            animation: pulse 2s infinite ease-in-out; box-shadow: 0 0 20px var(--accent);
         }
-        .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
-
+        .diamond-pulse span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
         @keyframes pulse {
-            0% { box-shadow: 0 0 10px var(--accent); transform: rotate(45deg) scale(0.95); }
-            50% { box-shadow: 0 0 40px var(--accent); transform: rotate(45deg) scale(1.05); }
-            100% { box-shadow: 0 0 10px var(--accent); transform: rotate(45deg) scale(0.95); }
+            0% { transform: rotate(45deg) scale(0.95); box-shadow: 0 0 10px var(--accent); }
+            50% { transform: rotate(45deg) scale(1.05); box-shadow: 0 0 40px var(--accent); }
+            100% { transform: rotate(45deg) scale(0.95); box-shadow: 0 0 10px var(--accent); }
         }
 
-        .input-box { width: 280px; border-bottom: 1px solid #333; position: relative; margin-top: 20px; }
-        .input-box input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; text-align: center; letter-spacing: 5px; outline: none; font-size: 18px; }
-        .show-pass { position: absolute; right: 0; top: 18px; font-size: 10px; font-weight: bold; color: #555; background: none; border: none; cursor: pointer; }
+        .login-box { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; }
+        .login-input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; outline: none; text-align: center; font-size: 18px; letter-spacing: 4px; }
+        .show-btn { position: absolute; right: 0; background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; }
 
-        /* --- EDITOR SYSTEM --- */
-        #editor-view { position: fixed; inset: 0; background: #000; z-index: 9000; display: none; flex-direction: column; }
-        .canvas-wrap { flex: 1; position: relative; background: #050505; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        #edit-img { max-width: 100%; display: block; border-radius: 8px; }
+        /* ESTRUCTURA OF */
+        .header { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; z-index: 1000; }
+        .sidebar-btn { font-size: 20px; cursor: pointer; }
         
-        .draggable-element { 
-            position: absolute; color: white; font-size: 32px; font-weight: bold; cursor: move; 
-            touch-action: none; z-index: 100; text-shadow: 0 0 15px rgba(0,0,0,0.8); user-select: none; 
-        }
+        .main-app { height: 100vh; overflow-y: auto; padding-top: 60px; padding-bottom: 80px; }
+        
+        /* EDITOR PROFESIONAL */
+        #editor-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
+        .editor-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--border); }
+        .editor-body { flex: 1; display: flex; align-items: center; justify-content: center; background: #050505; position: relative; overflow: hidden; }
+        #image-to-edit { max-width: 100%; max-height: 80vh; }
+        
+        .editor-footer { background: #000; padding: 20px; border-top: 1px solid var(--border); }
+        .tool-bar { display: flex; justify-content: space-around; align-items: center; margin-bottom: 20px; }
+        .publish-btn { width: 100%; background: #fff; color: #000; border: none; padding: 15px; border-radius: 30px; font-weight: bold; text-transform: uppercase; }
 
-        /* BARRA DE EMOJIS PRO */
-        .emoji-bar { 
-            display: flex; justify-content: center; gap: 15px; padding: 15px; 
-            background: rgba(10,10,10,0.9); border-top: 1px solid var(--border);
-        }
-        .emoji-btn { font-size: 26px; cursor: pointer; transition: 0.2s; }
-        .emoji-btn:hover { transform: scale(1.3); }
-
-        /* --- UI BASE --- */
-        .top-nav { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; background: rgba(0,0,0,0.8); z-index: 1000; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .btn-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        /* NAVBAR INFERIOR */
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-add { width: 48px; height: 48px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 15px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
 
         .hidden { display: none !important; }
     </style>
@@ -68,144 +62,114 @@
 <body>
 
     <div id="login-view">
-        <div class="diamond-logo"><span>Ω</span></div>
-        <p style="color:var(--accent); font-family:'Cinzel'; font-size:10px; letter-spacing:3px;">SECURITY CHECK</p>
-        <div class="input-box">
-            <input type="password" id="pass" placeholder="••••••••">
-            <button class="show-pass" onclick="toggleShow()">SHOW</button>
+        <div class="diamond-pulse"><span>Ω</span></div>
+        <div class="login-box">
+            <input type="password" id="access-pass" class="login-input" placeholder="••••••••">
+            <button class="show-btn" onclick="togglePass()">SHOW</button>
         </div>
-        <button onclick="login()" style="margin-top:50px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-chevron-right"></i></button>
+        <button onclick="doLogin()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
-    <div id="app" class="hidden">
-        <div class="top-nav">
-            <i class="fas fa-bars" style="font-size:20px;"></i>
-            <span style="font-family:'Cinzel'; color:var(--accent); letter-spacing:5px; font-size:18px;">OBSIDIAN</span>
+    <div id="app-content" class="hidden">
+        <div class="header">
+            <i class="fas fa-bars sidebar-btn"></i>
+            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
             <div style="width:30px; height:30px; border-radius:50%; border:1px solid var(--accent); background: url('https://i.pravatar.cc/100?u=9') center/cover;"></div>
         </div>
 
-        <div id="content" style="padding-top:120px; text-align:center;">
-            <p style="color:#222; font-family:'Cinzel'; letter-spacing:2px;">ENCRYPTED VAULT</p>
+        <div class="main-app">
+            <div id="feed" style="margin-top:100px; text-align:center; color:#222; font-family:'Cinzel';">THE VAULT IS LOCKED</div>
         </div>
 
-        <div class="bottom-nav">
+        <nav>
             <i class="fas fa-home"></i>
             <i class="fas fa-search"></i>
-            <div class="btn-add" onclick="document.getElementById('file-in').click()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-comment-alt"></i>
-            <i class="fas fa-user-shield"></i>
-        </div>
+            <div class="nav-add" onclick="triggerFile()"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope"></i>
+            <i class="fas fa-cog" onclick="alert('Configuración: Idioma, Privacidad, Perfil')"></i>
+        </nav>
     </div>
 
     <div id="editor-view">
-        <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; background: #000;">
-            <i class="fas fa-times" onclick="closeEditor()" style="font-size:20px; color:#555;"></i>
-            <span style="font-family:'Cinzel'; font-size:12px; color:var(--accent);">EDITOR PRO</span>
-            <button onclick="publish()" style="background:var(--accent); color:white; border:none; padding:8px 22px; border-radius:20px; font-weight:bold; box-shadow: 0 0 15px var(--accent);">PUBLICAR</button>
+        <div class="editor-header">
+            <i class="fas fa-times" onclick="closeEditor()" style="font-size:20px;"></i>
+            <span style="font-family:'Cinzel'; font-size:12px;">NUEVA PUBLICACIÓN</span>
+            <i class="fas fa-check" style="color:var(--accent);" onclick="applyCrop()"></i>
         </div>
-
-        <div class="canvas-wrap" id="canvas-wrap">
-            <img id="edit-img">
+        <div class="editor-body">
+            <img id="image-to-edit" src="">
         </div>
-
-        <div class="emoji-bar">
-            <span class="emoji-btn" onclick="putEmoji('🔥')">🔥</span>
-            <span class="emoji-btn" onclick="putEmoji('😈')">😈</span>
-            <span class="emoji-btn" onclick="putEmoji('🔞')">🔞</span>
-            <span class="emoji-btn" onclick="putEmoji('💎')">💎</span>
-            <span class="emoji-btn" onclick="putEmoji('⛓️')">⛓️</span>
-            <span class="emoji-btn" onclick="addText()"><i class="fas fa-font" style="font-size:20px;"></i></span>
-        </div>
-
-        <div style="background:#080808; padding:20px; border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center;">
-            <i class="fas fa-crop-alt" style="font-size:24px;" onclick="startCrop()"></i>
-            <i class="fas fa-check-circle" style="font-size:30px; color:var(--accent);" onclick="applyCrop()"></i>
-            <i class="fas fa-undo" style="font-size:20px; color:#444;" onclick="location.reload()"></i>
+        <div class="editor-footer">
+            <div class="tool-bar">
+                <i class="fas fa-crop-alt" style="font-size:22px;" onclick="startCropping()"></i>
+                <i class="fas fa-sun" style="font-size:22px;" onclick="adjustBrightness()"></i>
+                <i class="fas fa-font" style="font-size:22px;" onclick="alert('Texto habilitado')"></i>
+            </div>
+            <button class="publish-btn" onclick="publish()">PUBLICAR AHORA</button>
         </div>
     </div>
 
-    <input type="file" id="file-in" hidden accept="image/*" onchange="loadFile(event)">
+    <input type="file" id="file-input" hidden accept="image/*,video/*" onchange="handleMedia(event)">
 
     <script>
         let cropper;
 
-        function login() {
-            document.getElementById('login-view').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('login-view').style.display = 'none';
-                document.getElementById('app').classList.remove('hidden');
-            }, 500);
-        }
-
-        function toggleShow() {
-            const p = document.getElementById('pass');
+        // LOGIN ENGINE
+        function togglePass() {
+            const p = document.getElementById('access-pass');
             p.type = p.type === 'password' ? 'text' : 'password';
         }
 
-        function loadFile(e) {
-            const reader = new FileReader();
-            reader.onload = (f) => {
-                document.getElementById('edit-img').src = f.target.result;
-                document.getElementById('editor-view').style.display = 'flex';
-                document.getElementById('app').classList.add('hidden');
-            };
-            reader.readAsDataURL(e.target.files[0]);
+        function doLogin() {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
         }
 
-        function startCrop() {
+        // MEDIA ENGINE
+        function triggerFile() { document.getElementById('file-input').click(); }
+
+        function handleMedia(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(f) {
+                document.getElementById('image-to-edit').src = f.target.result;
+                document.getElementById('editor-view').style.display = 'flex';
+                document.getElementById('app-content').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // CROP ENGINE (RECORTE LIBRE)
+        function startCropping() {
             if(cropper) cropper.destroy();
-            cropper = new Cropper(document.getElementById('edit-img'), {
+            cropper = new Cropper(document.getElementById('image-to-edit'), {
+                aspectRatio: NaN, // LIBRE
                 viewMode: 1,
-                dragMode: 'move',
-                autoCropArea: 1,
-                restore: false,
-                guides: false,
-                center: true,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true
+                background: false
             });
         }
 
         function applyCrop() {
             if(!cropper) return;
             const canvas = cropper.getCroppedCanvas();
-            document.getElementById('edit-img').src = canvas.toDataURL();
+            document.getElementById('image-to-edit').src = canvas.toDataURL();
             cropper.destroy();
             cropper = null;
         }
 
-        function putEmoji(e) { createDraggable(e); }
-        function addText() { const t = prompt("Texto:"); if(t) createDraggable(t); }
-
-        function createDraggable(content) {
-            const el = document.createElement('div');
-            el.className = 'draggable-element';
-            el.innerText = content;
-            document.getElementById('canvas-wrap').appendChild(el);
-            
-            interact(el).draggable({
-                listeners: {
-                    move (event) {
-                        const target = event.target;
-                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                        target.style.transform = `translate(${x}px, ${y}px)`;
-                        target.setAttribute('data-x', x);
-                        target.setAttribute('data-y', y);
-                    }
-                }
-            });
+        function adjustBrightness() {
+            const img = document.getElementById('image-to-edit');
+            img.style.filter = "brightness(1.2) contrast(1.1)";
         }
 
         function closeEditor() {
+            if(cropper) cropper.destroy();
             document.getElementById('editor-view').style.display = 'none';
-            document.getElementById('app').classList.remove('hidden');
-            document.querySelectorAll('.draggable-element').forEach(e => e.remove());
+            document.getElementById('app-content').classList.remove('hidden');
         }
 
         function publish() {
-            alert("✅ Imagen procesada. El recorte y los emojis se han guardado en el servidor.");
+            alert("✅ CONTENIDO PUBLICADO EN EL VAULT");
             closeEditor();
         }
     </script>
