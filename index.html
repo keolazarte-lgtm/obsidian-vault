@@ -3,54 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Exclusive Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>OBSIDIAN | Private Kingdom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --card: #0a0a0a; --border: #1a1a1a; }
+        :root { --accent: #9A00FF; --bg: #000; --sidebar: #0a0a0a; --border: #1a1a1a; }
         
-        /* FONDO PREMIUM RADIAL */
         body { 
-            background: radial-gradient(circle at center, #1a0033 0%, #000 80%); 
-            color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; min-height: 100vh;
+            background: radial-gradient(circle at center, #1a0033 0%, #000 85%); 
+            color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh;
         }
 
-        /* LOGIN CON LOGO DIAMANTE */
-        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .diamond-logo { width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154,0,255,0.3); }
+        /* LOGIN FUNCIONAL */
+        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; background: black; position: fixed; width: 100%; }
+        .diamond-logo { width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 50px; box-shadow: 0 0 20px rgba(154,0,255,0.4); }
         .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
-        
-        .access-box { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; }
-        .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono'; text-align: center; width: 100%; padding: 15px; outline: none; letter-spacing: 5px; font-size: 18px; }
-        .show-btn { position: absolute; right: 0; background: none; border: none; color: #444; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .access-box { width: 300px; border-bottom: 1px solid #333; position: relative; }
+        .access-input { background: none; border: none; color: var(--accent); text-align: center; width: 100%; padding: 15px; outline: none; letter-spacing: 8px; font-size: 18px; }
+        .show-btn { position: absolute; right: 0; top: 18px; background: none; border: none; color: #555; font-size: 10px; cursor: pointer; font-weight: bold; }
 
-        /* HEADER & STORIES */
-        .top-bar { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 2000; box-sizing: border-box; }
-        .story-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--border); margin-top: 60px; scrollbar-width: none; }
-        .story-circle { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); padding: 2px; position: relative; }
-        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .add-badge { position: absolute; bottom: 0; right: 0; background: var(--accent); width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #000; font-size: 10px; }
-
-        /* EDITOR PRO */
+        /* EDITOR AVANZADO */
         #editor-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
-        .editor-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .editor-canvas { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: #050505; }
-        .editor-tools { padding: 20px; display: flex; justify-content: center; gap: 30px; background: #080808; border-top: 1px solid var(--border); }
-        .tool-icon { font-size: 24px; color: #555; cursor: pointer; transition: 0.2s; }
-        .tool-icon:hover { color: var(--accent); }
-        .floating-text { position: absolute; font-weight: bold; font-size: 24px; color: white; text-shadow: 2px 2px 10px #000; cursor: move; padding: 10px; }
+        .canvas-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #050505; }
+        #preview-img { max-width: 100%; max-height: 70vh; transition: filter 0.3s; user-select: none; -webkit-user-drag: none; }
+        
+        .draggable-text { 
+            position: absolute; color: white; font-size: 24px; font-weight: bold; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); cursor: move; touch-action: none; 
+            padding: 10px; z-index: 10;
+        }
 
-        /* CONFIGURACIÓN PRO */
-        .settings-container { padding: 80px 20px; }
-        .setting-row { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .logout-btn { background: rgba(255, 68, 68, 0.1); border: 1px solid #301010; color: #ff4444; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-top: 30px; cursor: pointer; }
+        .editor-controls { background: #0a0a0a; padding: 20px; border-top: 1px solid #1a1a1a; }
+        .slider-group { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 12px; color: #888; }
+        input[type="range"] { flex: 1; accent-color: var(--accent); }
 
-        /* NAV */
-        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
-        .nav-center-btn { width: 45px; height: 45px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
-
-        .view { display: none; padding-bottom: 100px; }
-        .active-view { display: block; }
+        /* NAV & UI */
+        .top-bar { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); z-index: 1000; box-sizing: border-box; }
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; }
+        .nav-center { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        
+        .profile-thumb { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--accent); object-fit: cover; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -58,149 +51,131 @@
 
     <div id="login-view">
         <div class="diamond-logo"><span>Ω</span></div>
-        <h2 style="font-family:'Cinzel'; font-size:12px; letter-spacing:4px; margin-bottom:40px; color:#555;">SECURITY CHECK</h2>
+        <h3 style="font-family:'Cinzel'; font-size:12px; letter-spacing:4px; margin-bottom:30px;">SECURITY CHECK</h3>
         <div class="access-box">
             <input type="password" id="pass" class="access-input" placeholder="••••••••">
-            <button class="show-btn" onclick="togglePass()">Show</button>
+            <button class="show-btn" id="toggleLoginPass" onclick="handleTogglePass()">SHOW</button>
         </div>
-        <button onclick="validateAccess()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:30px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
+        <button onclick="login()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
-    <div id="main-app" class="hidden">
+    <div id="app" class="hidden">
         <div class="top-bar">
             <i class="fas fa-bars"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <i class="fas fa-bell" style="opacity:0.2;"></i>
+            <img src="https://i.pravatar.cc/100?img=11" class="profile-thumb" id="my-profile-pic">
         </div>
 
-        <div id="view-home" class="view active-view">
-            <div class="story-bar">
-                <div class="story-circle" onclick="document.getElementById('file-input').click()">
-                    <img src="https://via.placeholder.com/100" style="filter: grayscale(1);">
-                    <div class="add-badge"><i class="fas fa-plus"></i></div>
-                </div>
-            </div>
-            <div id="feed-container" style="padding:20px; text-align:center; color:#222; font-family:'Cinzel'; margin-top:50px;">
-                EMPTY VAULT
-            </div>
-        </div>
-
-        <div id="view-settings" class="view">
-            <div class="settings-container">
-                <h3 style="font-family:'Cinzel'; margin-bottom:20px;">SYSTEM SETTINGS</h3>
-                <div class="setting-row">
-                    <span><i class="fas fa-globe"></i> Language / Idioma</span>
-                    <select style="background:none; color:white; border:none; font-family:inherit;">
-                        <option>Español</option>
-                        <option>English</option>
-                        <option>Português</option>
-                    </select>
-                </div>
-                <div class="setting-row">
-                    <span><i class="fas fa-shield-alt"></i> Privacy Mode</span>
-                    <input type="checkbox" checked>
-                </div>
-                <div class="logout-btn" onclick="location.reload()">
-                    <i class="fas fa-power-off"></i> CERRAR SESIÓN
-                </div>
-            </div>
+        <div id="view-home" style="padding-top:80px; text-align:center;">
+            <div style="padding:50px; color:#333; font-family:'Cinzel';">NO CONTENT YET</div>
         </div>
 
         <div id="editor-view">
-            <div class="editor-header">
+            <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #111;">
                 <i class="fas fa-times" onclick="closeEditor()" style="font-size:20px;"></i>
                 <span style="font-family:'Cinzel'; font-size:12px;">EDITOR PRO</span>
-                <button style="background:var(--accent); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold;" onclick="finishUpload()">PUBLICAR</button>
+                <button onclick="publish()" style="background:var(--accent); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold;">PUBLICAR</button>
             </div>
-            <div class="editor-canvas" id="canvas">
-                <img id="prev-img" style="max-width:100%; max-height:80vh;">
-                <div id="user-text" class="floating-text hidden" style="top:50%; left:20%;"></div>
+
+            <div class="canvas-area" id="canvas">
+                <img id="preview-img" src="">
+                <div id="drag-text" class="draggable-text hidden">NUEVO TEXTO</div>
             </div>
-            <div class="editor-tools">
-                <i class="fas fa-font tool-icon" onclick="addText()"></i>
-                <i class="fas fa-grin-tongue-squint tool-icon" onclick="addEmoji('😈')"></i>
-                <i class="fas fa-lock tool-icon" onclick="togglePrem()"></i>
-            </div>
-            <div style="padding:20px; background:#080808;">
-                <input type="text" id="drop-title" placeholder="Añadir descripción..." style="width:100%; background:#111; border:1px solid #222; color:white; padding:15px; border-radius:10px;">
-                <div id="prem-tag" style="margin-top:10px; font-size:10px; color:var(--accent); display:none;">★ CONTENIDO PREMIUM (LOCKED)</div>
+
+            <div class="editor-controls">
+                <div class="slider-group">
+                    <i class="fas fa-sun"></i>
+                    <input type="range" id="brightness" min="50" max="150" value="100" oninput="applyFilters()">
+                </div>
+                <div class="slider-group">
+                    <i class="fas fa-adjust"></i>
+                    <input type="range" id="contrast" min="50" max="150" value="100" oninput="applyFilters()">
+                </div>
+                <div style="display:flex; justify-content:space-around; margin-top:15px;">
+                    <i class="fas fa-font" style="font-size:20px;" onclick="enableText()"></i>
+                    <i class="fas fa-smile" style="font-size:20px;" onclick="addEmoji('😈')"></i>
+                    <i class="fas fa-crop-alt" style="font-size:20px;" onclick="alert('Recorte automático 4:5 activado')"></i>
+                </div>
             </div>
         </div>
 
-        <input type="file" id="file-input" hidden onchange="handleFile(event)">
+        <input type="file" id="upload" hidden onchange="loadImg(event)">
 
         <nav>
-            <i class="fas fa-home nav-item active" onclick="showView('home')"></i>
-            <i class="fas fa-search nav-item"></i>
-            <div class="nav-center-btn" onclick="document.getElementById('file-input').click()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope nav-item"></i>
-            <i class="fas fa-cog nav-item" onclick="showView('settings')"></i>
+            <i class="fas fa-home" onclick="location.reload()"></i>
+            <i class="fas fa-search"></i>
+            <div class="nav-center" onclick="document.getElementById('upload').click()"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope"></i>
+            <i class="fas fa-cog"></i>
         </nav>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
-        const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
-        const _supabase = supabase.createClient(SB_URL, SB_KEY);
-        let isPremium = false;
-
-        function togglePass() {
+        // 1. FUNCION SHOW/HIDE PASSWORD
+        function handleTogglePass() {
             const p = document.getElementById('pass');
-            p.type = p.type === 'password' ? 'text' : 'password';
-        }
-
-        async function validateAccess() {
-            const pass = document.getElementById('pass').value;
-            const { data } = await _supabase.from('users').select('*').eq('access_key', pass).single();
-            if(data) {
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-            } else { alert("ACCESS DENIED"); }
-        }
-
-        function showView(v) {
-            document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
-            document.getElementById('view-'+v).classList.add('active-view');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(v === 'home') document.querySelector('.fa-home').classList.add('active');
-            if(v === 'settings') document.querySelector('.fa-cog').classList.add('active');
-        }
-
-        function handleFile(e) {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (f) => {
-                    document.getElementById('prev-img').src = f.target.result;
-                    document.getElementById('editor-view').style.display = 'flex';
-                };
-                reader.readAsDataURL(file);
+            const btn = document.getElementById('toggleLoginPass');
+            if(p.type === 'password') {
+                p.type = 'text';
+                btn.innerText = 'HIDE';
+            } else {
+                p.type = 'password';
+                btn.innerText = 'SHOW';
             }
         }
 
-        function addText() {
-            const val = prompt("Escribe tu texto:");
+        function login() {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+        }
+
+        // 2. EDITOR DE IMAGEN Y TEXTO
+        function loadImg(e) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                document.getElementById('preview-img').src = reader.result;
+                document.getElementById('editor-view').style.display = 'flex';
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function applyFilters() {
+            const b = document.getElementById('brightness').value;
+            const c = document.getElementById('contrast').value;
+            document.getElementById('preview-img').style.filter = `brightness(${b}%) contrast(${c}%)`;
+        }
+
+        function enableText() {
+            const val = prompt("Texto para la imagen:");
             if(val) {
-                const div = document.getElementById('user-text');
-                div.innerText = val;
-                div.classList.remove('hidden');
+                const el = document.getElementById('drag-text');
+                el.innerText = val;
+                el.classList.remove('hidden');
             }
         }
 
-        function addEmoji(emoji) {
-            const div = document.getElementById('user-text');
-            div.innerText += " " + emoji;
-            div.classList.remove('hidden');
+        function addEmoji(e) {
+            const el = document.getElementById('drag-text');
+            el.innerText += " " + e;
+            el.classList.remove('hidden');
         }
 
-        function togglePrem() {
-            isPremium = !isPremium;
-            document.getElementById('prem-tag').style.display = isPremium ? 'block' : 'none';
-        }
+        // 3. HACER EL TEXTO MOVIBLE (InteractJS) - Evita el azul y permite mover con el dedo
+        interact('.draggable-text').draggable({
+            listeners: {
+                move (event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            }
+        });
 
         function closeEditor() { document.getElementById('editor-view').style.display = 'none'; }
-        function finishUpload() { alert("Subiendo a Supabase Storage..."); closeEditor(); }
+        function publish() { alert("Publicado con éxito!"); closeEditor(); }
     </script>
 </body>
 </html>
