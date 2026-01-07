@@ -13,36 +13,31 @@
         #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, #0d001a 0%, #000 70%); }
         .logo-diamond { width: 80px; height: 80px; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); border: 1px solid rgba(154, 0, 255, 0.4); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154, 0, 255, 0.2); animation: pulse 3s infinite ease-in-out; }
         .logo-diamond span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 32px; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-        @keyframes pulse { 0%, 100% { transform: rotate(45deg) scale(1); box-shadow: 0 0 30px rgba(154, 0, 255, 0.2); } 50% { transform: rotate(45deg) scale(1.05); box-shadow: 0 0 50px rgba(154, 0, 255, 0.4); } }
+        @keyframes pulse { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.05); box-shadow: 0 0 50px rgba(154, 0, 255, 0.4); } }
         .brand-name { font-family: 'Cinzel', serif; font-size: 24px; letter-spacing: 12px; margin-bottom: 5px; font-weight: 700; }
         .brand-tagline { font-size: 8px; letter-spacing: 6px; color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 60px; }
         .login-container { position: relative; width: 280px; border-bottom: 1px solid #222; }
         .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 18px; letter-spacing: 6px; width: 100%; padding: 15px 0; outline: none; }
-        .toggle-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: none; border: none; color: #444; cursor: pointer; font-size: 9px; text-transform: uppercase; font-weight: bold; }
 
         /* DASHBOARD */
         header { padding: 20px; text-align: center; border-bottom: 1px solid #111; position: sticky; top: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 100; }
         header h1 { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 8px; margin: 0; color: var(--accent); }
         .feed { max-width: 500px; margin: 0 auto; padding: 15px; }
-        .post { background: var(--card); border-radius: 12px; margin-bottom: 25px; overflow: hidden; border: 1px solid #151515; }
+        .post { background: var(--card); border-radius: 12px; margin-bottom: 25px; border: 1px solid #151515; overflow: hidden; }
         .content-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #050505; }
         .post-img { width: 100%; height: 100%; object-fit: cover; }
         .premium-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(40px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
-        .unlock-btn { background: #fff; color: #000; border: none; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 11px; cursor: pointer; }
-
-        /* NAV */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: #050505; border-top: 1px solid #111; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-item { color: #333; font-size: 24px; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--accent); }
+        .unlock-btn { background: #fff; color: #000; border: none; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 11px; }
 
         /* MODAL SUBIDA */
         #upload-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .modal-content { width: 90%; max-width: 400px; text-align: center; }
-        .file-label { display: block; background: #111; border: 2px dashed #333; padding: 40px; border-radius: 12px; cursor: pointer; margin-bottom: 15px; color: #666; font-size: 12px; transition: 0.3s; }
-        .file-label:hover { border-color: var(--accent); color: #fff; }
+        .file-zone { display: block; background: #111; border: 2px dashed #333; padding: 40px; border-radius: 12px; cursor: pointer; margin-bottom: 15px; color: #666; font-size: 11px; letter-spacing: 2px; }
         .upload-input { width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 15px; margin: 10px 0; border-radius: 8px; outline: none; box-sizing: border-box; }
-        #status-msg { font-size: 11px; margin-top: 10px; color: var(--accent); font-family: 'JetBrains Mono'; }
+        #pub-btn { background: var(--accent); color: #fff; border: none; padding: 15px; border-radius: 30px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 10px; }
 
+        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: #050505; border-top: 1px solid #111; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-item { color: #333; font-size: 24px; cursor: pointer; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -54,7 +49,6 @@
         <div class="brand-tagline">Private Kingdom Protocol</div>
         <div class="login-container">
             <input type="password" id="pass" class="access-input" placeholder="ACCESS KEY" onkeypress="handleKey(event)" autofocus>
-            <button class="toggle-btn" onclick="togglePass()">Show</button>
         </div>
     </div>
 
@@ -64,30 +58,24 @@
         
         <div id="upload-panel">
             <div class="modal-content">
-                <h2 style="font-family:'Cinzel'; font-size:14px; letter-spacing:5px; margin-bottom:20px;">NEW CONTENT</h2>
-                
-                <label for="file-upload" class="file-label" id="drop-zone">
-                    <span id="file-name">TAP TO OPEN GALLERY<br>(IMAGE/VIDEO)</span>
-                    <input type="file" id="file-upload" hidden accept="image/*,video/*" onchange="updateFileName()">
+                <h2 style="font-family:'Cinzel'; font-size:14px; letter-spacing:5px;">NEW CONTENT</h2>
+                <label for="file-upload" class="file-zone">
+                    <span id="file-label-text">SELECT FROM GALLERY</span>
+                    <input type="file" id="file-upload" hidden accept="image/*,video/*" onchange="updateFilePreview()">
                 </label>
-
-                <input type="text" id="post-desc" class="upload-input" placeholder="Add a description...">
-                
-                <label style="display:block; margin: 20px 0; font-size: 11px; color: #888; cursor: pointer;">
+                <input type="text" id="post-desc" class="upload-input" placeholder="Description...">
+                <label style="display:block; margin: 15px 0; font-size: 11px; color: #888;">
                     <input type="checkbox" id="post-premium"> Premium Content (Locked)
                 </label>
-
-                <button id="pub-btn" onclick="publishPost()" style="background:var(--accent); color:#fff; border:none; padding:15px; border-radius:30px; font-weight:bold; width:100%; cursor:pointer; letter-spacing:1px;">PUBLISH</button>
-                <div id="status-msg"></div>
-                <button onclick="toggleUpload()" style="background:none; border:none; color:#444; margin-top:20px; font-size:10px; cursor:pointer; letter-spacing:2px;">CANCEL</button>
+                <button id="pub-btn" onclick="publishPost()">PUBLISH</button>
+                <div id="status-msg" style="font-size:10px; color:var(--accent); margin-top:10px;"></div>
+                <button onclick="toggleUpload()" style="background:none; border:none; color:#444; margin-top:20px; font-size:10px; cursor:pointer;">CANCEL</button>
             </div>
         </div>
 
         <nav>
-            <div class="nav-item active">⌂</div>
-            <div class="nav-item">⌕</div>
+            <div class="nav-item" onclick="location.reload()">⌂</div>
             <div class="nav-item" onclick="toggleUpload()" style="font-size:32px; color: #fff;">⊕</div>
-            <div class="nav-item">✉</div>
             <div class="nav-item" onclick="location.reload()">👤</div>
         </nav>
     </div>
@@ -98,12 +86,6 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
-        function togglePass() {
-            const input = document.getElementById('pass');
-            input.type = input.type === "password" ? "text" : "password";
-            document.querySelector('.toggle-btn').innerText = input.type === "password" ? "Show" : "Hide";
-        }
-
         async function handleKey(e) {
             if (e.key === 'Enter') {
                 const { data } = await _supabase.from('users').select('*').eq('access_key', e.target.value).single();
@@ -111,8 +93,6 @@
                     document.getElementById('login-view').classList.add('hidden');
                     document.getElementById('main-app').classList.remove('hidden');
                     loadPosts();
-                } else {
-                    e.target.value = ""; e.target.placeholder = "DENIED";
                 }
             }
         }
@@ -122,17 +102,15 @@
             const container = document.getElementById('feed-container');
             container.innerHTML = "";
             posts?.forEach(post => {
-                const isVideo = post.content_url.match(/\.(mp4|webm|ogg|mov)$/i);
+                const isVideo = post.content_url.match(/\.(mp4|webm|mov)$/i);
                 container.innerHTML += `
                     <div class="post">
                         <div style="padding:15px; font-size:10px; color:#444; letter-spacing:2px; font-weight:bold;">AUTHORIZED CREATOR</div>
                         <div class="content-container">
-                            ${isVideo ? 
-                                `<video src="${post.content_url}" class="post-img" autoplay muted loop playsinline></video>` : 
-                                `<img src="${post.content_url}" class="post-img">`}
+                            ${isVideo ? `<video src="${post.content_url}" class="post-img" autoplay muted loop playsinline></video>` : `<img src="${post.content_url}" class="post-img">`}
                             ${post.is_premium ? `<div class="premium-overlay">🔒 <button class="unlock-btn">Unlock for $${post.price || '10'}</button></div>` : ''}
                         </div>
-                        <div style="padding:15px;"><p style="font-size:13px; color:#999; margin:0; line-height:1.4;">${post.description || ''}</p></div>
+                        <div style="padding:15px;"><p style="font-size:13px; color:#999; margin:0;">${post.description || ''}</p></div>
                     </div>`;
             });
         }
@@ -142,9 +120,9 @@
             panel.style.display = (panel.style.display === 'flex') ? 'none' : 'flex';
         }
 
-        function updateFileName() {
+        function updateFilePreview() {
             const file = document.getElementById('file-upload').files[0];
-            document.getElementById('file-name').innerHTML = file ? `<span style="color:#fff">READY: ${file.name}</span>` : "TAP TO OPEN GALLERY";
+            if(file) document.getElementById('file-label-text').innerText = "READY: " + file.name;
         }
 
         async function publishPost() {
@@ -153,35 +131,19 @@
             const premium = document.getElementById('post-premium').checked;
             const msg = document.getElementById('status-msg');
 
-            if(!file) return alert("Please select a file");
-            
-            msg.innerText = "UPLOADING TO KINGDOM...";
+            if(!file) return alert("Select a file first");
+            msg.innerText = "UPLOADING...";
             document.getElementById('pub-btn').disabled = true;
 
             const fileName = `${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-            const { data: uploadData, error: uploadError } = await _supabase.storage
-                .from('post-files')
-                .upload(fileName, file);
+            const { data: uploadData, error: uploadError } = await _supabase.storage.from('post-files').upload(fileName, file);
 
-            if(uploadError) {
-                alert("Upload error: " + uploadError.message);
-                document.getElementById('pub-btn').disabled = false;
-                return;
-            }
+            if(uploadError) return alert("Upload error: " + uploadError.message);
 
             const { data: urlData } = _supabase.storage.from('post-files').getPublicUrl(fileName);
-            const publicUrl = urlData.publicUrl;
+            await _supabase.from('posts').insert([{ content_url: urlData.publicUrl, description: desc, is_premium: premium, price: premium ? 10.00 : 0 }]);
 
-            const { error: dbError } = await _supabase.from('posts').insert([
-                { content_url: publicUrl, description: desc, is_premium: premium, price: premium ? 10.00 : 0 }
-            ]);
-
-            if(!dbError) {
-                location.reload();
-            } else {
-                alert("Database error: " + dbError.message);
-                document.getElementById('pub-btn').disabled = false;
-            }
+            location.reload();
         }
     </script>
 </body>
