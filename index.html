@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Official</title>
+    <title>OBSIDIAN | Private Vault</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
@@ -14,10 +14,10 @@
         
         body, html { 
             background: radial-gradient(circle at center, #1a0033 0%, #000 100%) no-repeat fixed;
-            color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden;
+            color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden;
         }
 
-        /* --- LOGIN --- */
+        /* --- LOGIN CON LATIDO --- */
         #login-view { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .diamond-logo { 
             width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); 
@@ -34,37 +34,37 @@
         .input-group input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; outline: none; text-align: center; font-size: 18px; letter-spacing: 5px; }
         .btn-toggle { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; }
 
-        /* --- MAIN APP --- */
+        /* --- UI PRINCIPAL --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
-        .header { height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; }
+        .header { height: 60px; background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; }
         
-        /* FEED & CARDS */
-        .feed { flex: 1; overflow-y: auto; padding-bottom: 100px; }
-        .post-card { background: var(--card); margin-bottom: 15px; border-bottom: 1px solid var(--border); position: relative; }
-        .post-header { padding: 12px; display: flex; align-items: center; gap: 10px; }
-        .media-container { position: relative; width: 100%; overflow: hidden; }
-        .post-img { width: 100%; display: block; }
-        
-        /* BLOQUEO PREMIUM */
-        .locked-overlay { 
-            position: absolute; inset: 0; background: rgba(0,0,0,0.4); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; 
-        }
-        .unlock-btn { background: #fff; color: #000; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .main-scroll { flex: 1; overflow-y: auto; padding-bottom: 80px; scrollbar-width: none; }
+        .main-scroll::-webkit-scrollbar { display: none; }
 
-        /* EDITOR PRO */
+        /* POSTS & PAYWALL */
+        .post-card { background: var(--card); margin-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .media-box { position: relative; width: 100%; min-height: 300px; background: #050505; }
+        .post-img { width: 100%; display: block; }
+        .locked-blur { 
+            position: absolute; inset: 0; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5;
+        }
+
+        /* CONFIGURACIÓN REAL */
+        #settings-view { display: none; padding: 20px; }
+        .set-box { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 15px; overflow: hidden; margin-top: 20px; }
+        .set-row { padding: 18px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .set-row:last-child { border: none; }
+
+        /* EDITOR */
         #editor-view { position: fixed; inset: 0; background: #000; z-index: 20000; display: none; flex-direction: column; }
         .editor-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #1a1a1a; }
-        .editor-canvas { flex: 1; display: flex; align-items: center; justify-content: center; background: #050505; overflow: hidden; }
-        #image-edit { max-width: 100%; }
-
-        /* BOTONERA DE MONETIZACIÓN */
-        .monetize-bar { padding: 20px; background: #0a0a0a; border-top: 1px solid var(--border); }
-        .price-input { background: #1a1a1a; border: 1px solid #333; color: var(--accent); padding: 10px; border-radius: 8px; width: 80px; text-align: center; font-weight: bold; }
-
+        
+        /* NAVBAR */
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-center { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .nav-add { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+
+        .active { color: var(--accent) !important; }
     </style>
 </head>
 <body>
@@ -80,72 +80,86 @@
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars"></i>
+            <i class="fas fa-bars" onclick="alert('Menú lateral activo')"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <img src="https://i.pravatar.cc/100?u=12" style="width:30px; border-radius:50%; border:1px solid var(--accent);">
+            <div style="width:30px; height:30px; border-radius:50%; background: url('https://i.pravatar.cc/100?u=8') center/cover; border:1px solid var(--accent);"></div>
         </div>
 
-        <div id="home-view" class="feed">
+        <div id="home-tab" class="main-scroll">
+            <div style="display:flex; gap:15px; padding:15px; overflow-x:auto;">
+                <div style="min-width:65px; height:65px; border-radius:50%; border:2px dashed #333; display:flex; align-items:center; justify-content:center;" onclick="openFile()"><i class="fas fa-plus"></i></div>
+            </div>
+            
             <div class="post-card">
-                <div class="post-header">
+                <div style="padding:12px; display:flex; align-items:center; gap:10px;">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--accent);"></div>
-                    <span style="font-weight:bold; font-size:13px;">MODEL_VIP_01</span>
+                    <span style="font-weight:600; font-size:14px;">OBSIDIAN_VIP</span>
                 </div>
-                <div class="media-container">
-                    <div class="locked-overlay">
-                        <i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i>
-                        <span style="font-weight:bold;">CONTENIDO PREMIUM</span>
-                        <button class="unlock-btn" onclick="alert('Redirigiendo a pasarela de pago...')">DESBLOQUEAR POR $9.99</button>
+                <div class="media-box">
+                    <div class="locked-blur">
+                        <i class="fas fa-lock" style="font-size:30px; margin-bottom:15px;"></i>
+                        <button style="background:#fff; color:#000; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;" onclick="alert('Abrir Checkout...')">DESBLOQUEAR $19.99</button>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800" class="post-img">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800" class="post-img">
                 </div>
             </div>
         </div>
 
+        <div id="settings-tab" class="main-scroll" style="display:none; padding:20px;">
+            <h2 style="font-family:'Cinzel';">SETTINGS</h2>
+            <div class="set-box">
+                <div class="set-row"><span>Cuenta Privada</span><i class="fas fa-toggle-on" style="color:var(--accent);"></i></div>
+                <div class="set-row"><span>Idioma</span><span>Español <i class="fas fa-chevron-right" style="font-size:12px; margin-left:10px;"></i></span></div>
+                <div class="set-row"><span>Notificaciones</span><i class="fas fa-bell"></i></div>
+                <div class="set-row" onclick="location.reload()" style="color:#ff4444;"><span>Cerrar Sesión</span><i class="fas fa-power-off"></i></div>
+            </div>
+        </div>
+
         <nav>
-            <i class="fas fa-home" onclick="showTab('home')"></i>
-            <i class="fas fa-search"></i>
-            <div class="nav-center" onclick="openFile()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope"></i>
-            <i class="fas fa-cog" onclick="showTab('settings')"></i>
+            <i class="fas fa-home nav-btn active" onclick="switchTab('home')"></i>
+            <i class="fas fa-search nav-btn"></i>
+            <div class="nav-add" onclick="openFile()"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope nav-btn"></i>
+            <i class="fas fa-cog nav-btn" onclick="switchTab('settings')"></i>
         </nav>
     </div>
 
     <div id="editor-view">
         <div class="editor-header">
             <i class="fas fa-times" onclick="closeEditor()"></i>
-            <span style="font-family:'Cinzel'; font-size:12px;">NUEVO POST</span>
-            <button onclick="publish()" style="background:var(--accent); color:#fff; border:none; padding:8px 20px; border-radius:20px; font-weight:bold;">SUBIR</button>
+            <span style="font-family:'Cinzel'; font-size:12px;">EDITOR PRO</span>
+            <button onclick="publish()" style="background:var(--accent); color:#fff; border:none; padding:8px 18px; border-radius:20px; font-weight:bold;">POSTEAR</button>
         </div>
-        <div class="editor-canvas">
-            <img id="image-edit" src="">
+        <div style="flex:1; display:flex; align-items:center; justify-content:center; background:#050505; overflow:hidden;">
+            <img id="image-edit" src="" style="max-width:100%;">
         </div>
-        
-        <div class="monetize-bar">
+        <div style="padding:20px; background:#0a0a0a; border-top:1px solid #1a1a1a;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <span>Bloquear Contenido</span>
-                <input type="checkbox" id="is-premium" onchange="togglePrice(this)">
+                <span>Bloquear con Paywall</span>
+                <input type="checkbox" id="lock-toggle" onchange="document.getElementById('price-wrap').style.display = this.checked ? 'flex' : 'none'">
             </div>
-            <div id="price-box" style="display:none; justify-content:space-between; align-items:center;">
-                <span style="font-size:13px; color:#888;">Precio del post (USD)</span>
-                <input type="number" class="price-input" id="post-price" value="5.00">
+            <div id="price-wrap" style="display:none; justify-content:space-between; align-items:center;">
+                <span style="color:#666; font-size:13px;">Precio sugerido (USD)</span>
+                <input type="number" value="9.99" style="background:#1a1a1a; border:1px solid #333; color:var(--accent); width:80px; padding:8px; border-radius:8px; text-align:center;">
             </div>
-            <div style="display:flex; justify-content:space-around; margin-top:20px;">
-                <i class="fas fa-crop-alt" onclick="initCropper()"></i>
-                <i class="fas fa-check" onclick="applyCrop()" style="color:var(--accent);"></i>
+            <div style="display:flex; justify-content:space-around; margin-top:20px; border-top:1px solid #111; padding-top:20px;">
+                <i class="fas fa-crop-alt" onclick="startCrop()"></i>
+                <i class="fas fa-check-circle" onclick="applyCrop()" style="color:var(--accent); font-size:24px;"></i>
             </div>
         </div>
     </div>
 
-    <input type="file" id="input-file" hidden accept="image/*" onchange="loadMedia(event)">
+    <input type="file" id="file-in" hidden accept="image/*" onchange="loadImg(event)">
 
     <script>
-        let myCropper;
+        let cropper;
 
+        // LOGIN ENGINE
         function togglePass() {
-            const field = document.getElementById('pass-field');
-            field.type = field.type === 'password' ? 'text' : 'password';
-            document.querySelector('.btn-toggle').innerText = field.type === 'password' ? 'SHOW' : 'HIDE';
+            const f = document.getElementById('pass-field');
+            const b = document.querySelector('.btn-toggle');
+            f.type = f.type === 'password' ? 'text' : 'password';
+            b.innerText = f.type === 'password' ? 'SHOW' : 'HIDE';
         }
 
         function enterApp() {
@@ -153,45 +167,44 @@
             document.getElementById('main-app').style.display = 'flex';
         }
 
-        function openFile() { document.getElementById('input-file').click(); }
+        // NAVIGATION
+        function switchTab(tab) {
+            document.getElementById('home-tab').style.display = tab === 'home' ? 'block' : 'none';
+            document.getElementById('settings-tab').style.display = tab === 'settings' ? 'block' : 'none';
+            document.querySelectorAll('.nav-btn').forEach(i => i.classList.remove('active'));
+            event.target.classList.add('active');
+        }
 
-        function loadMedia(e) {
+        // EDITOR ENGINE
+        function openFile() { document.getElementById('file-in').click(); }
+        
+        function loadImg(e) {
             const reader = new FileReader();
             reader.onload = (f) => {
                 document.getElementById('image-edit').src = f.target.result;
                 document.getElementById('editor-view').style.display = 'flex';
-            }
+            };
             reader.readAsDataURL(e.target.files[0]);
         }
 
-        function togglePrice(cb) {
-            document.getElementById('price-box').style.display = cb.checked ? 'flex' : 'none';
-        }
-
-        function initCropper() {
-            if(myCropper) myCropper.destroy();
-            myCropper = new Cropper(document.getElementById('image-edit'), { viewMode: 1 });
+        function startCrop() {
+            if(cropper) cropper.destroy();
+            cropper = new Cropper(document.getElementById('image-edit'), { viewMode: 1, aspectRatio: NaN });
         }
 
         function applyCrop() {
-            if(!myCropper) return;
-            document.getElementById('image-edit').src = myCropper.getCroppedCanvas().toDataURL();
-            myCropper.destroy();
-            myCropper = null;
+            if(!cropper) return;
+            document.getElementById('image-edit').src = cropper.getCroppedCanvas().toDataURL();
+            cropper.destroy();
+            cropper = null;
         }
 
-        function closeEditor() {
-            document.getElementById('editor-view').style.display = 'none';
-        }
-
+        function closeEditor() { document.getElementById('editor-view').style.display = 'none'; }
+        
         function publish() {
-            const isLocked = document.getElementById('is-premium').checked;
-            const price = document.getElementById('post-price').value;
-            alert(isLocked ? `Publicado como PREMIUM por $${price}` : "Publicado GRATIS");
+            alert("✅ Procesando contenido premium...");
             closeEditor();
         }
-
-        function showTab(t) { /* Lógica de cambio de pestaña */ }
     </script>
 </body>
 </html>
