@@ -2,112 +2,106 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN | Editor Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OBSIDIAN | Private Kingdom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #9A00FF; --bg: #020202; --card: #0a0a0a; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 90px; }
+        :root { --accent: #9A00FF; --bg: #000; --card: #0a0a0a; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+
+        /* VISTAS */
+        .view { display: none; min-height: 100vh; padding-bottom: 90px; }
+        .active-view { display: block; }
 
         /* LOGIN */
         #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); }
-        .logo-diamond { width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154, 0, 255, 0.3); animation: pulse 3s infinite; }
+        .logo-diamond { width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154,0,255,0.3); }
         .logo-diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 32px; color: var(--accent); }
-        @keyframes pulse { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.05); } }
-
         .login-box { position: relative; width: 280px; border-bottom: 1px solid #222; }
         .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono'; text-align: center; font-size: 18px; width: 100%; padding: 15px 0; outline: none; }
-        .toggle-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: none; border: none; color: #444; font-size: 10px; cursor: pointer; }
 
-        /* EDITOR MODAL */
-        #upload-panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
-        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        /* EDITOR */
+        #upload-panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
+        .canvas-area { position: relative; flex-grow: 1; background: #080808; display: flex; align-items: center; justify-content: center; touch-action: none; }
+        #canvas-editor { max-width: 100%; max-height: 80vh; background: #111; cursor: move; }
+
+        /* DM SYSTEM */
+        .chat-list { padding: 20px; }
+        .chat-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #111; gap: 15px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #222, var(--accent)); }
         
-        .canvas-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #111; border-radius: 15px; overflow: hidden; margin-bottom: 20px; }
-        #canvas-editor { width: 100%; height: 100%; object-fit: contain; }
+        /* NAV */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #111; z-index: 1000; }
+        .nav-item { font-size: 22px; color: #444; cursor: pointer; }
+        .nav-item.active { color: var(--accent); }
 
-        .editor-controls { background: #0a0a0a; padding: 20px; border-radius: 20px; border: 1px solid #1a1a1a; }
-        .control-row { margin-bottom: 15px; }
-        .control-row label { display: block; font-size: 10px; color: #555; margin-bottom: 8px; text-transform: uppercase; }
-        
-        input[type="text"], input[type="range"] { width: 100%; background: #151515; border: 1px solid #222; color: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; }
-        
-        .tool-btn { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-        .tool-btn.active { border-color: var(--accent); color: var(--accent); }
+        .emoji-bar { display: flex; gap: 15px; overflow-x: auto; padding: 15px; background: #050505; border-top: 1px solid #111; }
+        .emoji-btn { font-size: 24px; cursor: pointer; }
 
-        /* FEED POST */
-        .post { background: var(--card); border-radius: 20px; margin-bottom: 30px; border: 1px solid #111; overflow: hidden; }
-        .post-info { padding: 15px; }
-        .post-title { font-family: 'Cinzel'; font-size: 14px; color: var(--accent); margin: 0 0 5px 0; }
-        .post-desc { font-size: 12px; color: #888; margin: 0; }
-
-        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); border-top: 1px solid #111; display: flex; justify-content: space-around; align-items: center; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="login-view">
+    <div id="login-view" class="view active-view">
         <div class="logo-diamond"><span>Ω</span></div>
-        <div class="brand-name" style="font-family:'Cinzel'; letter-spacing:10px;">OBSIDIAN</div>
         <div class="login-box">
             <input type="password" id="pass" class="access-input" placeholder="PASSKEY" onkeypress="handleKey(event)">
-            <button class="toggle-btn" onclick="togglePass()">SHOW</button>
+            <button onclick="togglePass()" style="position:absolute; right:0; top:15px; background:none; border:none; color:#444; font-size:10px;">SHOW</button>
         </div>
     </div>
 
     <div id="main-app" class="hidden">
-        <header style="padding:20px; text-align:center; border-bottom:1px solid #111;">
-            <h1 style="font-family:'Cinzel'; font-size:14px; letter-spacing:8px; color:var(--accent); margin:0;">OBSIDIAN</h1>
-        </header>
+        
+        <div id="view-home" class="view active-view">
+            <header style="padding:20px; text-align:center; border-bottom:1px solid #111;">
+                <h1 style="font-family:'Cinzel'; font-size:14px; letter-spacing:8px; color:var(--accent); margin:0;">OBSIDIAN</h1>
+            </header>
+            <div id="feed-container" style="padding:10px;"></div>
+        </div>
 
-        <div class="feed" id="feed-container" style="max-width:500px; margin:0 auto; padding:20px;"></div>
+        <div id="view-msgs" class="view">
+            <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">INBOX</h2></header>
+            <div class="chat-list">
+                <div class="chat-item">
+                    <div class="avatar"></div>
+                    <div><div style="font-weight:bold; font-size:14px;">User_VIP_88</div><div style="font-size:12px; color:#555;">Subscribed 2 days ago</div></div>
+                </div>
+            </div>
+        </div>
 
         <div id="upload-panel">
-            <div class="editor-header">
+            <div style="display:flex; justify-content:space-between; padding:20px; background:#050505;">
                 <button onclick="toggleUpload()" style="background:none; border:none; color:#555;"><i class="fas fa-times"></i></button>
-                <span style="font-family:'Cinzel'; font-size:12px; letter-spacing:3px;">EDITOR PRO</span>
-                <button id="pub-btn" onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 20px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLISH</button>
+                <span style="font-family:'Cinzel'; font-size:12px; letter-spacing:3px;">EDITOR MASTER</span>
+                <button id="pub-btn" onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 20px; border-radius:20px; font-weight:bold; font-size:10px;">POST</button>
             </div>
 
-            <div class="canvas-container">
+            <div class="canvas-area">
                 <canvas id="canvas-editor"></canvas>
             </div>
 
-            <div class="editor-controls">
-                <div class="control-row">
-                    <input type="file" id="file-upload" hidden accept="image/*" onchange="loadEditorImage(event)">
-                    <button class="tool-btn" onclick="document.getElementById('file-upload').click()"><i class="fas fa-image"></i> SELECT PHOTO</button>
-                    <button class="tool-btn" onclick="addText()"><i class="fas fa-font"></i> ADD TEXT/EMOJI</button>
-                </div>
-
-                <div class="control-row">
-                    <label>Blur Intensity</label>
-                    <input type="range" id="blur-range" min="0" max="10" value="0" oninput="drawEditor()">
-                </div>
-
-                <div class="control-row">
-                    <label>Post Title</label>
-                    <input type="text" id="post-title-in" placeholder="Ex: Midnight Ritual">
-                </div>
-
-                <div class="control-row">
-                    <label>Description</label>
-                    <input type="text" id="post-desc-in" placeholder="Tell the story...">
-                </div>
-
-                <label style="color:#555; font-size:10px; display:flex; align-items:center; gap:10px;">
-                    <input type="checkbox" id="post-premium"> LOCK AS PREMIUM
-                </label>
+            <div class="emoji-bar">
+                <span class="emoji-btn" onclick="addTextLayer('🔥')">🔥</span>
+                <span class="emoji-btn" onclick="addTextLayer('😈')">😈</span>
+                <span class="emoji-btn" onclick="addTextLayer('🔒')">🔒</span>
+                <span class="emoji-btn" onclick="addTextLayer('🔞')">🔞</span>
+                <button onclick="addTextLayer(prompt('Texto:'))" style="background:#1a1a1a; border:none; color:#fff; border-radius:5px; padding:0 10px;">T</button>
             </div>
-            <div id="status-msg" style="text-align:center; margin-top:15px; font-size:11px; color:var(--accent);"></div>
+
+            <div style="padding:20px; background:#0a0a0a;">
+                <input type="file" id="file-upload" hidden accept="image/*" onchange="loadImg(event)">
+                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:12px; background:#111; border:1px solid #222; color:#fff; border-radius:10px; margin-bottom:10px;">Cargar de Galería</button>
+                <input type="text" id="post-title-in" placeholder="Título" style="width:100%; background:#000; border:1px solid #222; color:#fff; padding:10px; margin-bottom:5px;">
+                <label style="font-size:11px; color:#555;"><input type="checkbox" id="post-premium"> Contenido Premium</label>
+            </div>
         </div>
 
         <nav>
-            <i class="fas fa-home" onclick="location.reload()" style="color:var(--accent)"></i>
-            <i class="fas fa-plus-circle" style="font-size:30px;" onclick="toggleUpload()"></i>
-            <i class="fas fa-user"></i>
+            <i class="fas fa-home nav-item active" onclick="showView('home')"></i>
+            <i class="fas fa-plus-circle nav-item" style="font-size:32px; color:#fff;" onclick="toggleUpload()"></i>
+            <i class="fas fa-envelope nav-item" onclick="showView('msgs')"></i>
         </nav>
     </div>
 
@@ -119,13 +113,12 @@
 
         const canvas = document.getElementById('canvas-editor');
         const ctx = canvas.getContext('2d');
-        let editorImage = new Image();
-        let overlayText = "";
+        let img = new Image();
+        let layers = [];
+        let selectedLayer = null;
+        let isDragging = false;
 
-        function togglePass() {
-            const p = document.getElementById('pass');
-            p.type = p.type === 'password' ? 'text' : 'password';
-        }
+        function togglePass() { const p = document.getElementById('pass'); p.type = p.type === 'password' ? 'text' : 'password'; }
 
         async function handleKey(e) {
             if (e.key === 'Enter') {
@@ -138,94 +131,13 @@
             }
         }
 
-        function toggleUpload() {
-            const p = document.getElementById('upload-panel');
-            p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+        function showView(v) {
+            document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
+            document.getElementById('view-'+v).classList.add('active-view');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        function loadEditorImage(e) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                editorImage.onload = () => {
-                    canvas.width = 1080;
-                    canvas.height = 1080;
-                    drawEditor();
-                };
-                editorImage.src = event.target.result;
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-
-        function addText() {
-            overlayText = prompt("Enter text or emoji:");
-            drawEditor();
-        }
-
-        function drawEditor() {
-            if (!editorImage.src) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Apply Blur
-            const blurVal = document.getElementById('blur-range').value;
-            ctx.filter = `blur(${blurVal}px)`;
-            
-            // Draw image (Auto-crop to square)
-            ctx.drawImage(editorImage, 0, 0, 1080, 1080);
-            ctx.filter = 'none';
-
-            // Add Text/Emoji
-            if (overlayText) {
-                ctx.fillStyle = "white";
-                ctx.font = "bold 80px Inter";
-                ctx.textAlign = "center";
-                ctx.shadowColor = "black";
-                ctx.shadowBlur = 15;
-                ctx.fillText(overlayText, 540, 540);
-            }
-        }
-
-        async function publishPost() {
-            const btn = document.getElementById('pub-btn');
-            const msg = document.getElementById('status-msg');
-            btn.disabled = true;
-            msg.innerText = "UPLOADING TO THE KINGDOM...";
-
-            canvas.toBlob(async (blob) => {
-                const fileName = `post_${Date.now()}.jpg`;
-                const { data: uploadData } = await _supabase.storage.from('post-files').upload(fileName, blob);
-                const { data: url } = _supabase.storage.from('post-files').getPublicUrl(fileName);
-
-                await _supabase.from('posts').insert([{
-                    title: document.getElementById('post-title-in').value || "Untiled",
-                    content_url: url.publicUrl,
-                    description: document.getElementById('post-desc-in').value,
-                    is_premium: document.getElementById('post-premium').checked,
-                    price: 10.00
-                }]);
-                location.reload();
-            }, 'image/jpeg', 0.9);
-        }
-
-        async function loadPosts() {
-            const { data: posts } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
-            const container = document.getElementById('feed-container');
-            container.innerHTML = "";
-            posts?.forEach(p => {
-                container.innerHTML += `
-                    <div class="post">
-                        <div class="post-info">
-                            <h3 class="post-title">${p.title || 'EXCLUSIVE'}</h3>
-                            <p class="post-desc">${p.description || ''}</p>
-                        </div>
-                        <div style="position:relative; aspect-ratio:1/1;">
-                            <img src="${p.content_url}" style="width:100%; height:100%; object-fit:cover;">
-                            ${p.is_premium ? `<div style="position:absolute; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(30px); display:flex; align-items:center; justify-content:center;">
-                                <button style="background:#fff; color:#000; border:none; padding:12px 25px; border-radius:30px; font-weight:bold;">UNLOCK PIECE</button>
-                            </div>` : ''}
-                        </div>
-                    </div>`;
-            });
-        }
-    </script>
-</body>
-</html>
+        function toggleUpload() { 
+            const p = document.getElementById('upload-panel'); 
+            p.style.display = p.style.display === 'flex' ? 'none' : 'flex
