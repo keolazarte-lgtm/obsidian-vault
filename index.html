@@ -3,62 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN v29 | Floating Glass</title>
+    <title>OBSIDIAN v30 | Sublime Color</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --gold: #FFD700; --glass: rgba(15, 15, 15, 0.85); }
-        body, html { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; }
+        :root { 
+            --accent: #9A00FF; 
+            --bg-deep: #05000a; 
+            --bg-gradient: radial-gradient(circle at top right, #1a0033 0%, #05000a 60%, #000 100%);
+            --border: rgba(154, 0, 255, 0.2); 
+            --gold: #FFD700; 
+            --glass: rgba(10, 10, 10, 0.75); 
+        }
+
+        body, html { 
+            background: var(--bg-deep); 
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
 
         /* --- LOGIN & GLOW --- */
-        #login-view { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a0033 0%, #000 100%); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #login-view { 
+            position: fixed; inset: 0; 
+            background: radial-gradient(circle at center, #110022 0%, #000 100%); 
+            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+        }
         .logo-container { position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 50px; }
-        .logo-glow { position: absolute; width: 140px; height: 140px; background: var(--accent); filter: blur(60px); opacity: 0.5; border-radius: 50%; animation: pulse-glow 3s infinite; }
+        .logo-glow { position: absolute; width: 150px; height: 150px; background: var(--accent); filter: blur(70px); opacity: 0.6; border-radius: 50%; animation: pulse-glow 3s infinite; }
         .diamond-logo { position: relative; width: 85px; height: 85px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 25px var(--accent); animation: heartbeat 2s infinite; z-index: 2; }
         .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 38px; color: var(--accent); }
-        @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.4); opacity: 0.7; } }
+        
+        @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.4); opacity: 0.8; } }
         @keyframes heartbeat { 0%, 28%, 70% { transform: rotate(45deg) scale(1); } 14%, 42% { transform: rotate(45deg) scale(1.1); } }
 
-        /* --- FLOATING GLASS MENU (REMPLAZA AL SIDEBAR) --- */
+        /* --- FLOATING GLASS SIDEBAR --- */
         #sidebar { 
             position: fixed; top: 80px; left: 20px; width: 240px; 
-            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(154, 0, 255, 0.3); border-radius: 20px;
+            background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 20px;
             z-index: 20000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            padding: 20px; display: flex; flex-direction: column;
-            opacity: 0; visibility: hidden; transform: translateX(-20px) scale(0.95);
+            padding: 20px; opacity: 0; visibility: hidden; transform: translateX(-20px) scale(0.95);
         }
-        #sidebar.active { opacity: 1; visibility: visible; transform: translateX(0) scale(1); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; z-index: 19000; }
+        #sidebar.active { opacity: 1; visibility: visible; transform: translateX(0) scale(1); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 19000; }
         
-        .wallet-mini { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 15px; text-align: center; }
-        .sidebar-item { padding: 12px; display: flex; align-items: center; gap: 12px; color: #ddd; font-size: 13px; cursor: pointer; border-radius: 10px; transition: 0.2s; }
-        .sidebar-item i { color: var(--accent); width: 18px; }
-        .sidebar-item:active { background: rgba(154, 0, 255, 0.2); transform: scale(0.98); }
+        .sidebar-item { padding: 15px; display: flex; align-items: center; gap: 12px; color: #ddd; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .sidebar-item i { color: var(--accent); }
+        .sidebar-item:active { transform: scale(0.95); color: var(--accent); }
 
         /* --- UI CORE --- */
-        #main-app { display: none; height: 100vh; flex-direction: column; }
-        .header { height: 65px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; backdrop-filter: blur(10px); }
+        #main-app { display: none; height: 100vh; flex-direction: column; background: transparent; }
+        .header { 
+            height: 65px; background: rgba(0,0,0,0.4); 
+            border-bottom: 1px solid var(--border); 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 20px; backdrop-filter: blur(10px);
+        }
         .content { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 
         /* --- NAV --- */
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-        .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 30px; border: 4px solid #000; box-shadow: 0 0 25px rgba(154,0,255,0.5); cursor: pointer; }
-        .nav-btn { color: #555; font-size: 22px; cursor: pointer; }
+        nav { 
+            position: fixed; bottom: 0; width: 100%; height: 75px; 
+            background: rgba(0,0,0,0.8); border-top: 1px solid var(--border); 
+            display: flex; justify-content: space-around; align-items: center; 
+            z-index: 100; backdrop-filter: blur(10px);
+        }
+        .nav-add { 
+            width: 55px; height: 55px; background: #fff; color: #000; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 26px; margin-bottom: 30px; border: 4px solid #000; 
+            box-shadow: 0 0 30px rgba(154,0,255,0.6); cursor: pointer; 
+        }
+        .nav-btn { color: rgba(255,255,255,0.3); font-size: 22px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
     <div id="sidebar">
-        <div class="wallet-mini">
-            <p style="color:var(--accent); font-size:9px; margin:0; letter-spacing:1px; font-weight:bold;">WALLET</p>
-            <h3 style="font-family:'Cinzel'; margin: 5px 0; color:#fff;">$ 1,240.50</h3>
+        <div style="border-bottom: 1px solid var(--border); padding-bottom:15px; margin-bottom:15px; text-align:center;">
+            <p style="color:var(--accent); font-size:9px; letter-spacing:2px; font-weight:bold; margin:0;">OBSIDIAN VAULT</p>
+            <h3 style="font-family:'Cinzel'; margin: 8px 0; color:#fff;">$ 1,240.50</h3>
         </div>
         <div class="sidebar-item"><i class="fas fa-gem"></i> VIP Area</div>
-        <div class="sidebar-item"><i class="fas fa-chart-line"></i> Estadísticas</div>
-        <div class="sidebar-item"><i class="fas fa-cog"></i> Ajustes</div>
-        <div class="sidebar-item" style="margin-top: 10px; color:#ff4444; border-top: 1px solid rgba(255,255,255,0.05); padding-top:15px;" onclick="location.reload()">
+        <div class="sidebar-item"><i class="fas fa-history"></i> Transacciones</div>
+        <div class="sidebar-item" style="margin-top: 10px; color:#ff4444;" onclick="location.reload()">
             <i class="fas fa-power-off"></i> Salir
         </div>
     </div>
@@ -68,24 +102,24 @@
             <div class="logo-glow"></div>
             <div class="diamond-logo"><span>Ω</span></div>
         </div>
-        <div style="width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; margin-bottom: 40px;">
+        <div style="width: 280px; border-bottom: 1px solid var(--accent); position: relative; display: flex; align-items: center; margin-bottom: 40px;">
             <input type="password" id="pass" placeholder="ACCESS KEY" style="background:none; border:none; color:var(--accent); width:100%; padding:15px; text-align:center; letter-spacing:5px; outline:none; font-size:18px;">
             <button onclick="togglePass()" id="btn-t" style="background:none; border:none; color:#555; font-size:10px; font-weight:bold; cursor:pointer; position:absolute; right:0; padding:10px;">SHOW</button>
         </div>
-        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:45px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
+        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:50px; cursor:pointer;"><i class="fas fa-chevron-circle-right"></i></button>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" onclick="toggleSidebar()" style="cursor:pointer; font-size:20px; color:#fff;"></i>
+            <i class="fas fa-bars" onclick="toggleSidebar()" style="cursor:pointer; font-size:20px; color:var(--accent);"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
             <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--accent); background:url('https://i.pravatar.cc/100?u=leo') center/cover;"></div>
         </div>
         
         <div class="content">
-            <div style="padding:40px; text-align:center; margin-top:100px;">
-                 <i class="fas fa-shield-alt" style="font-size:40px; color:var(--accent); opacity:0.2; margin-bottom:20px;"></i>
-                 <p style="color:#222; font-family:'Cinzel'; font-size:12px; letter-spacing:2px;">Vault Encrypted</p>
+            <div style="padding:100px 40px; text-align:center;">
+                 <i class="fas fa-fingerprint" style="font-size:60px; color:var(--accent); opacity:0.1; margin-bottom:20px;"></i>
+                 <p style="color:rgba(154,0,255,0.2); font-family:'Cinzel'; font-size:12px; letter-spacing:4px;">Secure Environment</p>
             </div>
         </div>
 
@@ -112,24 +146,16 @@
             document.getElementById('login-view').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
         }
-        
         function toggleSidebar() {
             const side = document.getElementById('sidebar');
             const over = document.getElementById('overlay');
             const isActive = side.classList.contains('active');
-            
-            if (isActive) {
-                side.classList.remove('active');
-                over.style.display = 'none';
-            } else {
-                side.classList.add('active');
-                over.style.display = 'block';
-            }
+            side.classList.toggle('active');
+            over.style.display = isActive ? 'none' : 'block';
         }
-
         function handleFile() {
             document.getElementById('snd-cash').play();
-            alert("✅ Archivo enviado al Vault.");
+            alert("✅ Secure upload complete.");
         }
     </script>
 </body>
