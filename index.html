@@ -3,47 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN PRO | Shielded</title>
-    
+    <title>OBSIDIAN v25 | Official Vault</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
-        /* [MODULO 2: VARIABLES & RESET] */
         :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --gold: #FFD700; }
         body, html { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; }
 
-        /* [MODULO 3: LOGIN & GLOW ANIMATIONS] */
+        /* --- LOGIN & LOGO GLOW --- */
         #login-view { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a0033 0%, #000 100%); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .logo-container { position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 50px; }
         .logo-glow { position: absolute; width: 140px; height: 140px; background: var(--accent); filter: blur(60px); opacity: 0.5; border-radius: 50%; animation: pulse-glow 3s infinite; }
         .diamond-logo { position: relative; width: 85px; height: 85px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 25px var(--accent); animation: heartbeat 2s infinite; z-index: 2; }
         .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 38px; color: var(--accent); }
+        
         @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.4); opacity: 0.7; } }
         @keyframes heartbeat { 0%, 28%, 70% { transform: rotate(45deg) scale(1); } 14%, 42% { transform: rotate(45deg) scale(1.1); } }
 
-        /* [MODULO 4: INPUTS & BUTTONS] */
+        /* INPUTS */
         .input-group { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; margin-bottom: 40px; }
         .input-group input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; text-align: center; letter-spacing: 5px; outline: none; font-size: 18px; }
         .btn-show { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; padding: 10px; z-index: 10; }
 
-        /* [MODULO 5: APP CORE UI] */
-        #main-app { display: none; height: 100vh; flex-direction: column; }
-        .header { height: 65px; background: rgba(0,0,0,0.98); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .content { flex: 1; overflow-y: auto; padding-bottom: 90px; }
+        /* SIDEBAR (NUEVO) */
+        #sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; background: #080808; border-right: 1px solid var(--border); z-index: 15000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 20px; display: flex; flex-direction: column; }
+        #sidebar.active { left: 0; box-shadow: 20px 0 50px #000; }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 14000; }
+        .sidebar-item { padding: 15px; display: flex; align-items: center; gap: 15px; color: #888; font-size: 14px; cursor: pointer; border-bottom: 1px solid #111; }
+        .sidebar-item i { color: var(--accent); }
 
-        /* [MODULO 6: STORIES & NAVIGATION] */
-        .stories-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border); }
-        .story-circle { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); padding: 3px; position: relative; }
+        /* APP UI */
+        #main-app { display: none; height: 100vh; flex-direction: column; }
+        .header { height: 65px; background: #000; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+        .msg-tip { background: rgba(255,215,0,0.05); border: 1px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 10px; margin: 10px auto; width: 90%; text-align: center; font-size: 12px; font-weight: bold; }
+
+        /* STORIES */
+        .stories-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+        .story-circle { min-width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); padding: 2px; position: relative; }
         .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+
+        /* NAV */
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; }
         .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 30px; border: 4px solid #000; box-shadow: 0 0 20px rgba(154,0,255,0.4); cursor: pointer; }
         .nav-btn { color: #555; font-size: 22px; cursor: pointer; }
-        .active { color: var(--accent); }
     </style>
 </head>
 <body>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div id="sidebar">
+        <div style="background:linear-gradient(135deg,#1a0033,#000); padding:20px; border-radius:15px; border:1px solid var(--accent); text-align:center; margin-bottom: 20px;">
+            <p style="color:var(--accent); font-size:10px; margin:0;">BALANCE</p>
+            <h2 style="font-family:'Cinzel'; margin: 10px 0;">$ 1,240.50</h2>
+            <button style="background:var(--accent); border:none; color:#fff; padding:5px 15px; border-radius:15px; font-size:10px;">WITHDRAW</button>
+        </div>
+        <div class="sidebar-item"><i class="fas fa-user"></i> Mi Perfil</div>
+        <div class="sidebar-item"><i class="fas fa-chart-line"></i> Estadísticas VIP</div>
+        <div class="sidebar-item" style="margin-top:auto; color:#ff4444;" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</div>
+    </div>
 
     <div id="login-view">
         <div class="logo-container">
@@ -51,59 +68,59 @@
             <div class="diamond-logo"><span>Ω</span></div>
         </div>
         <div class="input-group">
-            <input type="password" id="pass-field" placeholder="ACCESS KEY">
+            <input type="password" id="pass" placeholder="ACCESS KEY">
             <button class="btn-show" onclick="togglePass()">SHOW</button>
         </div>
-        <button onclick="enterApp()" style="background:none; border:none; color:var(--accent); font-size:45px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
+        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:45px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars"></i>
-            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
-            <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--accent); background: #222;"></div>
+            <i class="fas fa-bars" onclick="toggleSidebar()" style="cursor:pointer;"></i>
+            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
+            <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--accent); background:#222;"></div>
+        </div>
+        
+        <div style="flex:1; overflow-y:auto; padding-bottom:100px;">
+            <div class="stories-bar">
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=me"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=12"></div>
+            </div>
+            <div class="msg-tip">💰 ¡HAS RECIBIDO UNA PROPINA DE $50.00!</div>
+            <p style="text-align:center; color:#222; font-family:'Cinzel'; margin-top:50px;">Vault Locked</p>
         </div>
 
-        <div class="content">
-            <div class="stories-bar" id="stories-area">
-                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=1"></div>
-                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=2"></div>
-            </div>
-            </div>
-
         <nav>
-            <i class="fas fa-home nav-btn active"></i>
+            <i class="fas fa-home nav-btn" style="color:var(--accent)"></i>
             <i class="fas fa-search nav-btn"></i>
-            <div class="nav-add" onclick="triggerFile()"><i class="fas fa-plus"></i></div>
+            <div class="nav-add" onclick="document.getElementById('file-up').click()"><i class="fas fa-plus"></i></div>
             <i class="fas fa-envelope nav-btn"></i>
             <i class="fas fa-cog nav-btn"></i>
         </nav>
     </div>
 
-    <input type="file" id="global-file" hidden onchange="handleFile(this)">
+    <input type="file" id="file-up" hidden onchange="handleFile()">
     <audio id="snd-cash" src="https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3"></audio>
 
     <script>
-        /* [LOGICA 1: ACCESO] */
         function togglePass() {
-            const f = document.getElementById('pass-field');
-            f.type = f.type === 'password' ? 'text' : 'password';
-            document.querySelector('.btn-show').innerText = f.type === 'password' ? 'SHOW' : 'HIDE';
+            const p = document.getElementById('pass');
+            p.type = p.type === 'password' ? 'text' : 'password';
+            document.querySelector('.btn-show').innerText = p.type === 'password' ? 'SHOW' : 'HIDE';
         }
-
-        function enterApp() {
+        function enter() {
             document.getElementById('login-view').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
         }
-
-        /* [LOGICA 2: MEDIA] */
-        function triggerFile() { document.getElementById('global-file').click(); }
-        
-        function handleFile(input) {
-            if(input.files && input.files[0]) {
-                document.getElementById('snd-cash').play();
-                alert("Vault: Contenido detectado. Iniciando encriptación...");
-            }
+        function toggleSidebar() {
+            const side = document.getElementById('sidebar');
+            const over = document.getElementById('overlay');
+            side.classList.toggle('active');
+            over.style.display = side.classList.contains('active') ? 'block' : 'none';
+        }
+        function handleFile() {
+            document.getElementById('snd-cash').play();
+            alert("✅ Archivo recibido en el Vault");
         }
     </script>
 </body>
