@@ -3,168 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN | Private Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@200;400;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>OBSIDIAN | Exclusive Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@200;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #9A00FF; --bg: #000; }
-        
-        body { 
-            background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; 
-            margin: 0; display: flex; align-items: center; justify-content: center; 
-            min-height: 100vh; overflow: hidden; position: relative;
-        }
+        :root { --accent: #9A00FF; --bg: #000; --card: #0a0a0a; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; }
 
-        /* FONDO ATMOSFÉRICO */
-        body::before {
-            content: ""; position: absolute; width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 50%, #0d001a 0%, #000 70%);
-            animation: drift 40s linear infinite; z-index: -1; opacity: 0.6;
-        }
-        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* HEADER */
+        header { padding: 20px; text-align: center; border-bottom: 1px solid #111; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100; }
+        header h1 { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 8px; margin: 0; opacity: 0.6; }
 
-        /* PANTALLA DE ACCESO */
-        #access-screen { text-align: center; z-index: 10; transition: 1.5s ease; width: 100%; max-width: 400px; }
-        
-        .gate-diamond { 
-            width: 60px; height: 60px; border: 1px solid rgba(255,255,255,0.2); 
-            transform: rotate(45deg); display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto 50px; box-shadow: 0 0 50px rgba(154, 0, 255, 0.1); 
-        }
-        .gate-diamond span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 24px; color: rgba(255,255,255,0.5); }
-        
-        /* CONTENEDOR INPUT CON OJO */
-        .input-wrapper { position: relative; width: 280px; margin: 0 auto; }
-
-        .access-input { 
-            background: none; border: none; border-bottom: 1px solid #222; 
-            color: var(--accent); font-family: 'JetBrains Mono', monospace; 
-            text-align: center; font-size: 18px; /* LETRA MÁS GRANDE */
-            letter-spacing: 4px; width: 100%; padding: 15px 0; outline: none; transition: 0.5s; 
-        }
+        /* LOGIN VIEW */
+        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .access-input { background: none; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 8px; width: 250px; text-align: center; font-size: 16px; margin-top: 20px; outline: none; transition: 0.3s; }
         .access-input:focus { border-color: var(--accent); }
 
-        .toggle-pass {
-            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-            background: none; border: none; color: #444; cursor: pointer;
-            font-size: 12px; font-family: 'Inter', sans-serif; text-transform: uppercase;
-            letter-spacing: 1px; transition: 0.3s;
-        }
-        .toggle-pass:hover { color: var(--accent); }
-
-        /* DASHBOARD */
-        #dashboard { display: none; text-align: center; opacity: 0; transition: 2.5s ease; width: 100%; }
+        /* FEED */
+        .feed { max-width: 500px; margin: 0 auto; padding: 15px; }
+        .post { background: var(--card); border-radius: 12px; margin-bottom: 25px; overflow: hidden; border: 1px solid #151515; }
         
-        .vault-header {
-            font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 15px;
-            color: rgba(255,255,255,0.15); margin-bottom: 30px;
-        }
+        .post-header { padding: 12px; display: flex; align-items: center; font-size: 12px; border-bottom: 1px solid #111; }
+        .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(45deg, #222, var(--accent)); margin-right: 10px; }
 
-        #balance {
-            font-size: clamp(80px, 20vw, 160px); font-weight: 200; letter-spacing: -10px;
-            background: linear-gradient(180deg, #fff 40%, #333 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 10px 0;
+        .content-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #050505; display: flex; align-items: center; justify-content: center; }
+        .post-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* PREMIUM BLUR */
+        .premium-overlay { 
+            position: absolute; inset: 0; background: rgba(0,0,0,0.4); 
+            backdrop-filter: blur(35px); display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; z-index: 2;
         }
+        .lock-icon { font-size: 30px; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--accent)); }
+        .unlock-btn { 
+            background: #fff; color: #000; border: none; padding: 12px 24px; 
+            border-radius: 30px; font-weight: 700; font-size: 11px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        .unlock-btn:hover { transform: scale(1.05); background: var(--accent); color: #fff; }
 
-        #user-tag {
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 12px; /* LETRA MÁS GRANDE */
-            letter-spacing: 4px; color: #444; text-transform: uppercase; margin-top: 30px; display: block;
-        }
+        .post-info { padding: 15px; }
+        .post-desc { font-size: 13px; color: #aaa; margin-bottom: 10px; line-height: 1.4; }
+        .post-actions { display: flex; gap: 15px; color: #444; font-size: 20px; margin-bottom: 10px; }
 
-        .btn-logout {
-            position: fixed; top: 40px; right: 40px; background: none; border: none;
-            color: #222; font-size: 9px; letter-spacing: 4px; cursor: pointer; opacity: 0; transition: 1s;
+        /* NAVIGATION */
+        nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; height: 70px; 
+            background: rgba(5,5,5,0.95); border-top: 1px solid #111; 
+            display: flex; justify-content: space-around; align-items: center; z-index: 100;
         }
-        body:hover .btn-logout { opacity: 0.5; }
-        .btn-logout:hover { color: var(--accent); opacity: 1; }
+        .nav-item { color: #333; font-size: 22px; transition: 0.3s; cursor: pointer; }
+        .nav-item.active { color: var(--accent); }
 
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <button id="logout-btn" class="btn-logout hidden" onclick="location.reload()">Terminate</button>
-
-    <div id="access-screen">
-        <div class="gate-diamond"><span>Ω</span></div>
-        <div class="input-wrapper">
-            <input type="password" id="pass" class="access-input" placeholder="PASSWORD" onkeypress="handleKey(event)">
-            <button class="toggle-pass" onclick="toggleVisibility()">Show</button>
-        </div>
+    <div id="login-view">
+        <div style="font-family: 'Cinzel', serif; letter-spacing: 10px; font-size: 18px; opacity: 0.3;">OBSIDIAN</div>
+        <input type="password" id="access-key" class="access-input" placeholder="ACCESS KEY" onkeypress="checkKey(event)">
     </div>
 
-    <div id="dashboard">
-        <div class="vault-header">Obsidian Kingdom</div>
-        <div id="balance">$0.00</div>
-        <span id="user-tag">Initializing...</span>
+    <div id="main-app" class="hidden">
+        <header><h1>OBSIDIAN</h1></header>
+        
+        <div class="feed" id="feed-container">
+            </div>
+
+        <nav>
+            <div class="nav-item active">⌂</div>
+            <div class="nav-item">⌕</div>
+            <div class="nav-item">⊕</div>
+            <div class="nav-item">✉</div>
+            <div class="nav-item" onclick="location.reload()">👤</div>
+        </nav>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
-        const _obsidian = supabase.createClient(SB_URL, SB_KEY);
+        const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
-        function toggleVisibility() {
-            const input = document.getElementById('pass');
-            const btn = document.querySelector('.toggle-pass');
-            if (input.type === "password") {
-                input.type = "text";
-                btn.innerText = "Hide";
-            } else {
-                input.type = "password";
-                btn.innerText = "Show";
-            }
-        }
-
-        async function handleKey(e) {
+        // Función para validar la clave
+        async function checkKey(e) {
             if (e.key === 'Enter') {
-                const input = document.getElementById('pass');
-                const key = input.value;
-                input.placeholder = "WAIT...";
+                const key = e.target.value;
+                const { data, error } = await _supabase.from('users').select('*').eq('access_key', key).single();
                 
-                const { data } = await _obsidian.from('users').select('*').eq('access_key', key).single();
-
                 if (data) {
-                    document.getElementById('user-tag').innerText = `Authorized: ${data.user_name}`;
-                    unlock();
+                    document.getElementById('login-view').classList.add('hidden');
+                    document.getElementById('main-app').classList.remove('hidden');
+                    loadPosts();
                 } else {
-                    input.value = "";
-                    input.placeholder = "WRONG KEY";
+                    e.target.value = "";
+                    e.target.placeholder = "INVALID ACCESS";
                 }
             }
         }
 
-        function unlock() {
-            document.getElementById('access-screen').style.opacity = "0";
-            setTimeout(() => {
-                document.getElementById('access-screen').classList.add('hidden');
-                document.getElementById('dashboard').style.display = "block";
-                document.getElementById('logout-btn').classList.remove('hidden');
-                setTimeout(() => { 
-                    document.getElementById('dashboard').style.opacity = "1"; 
-                    syncBalance(); 
-                }, 100);
-            }, 1000);
-        }
+        // Función para cargar los posts desde Supabase
+        async function loadPosts() {
+            const { data: posts, error } = await _supabase
+                .from('posts')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-        async function syncBalance() {
-            const { data } = await _obsidian.from('balances').select('creator_net');
-            const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-            
-            let start = 0;
-            const step = () => {
-                start += total / 60;
-                if (start < total) {
-                    document.getElementById('balance').innerText = "$" + start.toFixed(2);
-                    requestAnimationFrame(step);
-                } else { 
-                    document.getElementById('balance').innerText = "$" + total.toFixed(2); 
-                }
-            };
-            requestAnimationFrame(step);
+            const container = document.getElementById('feed-container');
+            container.innerHTML = ""; // Limpiar feed
+
+            if (posts) {
+                posts.forEach(post => {
+                    const postHTML = `
+                        <div class="post">
+                            <div class="post-header">
+                                <div class="avatar"></div> 
+                                <strong>OBSIDIAN CREATOR</strong>
+                            </div>
+                            <div class="content-container">
+                                <img src="${post.content_url}" class="post-img">
+                                ${post.is_premium ? `
+                                    <div class="premium-overlay">
+                                        <div class="lock-icon">🔒</div>
+                                        <button class="unlock-btn">Unlock for $${post.price}</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="post-info">
+                                <div class="post-actions"><span>♡</span> <span>✉</span> <span>⌂</span></div>
+                                <p class="post-desc">${post.description || ''}</p>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += postHTML;
+                });
+            }
         }
-    </script>
-</body>
-</html>
