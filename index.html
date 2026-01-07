@@ -3,22 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OBSIDIAN v35 | Messaging Gas</title>
+    <title>OBSIDIAN v36 | Final Chat Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #9A00FF; 
-            --bg-deep: #05000a; 
-            --border: rgba(154, 0, 255, 0.3); 
-            --gold: #FFD700; 
-            --glass: rgba(20, 20, 20, 0.9); 
+            --accent: #9A00FF; --bg: #05000a; --border: rgba(154, 0, 255, 0.3); 
+            --gold: #FFD700; --glass: rgba(15, 15, 15, 0.95); 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { 
-            background: var(--bg-deep);
-            background: radial-gradient(circle at top right, #1a0033 0%, #05000a 60%, #000 100%);
+            background: var(--bg); background: radial-gradient(circle at top right, #1a0033 0%, #05000a 60%, #000 100%);
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; position: fixed; width: 100%;
         }
 
@@ -27,77 +23,95 @@
         #main-app { display: none; height: 100vh; flex-direction: column; opacity: 0; transition: opacity 0.5s; }
         .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); z-index: 1000; }
         
-        /* --- CHAT MODULE (BLINDADO) --- */
-        #chat-view { display: none; flex: 1; flex-direction: column; background: transparent; }
-        .chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.4; position: relative; }
-        .msg-received { background: var(--glass); align-self: flex-start; border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 4px; }
-        .msg-sent { background: var(--accent); color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(154,0,255,0.3); }
-        
-        .msg-info { font-size: 9px; opacity: 0.6; margin-top: 5px; display: flex; justify-content: flex-end; gap: 4px; }
-        .msg-info i { color: var(--gold); }
+        /* --- FEED COMPACTO --- */
+        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; -webkit-overflow-scrolling: touch; }
+        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px auto; width: 90%; max-width: 380px; border-radius: 18px; overflow: hidden; }
+        .post-img { width: 100%; aspect-ratio: 1/1; position: relative; background: #000; }
+        .post-img img { width: 100%; height: 100%; object-fit: cover; }
+        .locked-overlay { position: absolute; inset: 0; backdrop-filter: blur(20px); background: rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 
-        .chat-input-area { 
-            padding: 15px; background: rgba(0,0,0,0.9); border-top: 1px solid var(--border); 
-            display: flex; align-items: center; gap: 12px; padding-bottom: calc(15px + env(safe-area-inset-bottom));
-        }
-        .chat-input { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 25px; padding: 10px 18px; color: #fff; outline: none; font-size: 14px; }
+        /* --- CHAT MODULE (BLINDADO) --- */
+        #chat-view { display: none; flex: 1; flex-direction: column; position: relative; height: calc(100vh - 135px); }
+        .chat-scroll { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         
-        /* --- OTROS --- */
-        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; }
-        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px auto; width: 92%; border-radius: 18px; overflow: hidden; }
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.95); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-top: -30px; border: 5px solid #000; box-shadow: 0 0 20px var(--accent); cursor: pointer; }
+        .msg { max-width: 80%; padding: 12px; border-radius: 15px; font-size: 13px; line-height: 1.4; }
+        .msg-received { background: var(--glass); align-self: flex-start; border: 1px solid var(--border); }
+        .msg-sent { background: var(--accent); align-self: flex-end; }
+
+        /* --- TIP / CONTENT BOX --- */
+        .tip-box { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); border-radius: 15px; padding: 15px; text-align: center; margin: 10px 0; }
+        .btn-gold { background: var(--gold); color: #000; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 11px; cursor: pointer; margin-top: 10px; }
+
+        /* --- INPUT BAR FIX --- */
+        .chat-input-bar { 
+            padding: 10px 15px; background: #000; border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px; position: absolute; bottom: 0; width: 100%;
+        }
+        .input-field { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 20px; padding: 10px 15px; color: #fff; outline: none; font-size: 14px; }
+
+        /* --- NAV --- */
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
+        .nav-add { width: 50px; height: 50px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -25px; border: 4px solid #000; color: #000; font-size: 20px; box-shadow: 0 0 15px var(--accent); }
     </style>
 </head>
 <body>
 
     <div id="login-view">
         <div style="font-family:'Cinzel'; font-size:40px; color:var(--accent); margin-bottom:40px;">Ω</div>
-        <input type="password" id="pass" placeholder="ACCESS KEY" style="background:none; border:none; border-bottom:1px solid var(--accent); color:var(--accent); text-align:center; padding:10px; outline:none; letter-spacing:5px;">
-        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:50px; cursor:pointer; margin-top:30px;"><i class="fas fa-chevron-circle-right"></i></button>
+        <button onclick="enter()" style="background:var(--accent); border:none; color:#fff; padding:15px 40px; border-radius:30px; font-weight:bold; cursor:pointer;">ENTER VAULT</button>
     </div>
 
     <div id="main-app">
         <div class="header">
             <i class="fas fa-bars" style="color:var(--accent); font-size:20px;"></i>
-            <span id="header-title" style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:32px; height:32px; border-radius:50%; border:1px solid var(--accent); background:url('https://i.pravatar.cc/100?u=leo') center/cover;"></div>
+            <span id="title" style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
+            <div style="width:30px; height:30px; border-radius:50%; background:var(--accent);"></div>
         </div>
-        
+
         <div id="feed-view" class="content">
             <div class="post-card">
-                <div style="padding:10px; font-size:12px; font-weight:600;">Diamond_Girl</div>
-                <div style="width:100%; aspect-ratio:1/1; background:url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=500') center/cover;"></div>
-                <div style="padding:15px; display:flex; gap:20px; color:rgba(255,255,255,0.4);"><i class="far fa-heart"></i><i class="far fa-comment"></i></div>
+                <div style="padding:10px; font-size:11px;">@Diamond_Girl</div>
+                <div class="post-img">
+                    <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=500">
+                    <div class="locked-overlay">
+                        <i class="fas fa-lock" style="color:var(--gold); font-size:24px;"></i>
+                        <button class="btn-gold">UNLOCK CONTENT $15.00</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="chat-view">
-            <div class="chat-container" id="chat-msgs">
-                <div class="msg msg-received">
-                    Hola Leo, ¿viste el último video del Vault? Está increíble.
-                    <div class="msg-info">10:42 PM</div>
+            <div class="chat-scroll">
+                <div class="msg msg-received">Hola Leo, te dejé un contenido nuevo en el chat.</div>
+                
+                <div class="tip-box">
+                    <i class="fas fa-gem" style="color:var(--gold); font-size:24px;"></i>
+                    <p style="font-size:12px; margin:10px 0;">Contenido Exclusivo desbloqueable</p>
+                    <button class="btn-gold">COMPRAR AHORA $25.00</button>
                 </div>
-                <div class="msg msg-sent">
-                    ¡Todavía no! Estoy terminando de blindar la interfaz.
-                    <div class="msg-info">10:43 PM <i class="fas fa-check-double"></i></div>
+
+                <div class="msg msg-sent">Ya lo estoy revisando! 🔥</div>
+                
+                <div class="tip-box" style="border-color: var(--accent); background: rgba(154,0,255,0.05);">
+                    <p style="font-size:11px; margin:0; color: var(--accent);">¿Quieres enviar una propina?</p>
+                    <button class="btn-gold" style="background:var(--accent); color:#fff;">ENVIAR TIP</button>
                 </div>
             </div>
-            <div class="chat-input-area">
-                <i class="fas fa-paperclip" style="color:var(--accent); font-size:20px;"></i>
-                <input type="text" class="chat-input" placeholder="Escribe un mensaje secreto...">
-                <i class="fas fa-paper-plane" style="color:var(--accent); font-size:20px;"></i>
+
+            <div class="chat-input-bar">
+                <i class="fas fa-paperclip" style="color:#555;"></i>
+                <input type="text" class="input-field" placeholder="Escribe un mensaje...">
+                <i class="fas fa-paper-plane" style="color:var(--accent);"></i>
             </div>
         </div>
 
         <nav>
-            <i class="fas fa-home" onclick="showView('feed')" id="nav-home" style="color:var(--accent); font-size:22px;"></i>
-            <i class="fas fa-search" style="color:#555; font-size:22px;"></i>
+            <i class="fas fa-home" onclick="tab('feed')" id="h-i" style="color:var(--accent); font-size:20px;"></i>
+            <i class="fas fa-search" style="color:#555; font-size:20px;"></i>
             <div class="nav-add"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" onclick="showView('chat')" id="nav-chat" style="color:#555; font-size:22px;"></i>
-            <i class="fas fa-cog" style="color:#555; font-size:22px;"></i>
+            <i class="fas fa-envelope" onclick="tab('chat')" id="c-i" style="color:#555; font-size:20px;"></i>
+            <i class="fas fa-cog" style="color:#555; font-size:20px;"></i>
         </nav>
     </div>
 
@@ -108,25 +122,25 @@
             setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
         }
 
-        function showView(view) {
+        function tab(v) {
             const feed = document.getElementById('feed-view');
             const chat = document.getElementById('chat-view');
-            const title = document.getElementById('header-title');
-            const iconHome = document.getElementById('nav-home');
-            const iconChat = document.getElementById('nav-chat');
+            const hi = document.getElementById('h-i');
+            const ci = document.getElementById('c-i');
+            const title = document.getElementById('title');
 
-            if(view === 'chat') {
+            if(v === 'chat') {
                 feed.style.display = 'none';
                 chat.style.display = 'flex';
-                title.innerText = 'MESSAGES';
-                iconChat.style.color = 'var(--accent)';
-                iconHome.style.color = '#555';
+                ci.style.color = 'var(--accent)';
+                hi.style.color = '#555';
+                title.innerText = 'VAULT CHAT';
             } else {
                 feed.style.display = 'block';
                 chat.style.display = 'none';
+                hi.style.color = 'var(--accent)';
+                ci.style.color = '#555';
                 title.innerText = 'OBSIDIAN';
-                iconHome.style.color = 'var(--accent)';
-                iconChat.style.color = '#555';
             }
         }
     </script>
