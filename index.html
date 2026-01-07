@@ -3,56 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OBSIDIAN | Exclusive Network</title>
+    <title>OBSIDIAN | Private Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Inter:wght@200;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #9A00FF; --bg: #000; --card: #0a0a0a; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
 
-        /* HEADER */
-        header { padding: 20px; text-align: center; border-bottom: 1px solid #111; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100; }
-        header h1 { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 8px; margin: 0; opacity: 0.6; }
-
-        /* LOGIN VIEW */
-        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .access-input { background: none; border: 1px solid #222; color: #fff; padding: 15px; border-radius: 8px; width: 250px; text-align: center; font-size: 16px; margin-top: 20px; outline: none; transition: 0.3s; }
+        /* LOGIN VIEW REFORZADO */
+        #login-view { 
+            height: 100vh; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center; 
+            background: radial-gradient(circle at center, #0d001a 0%, #000 70%);
+        }
+        
+        .login-container { position: relative; width: 300px; }
+        
+        .access-input { 
+            background: none; border: none; border-bottom: 1px solid #222; 
+            color: var(--accent); font-family: 'JetBrains Mono', monospace; 
+            text-align: center; font-size: 18px; letter-spacing: 4px; 
+            width: 100%; padding: 15px 0; outline: none; transition: 0.5s; 
+        }
         .access-input:focus { border-color: var(--accent); }
 
-        /* FEED */
-        .feed { max-width: 500px; margin: 0 auto; padding: 15px; }
-        .post { background: var(--card); border-radius: 12px; margin-bottom: 25px; overflow: hidden; border: 1px solid #151515; }
-        
-        .post-header { padding: 12px; display: flex; align-items: center; font-size: 12px; border-bottom: 1px solid #111; }
-        .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(45deg, #222, var(--accent)); margin-right: 10px; }
+        .toggle-btn {
+            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #444; cursor: pointer;
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+        }
 
-        .content-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #050505; display: flex; align-items: center; justify-content: center; }
+        /* DASHBOARD / FEED */
+        header { padding: 20px; text-align: center; border-bottom: 1px solid #111; position: sticky; top: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 100; }
+        header h1 { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 8px; margin: 0; color: var(--accent); }
+
+        .feed { max-width: 500px; margin: 0 auto; padding: 15px; }
+        .post { background: var(--card); border-radius: 12px; margin-bottom: 25px; overflow: hidden; border: 1px solid #151515; animation: fadeIn 1s ease; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .content-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #050505; }
         .post-img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* PREMIUM BLUR */
         .premium-overlay { 
             position: absolute; inset: 0; background: rgba(0,0,0,0.4); 
-            backdrop-filter: blur(35px); display: flex; flex-direction: column; 
+            backdrop-filter: blur(40px); display: flex; flex-direction: column; 
             align-items: center; justify-content: center; z-index: 2;
         }
-        .lock-icon { font-size: 30px; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--accent)); }
         .unlock-btn { 
             background: #fff; color: #000; border: none; padding: 12px 24px; 
             border-radius: 30px; font-weight: 700; font-size: 11px; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
         }
-        .unlock-btn:hover { transform: scale(1.05); background: var(--accent); color: #fff; }
 
-        .post-info { padding: 15px; }
-        .post-desc { font-size: 13px; color: #aaa; margin-bottom: 10px; line-height: 1.4; }
-        .post-actions { display: flex; gap: 15px; color: #444; font-size: 20px; margin-bottom: 10px; }
-
-        /* NAVIGATION */
-        nav { 
-            position: fixed; bottom: 0; left: 0; right: 0; height: 70px; 
-            background: rgba(5,5,5,0.95); border-top: 1px solid #111; 
-            display: flex; justify-content: space-around; align-items: center; z-index: 100;
-        }
-        .nav-item { color: #333; font-size: 22px; transition: 0.3s; cursor: pointer; }
+        /* NAV */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: #050505; border-top: 1px solid #111; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { color: #333; font-size: 22px; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
 
         .hidden { display: none !important; }
@@ -61,16 +65,16 @@
 <body>
 
     <div id="login-view">
-        <div style="font-family: 'Cinzel', serif; letter-spacing: 10px; font-size: 18px; opacity: 0.3;">OBSIDIAN</div>
-        <input type="password" id="access-key" class="access-input" placeholder="ACCESS KEY" onkeypress="checkKey(event)">
+        <div style="font-family: 'Cinzel', serif; letter-spacing: 12px; font-size: 18px; margin-bottom: 40px; color: rgba(255,255,255,0.2);">OBSIDIAN</div>
+        <div class="login-container">
+            <input type="password" id="pass" class="access-input" placeholder="PASSWORD" onkeypress="handleKey(event)">
+            <button class="toggle-btn" onclick="togglePass()">Show</button>
+        </div>
     </div>
 
     <div id="main-app" class="hidden">
         <header><h1>OBSIDIAN</h1></header>
-        
-        <div class="feed" id="feed-container">
-            </div>
-
+        <div class="feed" id="feed-container"></div>
         <nav>
             <div class="nav-item active">⌂</div>
             <div class="nav-item">⌕</div>
@@ -86,57 +90,63 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
-        // Función para validar la clave
-        async function checkKey(e) {
+        function togglePass() {
+            const input = document.getElementById('pass');
+            const btn = document.querySelector('.toggle-btn');
+            if (input.type === "password") {
+                input.type = "text";
+                btn.innerText = "Hide";
+            } else {
+                input.type = "password";
+                btn.innerText = "Show";
+            }
+        }
+
+        async function handleKey(e) {
             if (e.key === 'Enter') {
                 const key = e.target.value;
                 const { data, error } = await _supabase.from('users').select('*').eq('access_key', key).single();
-                
+
                 if (data) {
                     document.getElementById('login-view').classList.add('hidden');
                     document.getElementById('main-app').classList.remove('hidden');
                     loadPosts();
                 } else {
                     e.target.value = "";
-                    e.target.placeholder = "INVALID ACCESS";
+                    e.target.placeholder = "DENIED";
                 }
             }
         }
 
-        // Función para cargar los posts desde Supabase
         async function loadPosts() {
-            const { data: posts, error } = await _supabase
-                .from('posts')
-                .select('*')
-                .order('created_at', { ascending: false });
-
+            const { data: posts } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
             const container = document.getElementById('feed-container');
-            container.innerHTML = ""; // Limpiar feed
+            container.innerHTML = "";
 
-            if (posts) {
+            if (posts && posts.length > 0) {
                 posts.forEach(post => {
-                    const postHTML = `
+                    container.innerHTML += `
                         <div class="post">
-                            <div class="post-header">
-                                <div class="avatar"></div> 
-                                <strong>OBSIDIAN CREATOR</strong>
-                            </div>
+                            <div style="padding:15px; font-size:11px; color:#444; letter-spacing:2px;">ANONYMOUS CREATOR</div>
                             <div class="content-container">
                                 <img src="${post.content_url}" class="post-img">
                                 ${post.is_premium ? `
                                     <div class="premium-overlay">
-                                        <div class="lock-icon">🔒</div>
+                                        <div style="font-size:24px; margin-bottom:15px;">🔒</div>
                                         <button class="unlock-btn">Unlock for $${post.price}</button>
                                     </div>
                                 ` : ''}
                             </div>
-                            <div class="post-info">
-                                <div class="post-actions"><span>♡</span> <span>✉</span> <span>⌂</span></div>
-                                <p class="post-desc">${post.description || ''}</p>
+                            <div style="padding:15px;">
+                                <p style="font-size:13px; color:#888; margin:0;">${post.description || ''}</p>
                             </div>
                         </div>
                     `;
-                    container.innerHTML += postHTML;
                 });
+            } else {
+                container.innerHTML = "<p style='text-align:center; opacity:0.2;'>No hay publicaciones aún.</p>";
             }
         }
+    </script>
+</body>
+</html>
