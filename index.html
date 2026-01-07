@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN v26 | Living Vault</title>
+    <title>OBSIDIAN v28 | Sidebar Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --gold: #FFD700; --sidebar-bg: #0a0a0a; }
+        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --gold: #FFD700; --card: #0d0d0d; }
         body, html { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; }
 
         /* --- LOGIN & GLOW --- */
@@ -19,34 +19,26 @@
         @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.4); opacity: 0.7; } }
         @keyframes heartbeat { 0%, 28%, 70% { transform: rotate(45deg) scale(1); } 14%, 42% { transform: rotate(45deg) scale(1.1); } }
 
-        /* --- SIDEBAR CON VIDA --- */
+        /* --- SIDEBAR REAL FIX --- */
         #sidebar { 
             position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; 
-            background: var(--sidebar-bg); border-right: 1px solid var(--border); 
-            z-index: 15000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: #080808; border-right: 1px solid var(--border); 
+            z-index: 20000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
             padding: 25px; display: flex; flex-direction: column; 
         }
-        #sidebar.active { left: 0; box-shadow: 30px 0 60px rgba(0,0,0,0.9); }
-        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 14000; backdrop-filter: blur(4px); }
+        #sidebar.active { left: 0; box-shadow: 30px 0 60px #000; }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 19000; backdrop-filter: blur(5px); }
         
-        .wallet-box { 
-            background: linear-gradient(145deg, #15002b, #000); padding: 20px; border-radius: 18px; 
-            border: 1px solid #222; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-        .sidebar-item { 
-            padding: 18px; display: flex; align-items: center; gap: 15px; color: #aaa; 
-            font-size: 14px; cursor: pointer; border-radius: 12px; transition: 0.3s;
-        }
-        .sidebar-item i { color: var(--accent); font-size: 18px; }
-        .sidebar-item:active { background: #151515; color: #fff; transform: translateX(5px); }
+        .wallet-box { background: linear-gradient(145deg, #15002b, #000); padding: 20px; border-radius: 18px; border: 1px solid #222; text-align: center; margin-bottom: 30px; }
+        .sidebar-item { padding: 18px; display: flex; align-items: center; gap: 15px; color: #aaa; font-size: 14px; cursor: pointer; border-radius: 12px; }
+        .sidebar-item i { color: var(--accent); width: 20px; text-align: center; }
 
         /* --- UI CORE --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
-        .header { height: 65px; background: #000; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .msg-tip { background: rgba(255,215,0,0.05); border: 1px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 10px; margin: 15px auto; width: 90%; text-align: center; font-size: 12px; font-weight: bold; animation: tip-fade 2s ease-in-out; }
-        @keyframes tip-fade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .header { height: 65px; background: #000; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: sticky; top: 0; z-index: 100; }
+        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 
-        /* NAV */
+        /* --- NAV --- */
         nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
         .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 30px; border: 4px solid #000; box-shadow: 0 0 25px rgba(154,0,255,0.5); cursor: pointer; }
     </style>
@@ -56,18 +48,13 @@
     <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
     <div id="sidebar">
         <div class="wallet-box">
-            <p style="color:var(--accent); font-size:10px; margin:0; letter-spacing:1px;">BALANCE DISPONIBLE</p>
-            <h2 style="font-family:'Cinzel'; margin: 12px 0; color:#fff;">$ 1,240.50</h2>
-            <button style="background:linear-gradient(to right, var(--accent), #6a00ff); border:none; color:#fff; padding:8px 20px; border-radius:20px; font-size:11px; font-weight:bold; cursor:pointer;">RETIRAR FONDOS</button>
+            <p style="color:var(--accent); font-size:10px; margin:0; letter-spacing: 1px;">MY VAULT</p>
+            <h2 style="font-family:'Cinzel'; margin: 12px 0;">$ 1,240.50</h2>
+            <button style="background:var(--accent); border:none; color:#fff; padding:8px 20px; border-radius:20px; font-size:11px; font-weight:bold; cursor:pointer;">RETIRAR</button>
         </div>
-        
-        <div class="sidebar-item"><i class="fas fa-gem"></i> Beneficios VIP</div>
-        <div class="sidebar-item"><i class="fas fa-chart-pie"></i> Mis Estadísticas</div>
-        <div class="sidebar-item"><i class="fas fa-shield-alt"></i> Seguridad Vault</div>
-        
-        <div class="sidebar-item" style="margin-top:auto; color:#ff4444;" onclick="location.reload()">
-            <i class="fas fa-power-off" style="color:#ff4444;"></i> Cerrar Sesión
-        </div>
+        <div class="sidebar-item"><i class="fas fa-gem"></i> VIP Area</div>
+        <div class="sidebar-item"><i class="fas fa-chart-line"></i> Estadísticas</div>
+        <div class="sidebar-item" style="margin-top:auto; color:#ff4444;" onclick="location.reload()"><i class="fas fa-power-off"></i> Cerrar Sesión</div>
     </div>
 
     <div id="login-view">
@@ -75,7 +62,7 @@
             <div class="logo-glow"></div>
             <div class="diamond-logo"><span>Ω</span></div>
         </div>
-        <div class="input-group" style="width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; margin-bottom: 40px;">
+        <div style="width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; margin-bottom: 40px;">
             <input type="password" id="pass" placeholder="ACCESS KEY" style="background:none; border:none; color:var(--accent); width:100%; padding:15px; text-align:center; letter-spacing:5px; outline:none; font-size:18px;">
             <button onclick="togglePass()" id="btn-t" style="background:none; border:none; color:#555; font-size:10px; font-weight:bold; cursor:pointer; position:absolute; right:0; padding:10px;">SHOW</button>
         </div>
@@ -84,27 +71,30 @@
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" onclick="toggleSidebar()" style="cursor:pointer; font-size:20px;"></i>
+            <i class="fas fa-bars" onclick="toggleSidebar()" style="cursor:pointer; font-size:22px;"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
-            <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--accent); background:#111;"></div>
+            <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--accent); background:url('https://i.pravatar.cc/100?u=leo') center/cover;"></div>
         </div>
         
-        <div style="flex:1; overflow-y:auto; padding-bottom:100px;">
+        <div class="content">
             <div style="display:flex; gap:15px; padding:20px; overflow-x:auto; border-bottom:1px solid var(--border);">
                 <div style="min-width:65px; height:65px; border-radius:50%; border:2px solid var(--accent); padding:3px; position:relative;">
-                    <img src="https://i.pravatar.cc/150?u=leo" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                    <img src="https://i.pravatar.cc/100?u=me" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
                     <div style="position:absolute; bottom:0; right:0; background:var(--accent); width:18px; height:18px; border-radius:50%; border:2px solid #000; font-size:10px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-plus"></i></div>
                 </div>
             </div>
-            <div class="msg-tip"><i class="fas fa-coins"></i> ¡HAS RECIBIDO UNA PROPINA DE $50.00!</div>
+            <div style="padding:40px; text-align:center;">
+                 <i class="fas fa-shield-alt" style="font-size:50px; color:#111; margin-bottom:20px;"></i>
+                 <p style="color:#222; font-family:'Cinzel';">Vault Encrypted</p>
+            </div>
         </div>
 
         <nav>
-            <i class="fas fa-home" style="color:var(--accent)"></i>
-            <i class="fas fa-search"></i>
+            <i class="fas fa-home" style="color:var(--accent); font-size:22px;"></i>
+            <i class="fas fa-search" style="color:#555; font-size:22px;"></i>
             <div class="nav-add" onclick="document.getElementById('f-up').click()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope"></i>
-            <i class="fas fa-cog"></i>
+            <i class="fas fa-envelope" style="color:#555; font-size:22px;"></i>
+            <i class="fas fa-cog" style="color:#555; font-size:22px;" onclick="toggleSidebar()"></i>
         </nav>
     </div>
 
@@ -122,21 +112,23 @@
             document.getElementById('login-view').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
         }
+        
+        // ESTA FUNCIÓN TIENE QUE ESTAR SÍ O SÍ
         function toggleSidebar() {
             const side = document.getElementById('sidebar');
             const over = document.getElementById('overlay');
-            const isOpen = side.classList.contains('active');
-            if(!isOpen) {
-                side.classList.add('active');
-                over.style.display = 'block';
-            } else {
+            if (side.classList.contains('active')) {
                 side.classList.remove('active');
                 over.style.display = 'none';
+            } else {
+                side.classList.add('active');
+                over.style.display = 'block';
             }
         }
+
         function handleFile() {
             document.getElementById('snd-cash').play();
-            alert("Vault: Contenido cargado con éxito.");
+            alert("✅ Archivo detectado.");
         }
     </script>
 </body>
