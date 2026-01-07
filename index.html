@@ -39,4 +39,110 @@
         
         .story-item { 
             min-width: 65px; height: 65px; border-radius: 50%; 
-            padding: 3px; border: 2px solid var(--
+            padding: 3px; border: 2px solid var(--accent); 
+            position: relative; cursor: pointer;
+        }
+        .story-item img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .story-item.my-story { border: 2px dashed #444; }
+        .add-icon { 
+            position: absolute; bottom: 0; right: 0; 
+            background: var(--accent); color: white; 
+            width: 20px; height: 20px; border-radius: 50%; 
+            border: 2px solid #000; font-size: 12px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .story-name { font-size: 10px; text-align: center; margin-top: 5px; color: #888; }
+
+        /* --- NAVBAR --- */
+        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-center { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 25px; border: 4px solid #000; box-shadow: 0 0 20px rgba(154,0,255,0.4); }
+        .nav-btn { color: #555; font-size: 22px; cursor: pointer; }
+        .active { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <div id="login-view">
+        <div class="diamond-logo"><span>Ω</span></div>
+        <div class="input-group">
+            <input type="password" id="pass-field" placeholder="ACCESS KEY">
+            <button class="btn-show" onclick="togglePass()">SHOW</button>
+        </div>
+        <button onclick="enterApp()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px;"><i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <div id="main-app">
+        <div class="header">
+            <i class="fas fa-bars"></i>
+            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
+            <div style="width:30px; height:30px; border-radius:50%; background: #222; border:1px solid var(--accent);"></div>
+        </div>
+
+        <div class="main-scroll">
+            <div class="stories-bar">
+                <div class="story-wrapper" onclick="triggerUpload()">
+                    <div class="story-item my-story">
+                        <img src="https://i.pravatar.cc/100?u=me">
+                        <div class="add-icon"><i class="fas fa-plus"></i></div>
+                    </div>
+                    <div class="story-name">Tu Historia</div>
+                </div>
+                <div class="story-wrapper" onclick="alert('Viendo historia de Diamond_Girl')">
+                    <div class="story-item">
+                        <img src="https://i.pravatar.cc/100?u=12">
+                    </div>
+                    <div class="story-name">Diamond_Girl</div>
+                </div>
+                <div class="story-wrapper" onclick="alert('Viendo historia de King_Vip')">
+                    <div class="story-item">
+                        <img src="https://i.pravatar.cc/100?u=8">
+                    </div>
+                    <div class="story-name">King_Vip</div>
+                </div>
+            </div>
+
+            <div style="padding:40px; text-align:center; color:#222; font-family:'Cinzel';">
+                VAULT FEED READY
+            </div>
+        </div>
+
+        <nav>
+            <i class="fas fa-home nav-btn active"></i>
+            <i class="fas fa-search nav-btn"></i>
+            <div class="nav-center" onclick="triggerUpload()"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope nav-btn"></i>
+            <i class="fas fa-cog nav-btn"></i>
+        </nav>
+    </div>
+
+    <input type="file" id="media-input" hidden accept="image/*,video/*" onchange="uploadStory()">
+
+    <audio id="snd-money" src="https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3"></audio>
+
+    <script>
+        function togglePass() {
+            const f = document.getElementById('pass-field');
+            const b = document.querySelector('.btn-show');
+            f.type = f.type === 'password' ? 'text' : 'password';
+            b.innerText = f.type === 'password' ? 'SHOW' : 'HIDE';
+        }
+
+        function enterApp() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+        }
+
+        function triggerUpload() {
+            document.getElementById('media-input').click();
+        }
+
+        function uploadStory() {
+            const file = document.getElementById('media-input').files[0];
+            if(file) {
+                document.getElementById('snd-money').play(); // Sonido de éxito
+                alert("✅ Subiendo contenido a Historias...");
+            }
+        }
+    </script>
+</body>
+</html>
