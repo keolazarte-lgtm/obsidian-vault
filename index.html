@@ -3,163 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Private Vault</title>
+    <title>OBSIDIAN | Private Protocol</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --card: #0d0d0d; }
+        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --card: #0d0d0d; --chat-out: #2a0052; }
         
         body, html { 
             background: radial-gradient(circle at center, #1a0033 0%, #000 100%) no-repeat fixed;
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden;
         }
 
-        /* --- LOGIN CON LATIDO --- */
+        /* --- LOGIN --- */
         #login-view { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .diamond-logo { 
-            width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); 
-            display: flex; align-items: center; justify-content: center; margin-bottom: 50px; 
-            box-shadow: 0 0 20px var(--accent); animation: heartbeat 2s infinite;
-        }
+        .diamond-logo { width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 50px; box-shadow: 0 0 20px var(--accent); animation: heartbeat 2s infinite; }
         .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
-        @keyframes heartbeat {
-            0%, 28%, 70% { transform: rotate(45deg) scale(1); }
-            14%, 42% { transform: rotate(45deg) scale(1.1); }
-        }
+        @keyframes heartbeat { 0%, 28%, 70% { transform: rotate(45deg) scale(1); } 14%, 42% { transform: rotate(45deg) scale(1.1); } }
 
-        .input-group { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; }
-        .input-group input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; outline: none; text-align: center; font-size: 18px; letter-spacing: 5px; }
-        .btn-toggle { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; }
-
-        /* --- UI PRINCIPAL --- */
+        /* --- UI ESTRUCTURA --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
         .header { height: 60px; background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; }
-        
-        .main-scroll { flex: 1; overflow-y: auto; padding-bottom: 80px; scrollbar-width: none; }
-        .main-scroll::-webkit-scrollbar { display: none; }
+        .main-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
 
-        /* POSTS & PAYWALL */
-        .post-card { background: var(--card); margin-bottom: 15px; border-bottom: 1px solid var(--border); }
-        .media-box { position: relative; width: 100%; min-height: 300px; background: #050505; }
-        .post-img { width: 100%; display: block; }
-        .locked-blur { 
-            position: absolute; inset: 0; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5;
-        }
+        /* --- MENSAJES (CHATS) --- */
+        #chats-tab { display: none; height: 100%; flex-direction: column; }
+        .chat-list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #111; gap: 15px; cursor: pointer; }
+        .chat-list-item:active { background: #111; }
+        .chat-avatar { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--accent); }
+        .chat-info { flex: 1; }
+        .chat-info h4 { margin: 0; font-size: 14px; }
+        .chat-info p { margin: 5px 0 0; font-size: 12px; color: #666; }
 
-        /* CONFIGURACIÓN REAL */
-        #settings-view { display: none; padding: 20px; }
-        .set-box { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 15px; overflow: hidden; margin-top: 20px; }
-        .set-row { padding: 18px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .set-row:last-child { border: none; }
+        /* CHAT ABIERTO */
+        #chat-window { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
+        .chat-header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 15px; gap: 15px; background: rgba(0,0,0,0.8); }
+        .messages-area { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.4; }
+        .msg.in { background: #1a1a1a; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg.out { background: var(--chat-out); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #4a008a; }
+        .chat-input-area { padding: 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border); background: #000; }
+        .chat-input { flex: 1; background: #111; border: 1px solid #333; border-radius: 25px; padding: 12px 18px; color: #fff; outline: none; }
 
-        /* EDITOR */
+        /* EDITOR & OTROS */
         #editor-view { position: fixed; inset: 0; background: #000; z-index: 20000; display: none; flex-direction: column; }
-        .editor-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #1a1a1a; }
-        
-        /* NAVBAR */
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-add { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
-
-        .active { color: var(--accent) !important; }
+        .nav-add { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .active-icon { color: var(--accent) !important; }
     </style>
 </head>
 <body>
 
     <div id="login-view">
         <div class="diamond-logo"><span>Ω</span></div>
-        <div class="input-group">
-            <input type="password" id="pass-field" placeholder="ACCESS KEY">
-            <button class="btn-toggle" onclick="togglePass()">SHOW</button>
+        <div style="width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center;">
+            <input type="password" id="pass-field" style="background:none; border:none; color:var(--accent); width:100%; padding:15px; text-align:center; letter-spacing:5px; outline:none;" placeholder="ACCESS KEY">
+            <button onclick="togglePass()" style="background:none; border:none; color:#555; font-size:10px; font-weight:bold; cursor:pointer; position:absolute; right:0;">SHOW</button>
         </div>
         <button onclick="enterApp()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" onclick="alert('Menú lateral activo')"></i>
+            <i class="fas fa-bars"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
             <div style="width:30px; height:30px; border-radius:50%; background: url('https://i.pravatar.cc/100?u=8') center/cover; border:1px solid var(--accent);"></div>
         </div>
 
-        <div id="home-tab" class="main-scroll">
-            <div style="display:flex; gap:15px; padding:15px; overflow-x:auto;">
-                <div style="min-width:65px; height:65px; border-radius:50%; border:2px dashed #333; display:flex; align-items:center; justify-content:center;" onclick="openFile()"><i class="fas fa-plus"></i></div>
+        <div id="tab-home" class="main-content">
+            <div style="padding:15px; color:#333; font-family:'Cinzel'; text-align:center; margin-top:50px;">FEED ENCRYPTED</div>
+        </div>
+
+        <div id="tab-chats" class="main-content" style="display:none;">
+            <h2 style="padding:20px 20px 10px; font-family:'Cinzel'; margin:0;">MENSAJES</h2>
+            <div class="chat-list-item" onclick="openChat('Diamond User', 'https://i.pravatar.cc/100?u=1')">
+                <img src="https://i.pravatar.cc/100?u=1" class="chat-avatar">
+                <div class="chat-info">
+                    <h4>Diamond User</h4>
+                    <p>Envió una propina de $50.00 🔥</p>
+                </div>
+                <div style="font-size:10px; color:#444;">12:45</div>
             </div>
-            
-            <div class="post-card">
-                <div style="padding:12px; display:flex; align-items:center; gap:10px;">
-                    <div style="width:35px; height:35px; border-radius:50%; background:var(--accent);"></div>
-                    <span style="font-weight:600; font-size:14px;">OBSIDIAN_VIP</span>
+            <div class="chat-list-item" onclick="openChat('Vip Creator', 'https://i.pravatar.cc/100?u=2')">
+                <img src="https://i.pravatar.cc/100?u=2" class="chat-avatar">
+                <div class="chat-info">
+                    <h4>Vip Creator</h4>
+                    <p>¿Viste mi última foto bloqueada?</p>
                 </div>
-                <div class="media-box">
-                    <div class="locked-blur">
-                        <i class="fas fa-lock" style="font-size:30px; margin-bottom:15px;"></i>
-                        <button style="background:#fff; color:#000; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;" onclick="alert('Abrir Checkout...')">DESBLOQUEAR $19.99</button>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800" class="post-img">
-                </div>
+                <div style="font-size:10px; color:#444;">Ayer</div>
             </div>
         </div>
 
-        <div id="settings-tab" class="main-scroll" style="display:none; padding:20px;">
+        <div id="tab-settings" class="main-content" style="display:none; padding:20px;">
             <h2 style="font-family:'Cinzel';">SETTINGS</h2>
-            <div class="set-box">
-                <div class="set-row"><span>Cuenta Privada</span><i class="fas fa-toggle-on" style="color:var(--accent);"></i></div>
-                <div class="set-row"><span>Idioma</span><span>Español <i class="fas fa-chevron-right" style="font-size:12px; margin-left:10px;"></i></span></div>
-                <div class="set-row"><span>Notificaciones</span><i class="fas fa-bell"></i></div>
-                <div class="set-row" onclick="location.reload()" style="color:#ff4444;"><span>Cerrar Sesión</span><i class="fas fa-power-off"></i></div>
+            <div style="background:#0a0a0a; border-radius:15px; border:1px solid #1a1a1a; margin-top:20px;">
+                <div style="padding:20px; border-bottom:1px solid #111; display:flex; justify-content:space-between;"><span>Privacidad</span><i class="fas fa-lock"></i></div>
+                <div style="padding:20px; color:#ff4444;" onclick="location.reload()">Cerrar Sesión</div>
             </div>
         </div>
 
         <nav>
-            <i class="fas fa-home nav-btn active" onclick="switchTab('home')"></i>
-            <i class="fas fa-search nav-btn"></i>
-            <div class="nav-add" onclick="openFile()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope nav-btn"></i>
-            <i class="fas fa-cog nav-btn" onclick="switchTab('settings')"></i>
+            <i class="fas fa-home" onclick="showTab('home', this)"></i>
+            <i class="fas fa-search"></i>
+            <div class="nav-add" onclick="document.getElementById('file-in').click()"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope" onclick="showTab('chats', this)"></i>
+            <i class="fas fa-cog" onclick="showTab('settings', this)"></i>
         </nav>
     </div>
 
-    <div id="editor-view">
-        <div class="editor-header">
-            <i class="fas fa-times" onclick="closeEditor()"></i>
-            <span style="font-family:'Cinzel'; font-size:12px;">EDITOR PRO</span>
-            <button onclick="publish()" style="background:var(--accent); color:#fff; border:none; padding:8px 18px; border-radius:20px; font-weight:bold;">POSTEAR</button>
+    <div id="chat-window">
+        <div class="chat-header">
+            <i class="fas fa-chevron-left" onclick="closeChat()"></i>
+            <img id="chat-win-avatar" src="" style="width:35px; height:35px; border-radius:50%;">
+            <span id="chat-win-name" style="font-weight:bold;"></span>
         </div>
-        <div style="flex:1; display:flex; align-items:center; justify-content:center; background:#050505; overflow:hidden;">
-            <img id="image-edit" src="" style="max-width:100%;">
+        <div class="messages-area" id="msg-container">
+            <div class="msg in">Hola! Me encantó tu contenido de hoy 💎</div>
+            <div class="msg out">Muchas gracias! Tengo algo especial preparado para mañana...</div>
+            <div class="msg in">¿Es un post bloqueado?</div>
         </div>
-        <div style="padding:20px; background:#0a0a0a; border-top:1px solid #1a1a1a;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <span>Bloquear con Paywall</span>
-                <input type="checkbox" id="lock-toggle" onchange="document.getElementById('price-wrap').style.display = this.checked ? 'flex' : 'none'">
-            </div>
-            <div id="price-wrap" style="display:none; justify-content:space-between; align-items:center;">
-                <span style="color:#666; font-size:13px;">Precio sugerido (USD)</span>
-                <input type="number" value="9.99" style="background:#1a1a1a; border:1px solid #333; color:var(--accent); width:80px; padding:8px; border-radius:8px; text-align:center;">
-            </div>
-            <div style="display:flex; justify-content:space-around; margin-top:20px; border-top:1px solid #111; padding-top:20px;">
-                <i class="fas fa-crop-alt" onclick="startCrop()"></i>
-                <i class="fas fa-check-circle" onclick="applyCrop()" style="color:var(--accent); font-size:24px;"></i>
-            </div>
+        <div class="chat-input-area">
+            <i class="fas fa-camera" style="font-size:20px; color:var(--accent);"></i>
+            <input type="text" class="chat-input" placeholder="Escribe un mensaje...">
+            <i class="fas fa-paper-plane" style="color:var(--accent);"></i>
         </div>
     </div>
 
-    <input type="file" id="file-in" hidden accept="image/*" onchange="loadImg(event)">
+    <input type="file" id="file-in" hidden onchange="loadEditor(event)">
 
     <script>
-        let cropper;
-
-        // LOGIN ENGINE
         function togglePass() {
             const f = document.getElementById('pass-field');
-            const b = document.querySelector('.btn-toggle');
             f.type = f.type === 'password' ? 'text' : 'password';
-            b.innerText = f.type === 'password' ? 'SHOW' : 'HIDE';
         }
 
         function enterApp() {
@@ -167,44 +144,27 @@
             document.getElementById('main-app').style.display = 'flex';
         }
 
-        // NAVIGATION
-        function switchTab(tab) {
-            document.getElementById('home-tab').style.display = tab === 'home' ? 'block' : 'none';
-            document.getElementById('settings-tab').style.display = tab === 'settings' ? 'block' : 'none';
-            document.querySelectorAll('.nav-btn').forEach(i => i.classList.remove('active'));
-            event.target.classList.add('active');
+        function showTab(tab, el) {
+            document.getElementById('tab-home').style.display = 'none';
+            document.getElementById('tab-chats').style.display = 'none';
+            document.getElementById('tab-settings').style.display = 'none';
+            document.getElementById('tab-' + tab).style.display = 'block';
+            
+            document.querySelectorAll('nav i').forEach(i => i.classList.remove('active-icon'));
+            if(el) el.classList.add('active-icon');
         }
 
-        // EDITOR ENGINE
-        function openFile() { document.getElementById('file-in').click(); }
-        
-        function loadImg(e) {
-            const reader = new FileReader();
-            reader.onload = (f) => {
-                document.getElementById('image-edit').src = f.target.result;
-                document.getElementById('editor-view').style.display = 'flex';
-            };
-            reader.readAsDataURL(e.target.files[0]);
+        function openChat(name, avatar) {
+            document.getElementById('chat-win-name').innerText = name;
+            document.getElementById('chat-win-avatar').src = avatar;
+            document.getElementById('chat-window').style.display = 'flex';
         }
 
-        function startCrop() {
-            if(cropper) cropper.destroy();
-            cropper = new Cropper(document.getElementById('image-edit'), { viewMode: 1, aspectRatio: NaN });
+        function closeChat() {
+            document.getElementById('chat-window').style.display = 'none';
         }
 
-        function applyCrop() {
-            if(!cropper) return;
-            document.getElementById('image-edit').src = cropper.getCroppedCanvas().toDataURL();
-            cropper.destroy();
-            cropper = null;
-        }
-
-        function closeEditor() { document.getElementById('editor-view').style.display = 'none'; }
-        
-        function publish() {
-            alert("✅ Procesando contenido premium...");
-            closeEditor();
-        }
+        function loadEditor(e) { alert("Editor abierto para subir contenido"); }
     </script>
 </body>
 </html>
