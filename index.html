@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBSIDIAN | Private Kingdom</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         body {
             background: #000;
@@ -14,131 +14,96 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 40%, #15002a 0%, #000 75%);
-            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 30%, #15002a 0%, #000 80%);
+            overflow-x: hidden;
         }
 
-        /* EL LOGO OMEGA (Recuperado y Blindado) */
-        .logo-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
+        /* LOGO OMEGA (DISEÑO CSS PURO) */
+        .logo-wrapper { margin-top: 60px; text-align: center; }
         .diamond-omega {
-            width: 65px;
-            height: 65px;
-            background: #9A00FF;
-            transform: rotate(45deg);
-            box-shadow: 0 0 40px #9A00FF, 0 0 80px rgba(154, 0, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #fff;
-            animation: float-pulse 3s infinite ease-in-out;
-            position: relative;
+            width: 65px; height: 65px; background: #9A00FF; transform: rotate(45deg);
+            box-shadow: 0 0 50px #9A00FF; display: flex; align-items: center;
+            justify-content: center; border: 2px solid #fff; margin: 0 auto;
+            animation: float 3s infinite ease-in-out;
         }
-
-        .diamond-omega span {
-            transform: rotate(-45deg);
-            font-family: 'Cinzel', serif;
-            font-size: 35px;
-            font-weight: 900;
-            color: #fff;
-            margin-top: -2px;
-        }
-
-        @keyframes float-pulse {
-            0%, 100% { transform: rotate(45deg) translateY(0) scale(1); }
-            50% { transform: rotate(45deg) translateY(-10px) scale(1.05); filter: brightness(1.2); }
-        }
-
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 42px;
-            letter-spacing: 20px;
-            margin: 25px 0 5px 20px;
-            text-transform: uppercase;
-        }
-
-        .tagline {
-            color: #9A00FF;
-            font-size: 10px;
-            letter-spacing: 12px;
-            text-transform: uppercase;
-            font-weight: 900;
-            opacity: 0.7;
-        }
-
-        /* SALDO CON ANIMACIÓN */
-        .balance-area { text-align: center; margin: 60px 0; }
+        .diamond-omega span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 32px; font-weight: 900; color: #fff; }
         
-        .label {
-            color: #333;
-            font-size: 11px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: block;
-        }
+        @keyframes float { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(-10px); } }
 
-        #balance-num {
-            font-size: 115px;
-            font-weight: 900;
-            letter-spacing: -6px;
-            margin: 0;
-            line-height: 0.8;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-        }
+        h1 { font-family: 'Cinzel', serif; font-size: 40px; letter-spacing: 18px; margin: 25px 0 0 18px; text-transform: uppercase; }
+        .tagline { color: #9A00FF; font-size: 9px; letter-spacing: 10px; text-transform: uppercase; font-weight: 900; opacity: 0.6; }
 
-        .btn-system {
-            margin-top: 50px;
-            background: transparent;
-            border: 1px solid #1a1a1a;
-            color: #fff;
-            padding: 18px 50px;
-            font-size: 10px;
-            font-weight: 900;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.4s;
-        }
+        /* VAULT DISPLAY */
+        .vault-display { text-align: center; margin: 50px 0; }
+        .label { color: #333; font-size: 10px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 5px; display: block; }
+        #balance-num { font-size: 110px; font-weight: 900; letter-spacing: -6px; margin: 0; line-height: 0.8; }
 
-        .btn-system:hover {
-            border-color: #9A00FF;
-            box-shadow: 0 0 30px rgba(154, 0, 255, 0.2);
-            color: #9A00FF;
+        /* CONSOLA DE LOGS TÉCNICOS */
+        .console {
+            width: 90%; max-width: 500px; background: rgba(10, 0, 20, 0.6);
+            border: 1px solid #1a0033; padding: 15px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #666;
+            height: 130px; overflow-y: hidden; position: relative;
+            box-sizing: border-box;
         }
+        .console::before { content: "VAULT_SYSTEM_LOGS"; position: absolute; top: -8px; left: 10px; background: #000; padding: 0 5px; color: #9A00FF; font-size: 8px; letter-spacing: 2px; }
+        
+        .log-entry { margin-bottom: 5px; border-left: 2px solid #222; padding-left: 8px; animation: fadeIn 0.4s ease; }
+        .log-entry.success { border-color: #9A00FF; color: #aaa; }
+        .log-entry.highlight { color: #9A00FF; font-weight: bold; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
+
+        .btn-sync {
+            margin-top: 40px; background: transparent; border: 1px solid #1a1a1a;
+            color: #444; padding: 15px 45px; font-size: 10px; font-weight: 900;
+            letter-spacing: 6px; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+            margin-bottom: 50px;
+        }
+        .btn-sync:hover { border-color: #9A00FF; color: #fff; box-shadow: 0 0 20px rgba(154, 0, 255, 0.2); }
     </style>
 </head>
 <body>
 
     <div class="logo-wrapper">
-        <div class="diamond-omega">
-            <span>Ω</span>
-        </div>
+        <div class="diamond-omega"><span>Ω</span></div>
         <h1>OBSIDIAN</h1>
         <div class="tagline">Private Kingdom</div>
     </div>
 
-    <div class="balance-area">
-        <span class="label">Vault Reserves</span>
+    <div class="vault-display">
+        <span class="label">Total Reserves</span>
         <div id="balance-num">$0.00</div>
     </div>
 
-    <button class="btn-system" onclick="refreshData()">Refresh System</button>
+    <div class="console" id="log-box">
+        <div class="log-entry">Booting Obsidian_OS...</div>
+        <div class="log-entry">Bridge status: Pending encrypted handshake...</div>
+    </div>
+
+    <button class="btn-sync" onclick="manualSync()">Manual Override</button>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
+        let currentBalance = 0;
 
-        function counter(start, end, duration) {
+        // Función para imprimir en la consola
+        function addLog(msg, type = 'normal') {
+            const box = document.getElementById('log-box');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            entry.innerText = `[${time}] ${msg}`;
+            box.prepend(entry);
+        }
+
+        // Animación de los números
+        function animateValue(start, end) {
+            let duration = 2000;
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
@@ -150,17 +115,46 @@
             window.requestAnimationFrame(step);
         }
 
-        async function refreshData() {
-            try {
-                const { data } = await _obsidian.from('balances').select('creator_net');
-                const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-                counter(0, total, 2000);
-            } catch (e) {
-                counter(0, 17, 1500);
+        // Sincronización real con Supabase
+        async function fullSync() {
+            addLog("Executing Deep Scan...", "highlight");
+            
+            const { data, error } = await _obsidian
+                .from('balances')
+                .select('creator_net, created_at')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                addLog("ERROR: Connection refused by Vault.", "normal");
+                return;
+            }
+
+            const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
+            
+            // Mostrar últimos 2 movimientos en la terminal
+            data.slice(0, 2).forEach(item => {
+                addLog(`Asset Detected: +$${item.creator_net.toFixed(2)} [Verified]`, "success");
+            });
+
+            if(total !== currentBalance) {
+                animateValue(currentBalance, total);
+                currentBalance = total;
+                addLog(`RESERVES_UPDATED: $${total.toFixed(2)}`, "success");
+            } else {
+                addLog("Vault integrity: 100%. No new assets.");
             }
         }
 
-        refreshData();
+        function manualSync() {
+            addLog("Manual override request sent.");
+            fullSync();
+        }
+
+        // Inicio del sistema
+        setTimeout(() => {
+            addLog("OBSIDIAN SYSTEM ONLINE.");
+            fullSync();
+        }, 1000);
     </script>
 </body>
 </html>
