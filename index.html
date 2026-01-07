@@ -7,46 +7,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --sidebar: #0a0a0a; --border: #1a1a1a; }
+        :root { --accent: #9A00FF; --bg: #000; --sidebar: #0a0a0a; --border: #1a1a1a; --card: #0f0f0f; }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        /* SIDEBAR ESTILO ONLYFANS */
+        /* SIDEBAR PROFESIONAL */
         .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100vh; background: var(--sidebar); border-right: 1px solid var(--border); transition: 0.3s; z-index: 3000; padding: 20px; box-sizing: border-box; }
         .sidebar.open { left: 0; }
         .sidebar-header { display: flex; align-items: center; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
         .profile-pic { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-        .nav-link { display: flex; align-items: center; gap: 15px; padding: 12px; color: #ccc; text-decoration: none; font-size: 14px; border-radius: 10px; transition: 0.2s; cursor: pointer; }
+        .nav-link { display: flex; align-items: center; gap: 15px; padding: 12px; color: #ccc; text-decoration: none; font-size: 14px; border-radius: 10px; cursor: pointer; }
         .nav-link:hover { background: #151515; color: var(--accent); }
-        .nav-link i { width: 20px; text-align: center; }
 
-        /* VISTAS */
-        .view { display: none; min-height: 100vh; padding-top: 60px; padding-bottom: 90px; }
-        .active-view { display: block; }
+        /* HISTORIAS (STORIES) */
+        .stories-wrapper { display: flex; gap: 12px; padding: 15px; overflow-x: auto; scrollbar-width: none; background: #050505; border-bottom: 1px solid var(--border); }
+        .story-circle { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); padding: 2px; position: relative; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .add-story { position: absolute; bottom: 0; right: 0; background: var(--accent); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #000; }
 
-        /* HEADER SUPERIOR FIJO */
-        .top-bar { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-sizing: border-box; z-index: 2000; }
-        
-        /* LOGIN CON "SHOW" */
-        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); padding-top: 0; }
-        .login-box { position: relative; width: 280px; border-bottom: 1px solid #333; display: flex; align-items: center; }
-        .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono'; text-align: center; font-size: 18px; width: 100%; padding: 15px 0; outline: none; letter-spacing: 5px; }
-        .show-btn { position: absolute; right: 45px; background: none; border: none; color: #444; font-size: 9px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
+        /* FEED POSTS */
+        .post-card { background: var(--card); border-radius: 0; border-bottom: 8px solid #080808; margin-bottom: 0; overflow: hidden; }
+        .post-header { padding: 12px 15px; display: flex; align-items: center; gap: 10px; }
+        .post-img-container { position: relative; width: 100%; aspect-ratio: 1/1; background: #050505; }
+        .post-img { width: 100%; height: 100%; object-fit: cover; }
+        .blur-overlay { position: absolute; inset: 0; backdrop-filter: blur(40px); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); }
+        .unlock-btn { background: #fff; color: #000; border: none; padding: 12px 25px; border-radius: 25px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
 
-        /* PERFIL / CONFIGURACIÓN */
-        .profile-editor { padding: 20px; max-width: 600px; margin: auto; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 11px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
-        .input-group input, .input-group textarea { width: 100%; background: #080808; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; box-sizing: border-box; }
-
-        /* NAV BAR INFERIOR */
-        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
-        .nav-item { font-size: 20px; color: #444; cursor: pointer; }
+        /* HEADER & NAV */
+        .top-bar { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 2000; box-sizing: border-box; }
+        nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
+        .nav-item { font-size: 22px; color: #444; cursor: pointer; transition: 0.2s; }
         .nav-item.active { color: var(--accent); }
 
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 2500; }
+        /* LOGIN */
+        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; }
+        .login-box { position: relative; width: 300px; border-bottom: 1px solid #222; display: flex; align-items: center; }
+        .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono'; text-align: center; font-size: 20px; width: 100%; padding: 15px 0; outline: none; letter-spacing: 4px; }
+        .show-btn { position: absolute; right: 45px; background: none; border: none; color: #444; font-size: 10px; cursor: pointer; font-weight: bold; }
+
+        /* UPLOAD MODAL */
+        #upload-panel { position: fixed; inset: 0; background: #000; z-index: 4000; display: none; flex-direction: column; padding: 20px; }
+        .drop-zone { border: 2px dashed #222; border-radius: 15px; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #444; margin-bottom: 20px; }
+
+        .view { display: none; min-height: 100vh; padding-top: 60px; padding-bottom: 80px; }
+        .active-view { display: block; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 2500; }
         .hidden { display: none !important; }
-        .loading-spin { animation: spin 1s linear infinite; }
-        @keyframes spin { from {transform: rotate(0deg)} to {transform: rotate(360deg)} }
     </style>
 </head>
 <body>
@@ -55,63 +60,71 @@
 
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <img src="https://via.placeholder.com/50" class="profile-pic" id="side-avatar">
+            <img src="https://via.placeholder.com/100" class="profile-pic" id="side-avatar">
             <div>
-                <div id="side-name" style="font-weight: 600; font-size: 14px;">User</div>
-                <div id="side-handle" style="font-size: 12px; color: #666;">@obsidian_user</div>
+                <div id="side-name" style="font-weight: 600;">Authorized</div>
+                <div id="side-handle" style="font-size: 12px; color: #666;">@obsidian_vault</div>
             </div>
         </div>
         <div class="nav-link" onclick="showView('home')"><i class="fas fa-home"></i> Inicio</div>
-        <div class="nav-link" onclick="showView('profile-edit')"><i class="fas fa-user-circle"></i> Mi Perfil</div>
-        <div class="nav-link"><i class="fas fa-bookmark"></i> Colecciones</div>
-        <div class="nav-link"><i class="fas fa-vault"></i> Bóveda</div>
-        <div class="nav-link" id="admin-only-link" onclick="toggleUpload()"><i class="fas fa-plus-square"></i> Nueva Publicación</div>
-        <div class="nav-link" style="margin-top: 20px; color: #ff4444;" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</div>
+        <div class="nav-link" onclick="showView('profile-edit')"><i class="fas fa-cog"></i> Configuración</div>
+        <div class="nav-link"><i class="fas fa-wallet"></i> Mis Compras</div>
+        <div class="nav-link" style="margin-top: 30px; color: #ff4444;" onclick="location.reload()"><i class="fas fa-power-off"></i> Salir</div>
     </div>
 
     <div id="login-view" class="view active-view">
-        <div style="width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px;">
-            <span style="transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 32px; color: var(--accent);">Ω</span>
+        <div style="width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 50px;">
+            <span style="transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent);">Ω</span>
         </div>
         <div class="login-box">
-            <input type="password" id="pass" class="access-input" placeholder="••••••••" oninput="checkInput(this)">
-            <button class="show-btn" onclick="togglePass(this)">Show</button>
-            <button id="enter-btn" style="background:none; border:none; color:var(--accent); font-size:20px; opacity:0.3;" onclick="validateAccess()"><i class="fas fa-arrow-right"></i></button>
+            <input type="password" id="pass" class="access-input" placeholder="ACCESS KEY" oninput="checkInput(this)">
+            <button class="show-btn" onclick="togglePass(this)">SHOW</button>
+            <button id="enter-btn" style="background:none; border:none; color:var(--accent); font-size:24px; opacity:0.3;" onclick="validateAccess()"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
     <div id="main-app" class="hidden">
         <div class="top-bar">
-            <i class="fas fa-bars" onclick="toggleMenu()" style="font-size: 20px; cursor: pointer;"></i>
-            <span style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 14px;">OBSIDIAN</span>
-            <i class="fas fa-search" style="font-size: 18px; color: #444;"></i>
+            <i class="fas fa-bars" onclick="toggleMenu()"></i>
+            <span style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 14px; color: var(--accent);">OBSIDIAN</span>
+            <i class="fas fa-bell" style="color: #333;"></i>
         </div>
 
         <div id="view-home" class="view active-view">
-            <div id="feed-container" style="padding: 10px;"></div>
+            <div class="stories-wrapper" id="stories-cont">
+                <div class="story-circle" id="add-story-btn">
+                    <img src="https://via.placeholder.com/100">
+                    <div class="add-story"><i class="fas fa-plus"></i></div>
+                </div>
+            </div>
+            <div id="feed-container"></div>
         </div>
 
-        <div id="view-profile-edit" class="view">
-            <div class="profile-editor">
-                <h3 style="font-family: 'Cinzel'; font-size: 14px; border-bottom: 1px solid #111; padding-bottom: 10px;">EDITAR PERFIL</h3>
-                <div class="input-group">
-                    <label>Nombre de usuario</label>
-                    <input type="text" id="edit-handle" value="@ianvega21">
-                </div>
-                <div class="input-group">
-                    <label>Biografía</label>
-                    <textarea id="edit-bio" rows="4">I take control — you feel the pleasure.</textarea>
-                </div>
-                <div class="input-group">
-                    <label>Idioma de la plataforma</label>
-                    <select style="width:100%; background:#080808; border:1px solid #1a1a1a; color:#fff; padding:12px; border-radius:8px;">
-                        <option>Español</option>
-                        <option>English</option>
-                    </select>
-                </div>
-                <button style="width:100%; background:var(--accent); border:none; color:#fff; padding:15px; border-radius:30px; font-weight:600;">GUARDAR CAMBIOS</button>
+        <div id="upload-panel">
+            <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
+                <span style="font-family:'Cinzel';">NUEVO CONTENIDO</span>
+                <i class="fas fa-times" onclick="toggleUpload()"></i>
             </div>
+            <div class="drop-zone" onclick="document.getElementById('file-input').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size:40px;"></i>
+                <span>ELEGIR FOTO O VIDEO</span>
+                <input type="file" id="file-input" hidden onchange="previewFile(this)">
+            </div>
+            <input type="text" id="post-title" placeholder="Título del drop" style="width:100%; background:#080808; border:1px solid #222; color:#fff; padding:15px; border-radius:10px; margin-bottom:15px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                <input type="checkbox" id="is-premium">
+                <label style="font-size:12px; color:#666;">Contenido Premium (Blur)</label>
+            </div>
+            <button onclick="uploadToSupabase()" style="width:100%; background:var(--accent); color:#fff; padding:18px; border:none; border-radius:35px; font-weight:bold;">PUBLICAR EN FEED</button>
         </div>
+
+        <nav>
+            <i class="fas fa-home nav-item active" onclick="showView('home')"></i>
+            <i class="fas fa-search nav-item"></i>
+            <i class="fas fa-plus-square nav-item" id="nav-plus" onclick="toggleUpload()" style="font-size:30px;"></i>
+            <i class="fas fa-envelope nav-item"></i>
+            <i class="fas fa-user-circle nav-item" onclick="toggleMenu()"></i>
+        </nav>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -123,60 +136,66 @@
         let userRole = 'user';
 
         function toggleMenu() {
-            const side = document.getElementById('sidebar');
-            const over = document.getElementById('overlay');
-            side.classList.toggle('open');
-            over.style.display = side.classList.contains('open') ? 'block' : 'none';
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').style.display = document.getElementById('sidebar').classList.contains('open') ? 'block' : 'none';
         }
 
         function togglePass(btn) {
             const p = document.getElementById('pass');
             p.type = p.type === 'password' ? 'text' : 'password';
-            btn.innerText = p.type === 'password' ? 'Show' : 'Hide';
+            btn.innerText = p.type === 'password' ? 'SHOW' : 'HIDE';
         }
 
         function checkInput(el) { document.getElementById('enter-btn').style.opacity = el.value.length > 3 ? "1" : "0.3"; }
 
         async function validateAccess() {
             const pass = document.getElementById('pass').value;
-            const btn = document.getElementById('enter-btn');
-            btn.innerHTML = '<i class="fas fa-spinner loading-spin"></i>';
-            
             const { data } = await _supabase.from('users').select('*').eq('access_key', pass).single();
             
             if (data) {
                 userRole = data.role;
-                if(userRole !== 'creator') document.getElementById('admin-only-link').style.display = 'none';
-                document.getElementById('side-name').innerText = data.full_name || 'Authorized User';
+                if(userRole !== 'creator') document.getElementById('nav-plus').classList.add('hidden');
+                document.getElementById('side-name').innerText = data.full_name || 'Member';
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 loadPosts();
             } else {
-                btn.innerHTML = '<i class="fas fa-arrow-right"></i>';
-                alert("ACCESS DENIED");
+                alert("ACCESS KEY INVALID");
             }
         }
 
-        function showView(v) {
-            document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
-            document.getElementById('view-'+v).classList.add('active-view');
-            toggleMenu();
+        function toggleUpload() {
+            const p = document.getElementById('upload-panel');
+            p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
         }
 
         async function loadPosts() {
             const { data } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
             const container = document.getElementById('feed-container');
             container.innerHTML = data.map(p => `
-                <div style="background:#0a0a0a; border-radius:15px; margin-bottom:20px; border:1px solid #111; overflow:hidden;">
-                    <div style="padding:15px; display:flex; align-items:center; gap:10px;">
-                        <img src="https://via.placeholder.com/30" style="border-radius:50%;">
-                        <span style="font-size:12px; font-weight:600; color:var(--accent);">${p.title}</span>
+                <div class="post-card">
+                    <div class="post-header">
+                        <div style="width:35px; height:35px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold;">Ω</div>
+                        <span style="font-size:13px; font-weight:600;">${p.title}</span>
                     </div>
-                    <div style="position:relative;">
-                        <img src="${p.content_url}" style="width:100%; filter: blur(${p.is_premium ? '20px' : '0'});">
-                        ${p.is_premium ? `<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><button style="background:#fff; color:#000; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; font-size:12px;"><i class="fas fa-lock"></i> UNLOCK FOR $10</button></div>` : ''}
+                    <div class="post-img-container">
+                        <img src="${p.content_url}" class="post-img">
+                        ${p.is_premium ? `
+                        <div class="blur-overlay">
+                            <i class="fas fa-lock" style="font-size:30px; margin-bottom:15px;"></i>
+                            <button class="unlock-btn">UNLOCK FOR $10</button>
+                        </div>` : ''}
+                    </div>
+                    <div style="padding:15px; display:flex; gap:20px; font-size:18px; color:#666;">
+                        <i class="far fa-heart"></i><i class="far fa-comment"></i><i class="far fa-bookmark"></i>
                     </div>
                 </div>`).join('');
+        }
+
+        function showView(v) {
+            document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
+            document.getElementById('view-'+v).classList.add('active-view');
+            toggleMenu();
         }
     </script>
 </body>
