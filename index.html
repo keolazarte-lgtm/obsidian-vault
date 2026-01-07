@@ -3,79 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OBSIDIAN v36 | Final Chat Fix</title>
+    <title>OBSIDIAN v37 | Restoration</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #9A00FF; --bg: #05000a; --border: rgba(154, 0, 255, 0.3); 
+            --accent: #9A00FF; --bg-deep: #05000a; --border: rgba(154, 0, 255, 0.3); 
             --gold: #FFD700; --glass: rgba(15, 15, 15, 0.95); 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { 
-            background: var(--bg); background: radial-gradient(circle at top right, #1a0033 0%, #05000a 60%, #000 100%);
+            background: var(--bg-deep);
+            background: radial-gradient(circle at top right, #1a0033 0%, #05000a 60%, #000 100%);
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; position: fixed; width: 100%;
         }
 
-        /* --- UI ESTRUCTURA --- */
-        #login-view { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* --- LOGIN (RESTAURADO) --- */
+        #login-view { 
+            position: fixed; inset: 0; background: #000; z-index: 100000; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+        }
+        .logo-container { position: relative; margin-bottom: 50px; }
+        .logo-glow { position: absolute; width: 140px; height: 140px; background: var(--accent); filter: blur(60px); opacity: 0.5; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 3s infinite; }
+        .diamond-logo { position: relative; width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 20px var(--accent); z-index: 2; }
+        .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
+        
+        .input-wrapper { position: relative; width: 280px; border-bottom: 1px solid var(--accent); margin-bottom: 30px; display: flex; align-items: center; }
+        #pass { background:none; border:none; color:var(--accent); text-align:center; padding:15px; letter-spacing:5px; outline:none; width: 100%; font-size: 16px; }
+        .btn-t { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; padding: 10px; z-index: 10; }
+
+        /* --- ESTRUCTURA APP --- */
         #main-app { display: none; height: 100vh; flex-direction: column; opacity: 0; transition: opacity 0.5s; }
         .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); z-index: 1000; }
-        
-        /* --- FEED COMPACTO --- */
-        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; -webkit-overflow-scrolling: touch; }
-        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px auto; width: 90%; max-width: 380px; border-radius: 18px; overflow: hidden; }
-        .post-img { width: 100%; aspect-ratio: 1/1; position: relative; background: #000; }
-        .post-img img { width: 100%; height: 100%; object-fit: cover; }
-        .locked-overlay { position: absolute; inset: 0; backdrop-filter: blur(20px); background: rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 
-        /* --- CHAT MODULE (BLINDADO) --- */
-        #chat-view { display: none; flex: 1; flex-direction: column; position: relative; height: calc(100vh - 135px); }
-        .chat-scroll { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        
-        .msg { max-width: 80%; padding: 12px; border-radius: 15px; font-size: 13px; line-height: 1.4; }
+        /* --- STORIES (RESTAURADO) --- */
+        .stories-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--border); }
+        .stories-bar::-webkit-scrollbar { display: none; }
+        .story-circle { min-width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); padding: 2px; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+        /* --- FEED COMPACTO --- */
+        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px auto; width: 92%; max-width: 380px; border-radius: 18px; overflow: hidden; }
+        .post-img { width: 100%; aspect-ratio: 1/1; position: relative; background: #000; }
+        .locked-overlay { position: absolute; inset: 0; backdrop-filter: blur(25px); background: rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* --- SIDEBAR (FUNCIONAL) --- */
+        #sidebar { 
+            position: fixed; top: 70px; left: 15px; width: 230px; background: var(--glass); 
+            backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 15px; 
+            z-index: 50000; padding: 20px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0; visibility: hidden; transform: translateX(-20px);
+        }
+        #sidebar.active { opacity: 1; visibility: visible; transform: translateX(0); }
+        .sidebar-item { padding: 12px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: #eee; cursor: pointer; }
+        .sidebar-item i { color: var(--accent); width: 20px; text-align: center; }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 40000; }
+
+        /* --- CHAT VIEW --- */
+        #chat-view { display: none; flex: 1; flex-direction: column; height: calc(100vh - 135px); position: relative; }
+        .chat-scroll { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 13px; }
         .msg-received { background: var(--glass); align-self: flex-start; border: 1px solid var(--border); }
         .msg-sent { background: var(--accent); align-self: flex-end; }
-
-        /* --- TIP / CONTENT BOX --- */
-        .tip-box { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); border-radius: 15px; padding: 15px; text-align: center; margin: 10px 0; }
-        .btn-gold { background: var(--gold); color: #000; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 11px; cursor: pointer; margin-top: 10px; }
-
-        /* --- INPUT BAR FIX --- */
-        .chat-input-bar { 
-            padding: 10px 15px; background: #000; border-top: 1px solid var(--border);
-            display: flex; align-items: center; gap: 10px; position: absolute; bottom: 0; width: 100%;
-        }
-        .input-field { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 20px; padding: 10px 15px; color: #fff; outline: none; font-size: 14px; }
+        .chat-input-bar { padding: 10px 15px; background: #000; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .input-field { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 20px; padding: 10px 15px; color: #fff; outline: none; }
 
         /* --- NAV --- */
         nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
         .nav-add { width: 50px; height: 50px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -25px; border: 4px solid #000; color: #000; font-size: 20px; box-shadow: 0 0 15px var(--accent); }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.2); } }
     </style>
 </head>
 <body>
 
     <div id="login-view">
-        <div style="font-family:'Cinzel'; font-size:40px; color:var(--accent); margin-bottom:40px;">Ω</div>
-        <button onclick="enter()" style="background:var(--accent); border:none; color:#fff; padding:15px 40px; border-radius:30px; font-weight:bold; cursor:pointer;">ENTER VAULT</button>
+        <div class="logo-container">
+            <div class="logo-glow"></div>
+            <div class="diamond-logo"><span>Ω</span></div>
+        </div>
+        <div class="input-wrapper">
+            <input type="password" id="pass" placeholder="ACCESS KEY">
+            <button class="btn-t" onclick="togglePass()" id="btn-t">SHOW</button>
+        </div>
+        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:50px; cursor:pointer;"><i class="fas fa-chevron-circle-right"></i></button>
+    </div>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div id="sidebar">
+        <div style="text-align:center; padding-bottom: 15px; border-bottom: 1px solid var(--border); margin-bottom: 10px;">
+            <p style="color:var(--accent); font-size:9px; font-weight: bold;">VAULT BALANCE</p>
+            <h2 style="margin:5px 0; font-family:'Cinzel';">$ 1,240.50</h2>
+        </div>
+        <div class="sidebar-item"><i class="fas fa-gem"></i> VIP Area</div>
+        <div class="sidebar-item"><i class="fas fa-chart-line"></i> Analytics</div>
+        <div class="sidebar-item" onclick="location.reload()" style="color:#ff4444;"><i class="fas fa-power-off"></i> Logout</div>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" style="color:var(--accent); font-size:20px;"></i>
+            <i class="fas fa-bars" onclick="toggleSidebar()" style="color:var(--accent); font-size:20px; cursor:pointer;"></i>
             <span id="title" style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:30px; height:30px; border-radius:50%; background:var(--accent);"></div>
+            <div style="width:30px; height:30px; border-radius:50%; border:1px solid var(--accent); background:url('https://i.pravatar.cc/100?u=leo') center/cover;"></div>
         </div>
 
         <div id="feed-view" class="content">
+            <div class="stories-bar">
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=1"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=2"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=3"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=4"></div>
+            </div>
+            
             <div class="post-card">
-                <div style="padding:10px; font-size:11px;">@Diamond_Girl</div>
+                <div style="padding:10px; font-size:11px; font-weight:600;">@Diamond_Girl</div>
                 <div class="post-img">
-                    <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=500">
+                    <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=500" style="width:100%; height:100%; object-fit:cover;">
                     <div class="locked-overlay">
                         <i class="fas fa-lock" style="color:var(--gold); font-size:24px;"></i>
-                        <button class="btn-gold">UNLOCK CONTENT $15.00</button>
+                        <button style="background:var(--gold); border:none; padding:8px 15px; border-radius:20px; margin-top:10px; font-weight:bold; font-size:11px; cursor:pointer;">UNLOCK $15.00</button>
                     </div>
                 </div>
             </div>
@@ -83,22 +131,9 @@
 
         <div id="chat-view">
             <div class="chat-scroll">
-                <div class="msg msg-received">Hola Leo, te dejé un contenido nuevo en el chat.</div>
-                
-                <div class="tip-box">
-                    <i class="fas fa-gem" style="color:var(--gold); font-size:24px;"></i>
-                    <p style="font-size:12px; margin:10px 0;">Contenido Exclusivo desbloqueable</p>
-                    <button class="btn-gold">COMPRAR AHORA $25.00</button>
-                </div>
-
-                <div class="msg msg-sent">Ya lo estoy revisando! 🔥</div>
-                
-                <div class="tip-box" style="border-color: var(--accent); background: rgba(154,0,255,0.05);">
-                    <p style="font-size:11px; margin:0; color: var(--accent);">¿Quieres enviar una propina?</p>
-                    <button class="btn-gold" style="background:var(--accent); color:#fff;">ENVIAR TIP</button>
-                </div>
+                <div class="msg msg-received">Hola Leo, ¿viste el nuevo contenido?</div>
+                <div class="msg msg-sent">¡Lo estoy desbloqueando ahora! 🔥</div>
             </div>
-
             <div class="chat-input-bar">
                 <i class="fas fa-paperclip" style="color:#555;"></i>
                 <input type="text" class="input-field" placeholder="Escribe un mensaje...">
@@ -107,19 +142,33 @@
         </div>
 
         <nav>
-            <i class="fas fa-home" onclick="tab('feed')" id="h-i" style="color:var(--accent); font-size:20px;"></i>
-            <i class="fas fa-search" style="color:#555; font-size:20px;"></i>
+            <i class="fas fa-home" onclick="tab('feed')" id="h-i" style="color:var(--accent); font-size:22px; cursor:pointer;"></i>
+            <i class="fas fa-search" style="color:#555; font-size:22px;"></i>
             <div class="nav-add"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" onclick="tab('chat')" id="c-i" style="color:#555; font-size:20px;"></i>
-            <i class="fas fa-cog" style="color:#555; font-size:20px;"></i>
+            <i class="fas fa-envelope" onclick="tab('chat')" id="c-i" style="color:#555; font-size:22px; cursor:pointer;"></i>
+            <i class="fas fa-cog" onclick="toggleSidebar()" style="color:#555; font-size:22px; cursor:pointer;"></i>
         </nav>
     </div>
 
     <script>
+        function togglePass() {
+            const p = document.getElementById('pass');
+            const b = document.getElementById('btn-t');
+            if (p.type === 'password') { p.type = 'text'; b.innerText = 'HIDE'; }
+            else { p.type = 'password'; b.innerText = 'SHOW'; }
+        }
+
         function enter() {
             document.getElementById('login-view').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
             setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
+        }
+
+        function toggleSidebar() {
+            const s = document.getElementById('sidebar');
+            const o = document.getElementById('overlay');
+            const active = s.classList.toggle('active');
+            o.style.display = active ? 'block' : 'none';
         }
 
         function tab(v) {
@@ -130,16 +179,12 @@
             const title = document.getElementById('title');
 
             if(v === 'chat') {
-                feed.style.display = 'none';
-                chat.style.display = 'flex';
-                ci.style.color = 'var(--accent)';
-                hi.style.color = '#555';
+                feed.style.display = 'none'; chat.style.display = 'flex';
+                ci.style.color = 'var(--accent)'; hi.style.color = '#555';
                 title.innerText = 'VAULT CHAT';
             } else {
-                feed.style.display = 'block';
-                chat.style.display = 'none';
-                hi.style.color = 'var(--accent)';
-                ci.style.color = '#555';
+                feed.style.display = 'block'; chat.style.display = 'none';
+                hi.style.color = 'var(--accent)'; ci.style.color = '#555';
                 title.innerText = 'OBSIDIAN';
             }
         }
