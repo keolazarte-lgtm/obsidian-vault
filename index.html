@@ -6,189 +6,134 @@
     <title>OBSIDIAN | Private Kingdom</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --accent: #9A00FF;
-            --bg: #000;
-        }
+        :root { --accent: #9A00FF; --bg: #000; }
 
         body {
-            background: var(--bg);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-            position: relative;
+            background: var(--bg); color: #fff; font-family: 'Inter', sans-serif;
+            margin: 0; display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; overflow: hidden; position: relative;
         }
 
-        /* EFECTO DE NIEBLA ATMOSFÉRICA */
+        /* FONDO ATMOSFÉRICO */
         body::before {
-            content: "";
-            position: absolute;
-            top: -50%; left: -50%;
+            content: ""; position: absolute; top: -50%; left: -50%;
             width: 200%; height: 200%;
             background: radial-gradient(circle at 50% 50%, #15002a 0%, #000 50%);
-            animation: drift 15s linear infinite;
-            z-index: -1;
-            opacity: 0.6;
+            animation: drift 20s linear infinite; z-index: -1; opacity: 0.6;
         }
+        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        @keyframes drift {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* PANTALLA DE ACCESO */
+        #access-screen { text-align: center; z-index: 10; transition: all 1s ease; }
+
+        .gate-diamond {
+            width: 70px; height: 70px; border: 1px solid rgba(255,255,255,0.4);
+            transform: rotate(45deg); display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 40px; box-shadow: 0 0 40px rgba(154, 0, 255, 0.2);
+            animation: pulse-gate 3s infinite ease-in-out;
         }
+        .gate-diamond span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 30px; }
 
-        /* LOGO REFINADO */
-        .logo-section {
-            text-align: center;
-            margin-bottom: 60px;
-            z-index: 1;
+        @keyframes pulse-gate { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .access-input {
+            background: none; border: none; border-bottom: 1px solid #111;
+            color: var(--accent); font-family: 'JetBrains Mono', monospace;
+            text-align: center; font-size: 12px; letter-spacing: 4px;
+            width: 220px; padding: 10px; outline: none; transition: 0.4s;
         }
+        .access-input:focus { border-color: var(--accent); width: 250px; }
 
-        .omega-diamond {
-            width: 50px; height: 50px;
-            border: 1px solid rgba(255,255,255,0.6);
-            transform: rotate(45deg);
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto;
-            box-shadow: 0 0 30px rgba(154, 0, 255, 0.2);
-        }
-
-        .omega-diamond span {
-            transform: rotate(-45deg);
-            font-family: 'Cinzel', serif;
-            font-size: 24px;
-        }
-
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 32px;
-            letter-spacing: 18px;
-            margin: 25px 0 0 18px;
-            font-weight: 500;
-            opacity: 0.8;
-        }
-
-        /* VAULT CORE */
-        .vault-core { text-align: center; z-index: 1; }
+        /* DASHBOARD (OCULTO) */
+        #dashboard { display: none; text-align: center; opacity: 0; transition: opacity 1.5s ease; }
         
-        .vault-label {
-            font-size: 9px; letter-spacing: 7px;
-            text-transform: uppercase; color: #444;
-            margin-bottom: 15px; display: block;
-        }
-
         #balance {
-            font-size: clamp(80px, 15vw, 110px);
-            font-weight: 900;
-            letter-spacing: -4px;
-            margin: 0;
+            font-size: clamp(70px, 12vw, 100px); font-weight: 900; letter-spacing: -4px;
             background: linear-gradient(180deg, #fff 40%, #444 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 0.8;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 20px 0; line-height: 0.8;
         }
 
-        /* TERMINAL DISCRETA */
         .terminal {
-            width: 280px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 8px;
-            color: #222;
-            text-align: left;
-            margin-top: 40px;
-            border-top: 1px solid #111;
-            padding-top: 20px;
-            z-index: 1;
+            width: 280px; font-family: 'JetBrains Mono', monospace; font-size: 8px;
+            color: #222; text-align: left; margin: 40px auto 0;
+            border-top: 1px solid #111; padding-top: 20px;
         }
-
-        .log { margin-bottom: 5px; animation: fadeIn 0.8s forwards; }
-        .log.new { color: var(--accent); opacity: 0.6; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* BOTÓN FANTASMA */
-        .btn-refresh {
-            position: fixed; bottom: 30px;
-            background: none; border: none;
-            color: #111; font-size: 9px;
-            letter-spacing: 4px; text-transform: uppercase;
-            cursor: pointer; transition: 0.4s;
-            z-index: 2;
-        }
-
-        .btn-refresh:hover { color: var(--accent); }
-
+        .log { margin-bottom: 5px; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="logo-section">
-        <div class="omega-diamond"><span>Ω</span></div>
-        <h1>OBSIDIAN</h1>
+    <div id="access-screen">
+        <div class="gate-diamond"><span>Ω</span></div>
+        <input type="password" id="pass" class="access-input" placeholder="ENTER ACCESS KEY" onkeypress="checkKey(event)">
     </div>
 
-    <div class="vault-core">
-        <span class="vault-label">Liquidity Reserves</span>
+    <div id="dashboard">
+        <div class="vault-label" style="font-size: 8px; letter-spacing: 6px; color: #444; text-transform: uppercase;">Authenticated Vault</div>
         <div id="balance">$0.00</div>
+        <div class="terminal" id="logs"></div>
     </div>
-
-    <div class="terminal" id="logs"></div>
-
-    <button class="btn-refresh" onclick="sync()">Manual Sync</button>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
-        let currentTotal = 0;
 
-        function addLog(text, isNew = false) {
-            const logs = document.getElementById('logs');
-            const l = document.createElement('div');
-            l.className = isNew ? 'log new' : 'log';
-            l.innerText = `> ${text.toUpperCase()}`;
-            logs.prepend(l);
-            if(logs.children.length > 3) logs.lastChild.remove();
-        }
+        async function checkKey(e) {
+            if (e.key === 'Enter') {
+                const inputKey = document.getElementById('pass').value;
+                document.getElementById('pass').placeholder = "VALIDATING...";
+                
+                // BUSCAR EN TU TABLA 'users' (Debes crearla en Supabase con columna 'access_key')
+                const { data, error } = await _obsidian
+                    .from('users')
+                    .select('*')
+                    .eq('access_key', inputKey)
+                    .single();
 
-        function countUp(target) {
-            let start = 0;
-            let duration = 2500;
-            let startT = null;
-            const step = (t) => {
-                if(!startT) startT = t;
-                const progress = Math.min((t - startT) / duration, 1);
-                const val = progress * (target - start) + start;
-                document.getElementById('balance').innerText = "$" + val.toFixed(2);
-                if(progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        async function sync() {
-            addLog("Accessing core...");
-            const { data } = await _obsidian.from('balances').select('creator_net').order('created_at', {ascending:false});
-            const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-            
-            if(total !== currentTotal) {
-                addLog(`Inflow: +$${data[0].creator_net.toFixed(2)}`, true);
-                countUp(total);
-                currentTotal = total;
-            } else {
-                addLog("Vault Stable");
+                if (data) {
+                    unlock();
+                } else {
+                    document.getElementById('pass').value = "";
+                    document.getElementById('pass').placeholder = "ACCESS DENIED";
+                }
             }
         }
 
-        setTimeout(() => {
-            addLog("System Online");
-            sync();
-        }, 500);
+        function unlock() {
+            document.getElementById('access-screen').style.opacity = "0";
+            setTimeout(() => {
+                document.getElementById('access-screen').classList.add('hidden');
+                document.getElementById('dashboard').style.display = "block";
+                setTimeout(() => {
+                    document.getElementById('dashboard').style.opacity = "1";
+                    sync();
+                }, 100);
+            }, 800);
+        }
+
+        async function sync() {
+            const { data } = await _obsidian.from('balances').select('creator_net');
+            const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
+            animate(total);
+        }
+
+        function animate(target) {
+            let start = 0;
+            const step = (t) => {
+                start += target / 60;
+                if (start < target) {
+                    document.getElementById('balance').innerText = "$" + start.toFixed(2);
+                    requestAnimationFrame(step);
+                } else {
+                    document.getElementById('balance').innerText = "$" + target.toFixed(2);
+                }
+            };
+            requestAnimationFrame(step);
+        }
     </script>
 </body>
 </html>
