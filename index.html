@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Private Protocol</title>
+    <title>OBSIDIAN | Revenue Protocol</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
+    
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --card: #0d0d0d; --chat-out: #2a0052; }
+        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; --chat-in: #1a1a1a; --chat-out: #2a0052; --gold: #FFD700; }
         
         body, html { 
             background: radial-gradient(circle at center, #1a0033 0%, #000 100%) no-repeat fixed;
@@ -23,148 +21,126 @@
         .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
         @keyframes heartbeat { 0%, 28%, 70% { transform: rotate(45deg) scale(1); } 14%, 42% { transform: rotate(45deg) scale(1.1); } }
 
-        /* --- UI ESTRUCTURA --- */
+        /* --- UI PRINCIPAL --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
         .header { height: 60px; background: rgba(0,0,0,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; }
         .main-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
 
-        /* --- MENSAJES (CHATS) --- */
-        #chats-tab { display: none; height: 100%; flex-direction: column; }
-        .chat-list-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #111; gap: 15px; cursor: pointer; }
-        .chat-list-item:active { background: #111; }
-        .chat-avatar { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--accent); }
-        .chat-info { flex: 1; }
-        .chat-info h4 { margin: 0; font-size: 14px; }
-        .chat-info p { margin: 5px 0 0; font-size: 12px; color: #666; }
+        /* --- CHATS LIST --- */
+        .chat-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #111; gap: 15px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--accent); object-fit: cover; }
 
-        /* CHAT ABIERTO */
+        /* --- VENTANA DE CHAT --- */
         #chat-window { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
-        .chat-header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 15px; gap: 15px; background: rgba(0,0,0,0.8); }
+        .chat-header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 15px; gap: 15px; background: rgba(0,0,0,0.9); }
         .messages-area { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.4; }
-        .msg.in { background: #1a1a1a; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .msg.out { background: var(--chat-out); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #4a008a; }
-        .chat-input-area { padding: 15px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border); background: #000; }
+        
+        /* BURBUJAS */
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; }
+        .msg.in { background: var(--chat-in); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg.out { background: var(--chat-out); align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #4a008a; }
+
+        /* NOTIFICACIÓN DE PAGO / PROPINA [Novedad] */
+        .msg.system-tip { 
+            align-self: center; background: rgba(255, 215, 0, 0.1); 
+            border: 1px solid var(--gold); color: var(--gold); 
+            text-align: center; border-radius: 12px; font-size: 12px; 
+            padding: 10px 20px; width: 85%; font-weight: 600;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+        .system-tip i { margin-right: 8px; font-size: 14px; }
+
+        .chat-input-area { padding: 15px; display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); }
         .chat-input { flex: 1; background: #111; border: 1px solid #333; border-radius: 25px; padding: 12px 18px; color: #fff; outline: none; }
 
-        /* EDITOR & OTROS */
-        #editor-view { position: fixed; inset: 0; background: #000; z-index: 20000; display: none; flex-direction: column; }
+        /* NAV */
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-add { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
-        .active-icon { color: var(--accent) !important; }
+        .nav-btn { color: #444; font-size: 20px; cursor: pointer; }
+        .active { color: var(--accent); }
     </style>
 </head>
 <body>
 
     <div id="login-view">
         <div class="diamond-logo"><span>Ω</span></div>
-        <div style="width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center;">
-            <input type="password" id="pass-field" style="background:none; border:none; color:var(--accent); width:100%; padding:15px; text-align:center; letter-spacing:5px; outline:none;" placeholder="ACCESS KEY">
-            <button onclick="togglePass()" style="background:none; border:none; color:#555; font-size:10px; font-weight:bold; cursor:pointer; position:absolute; right:0;">SHOW</button>
+        <div style="width: 280px; border-bottom: 1px solid #333; position: relative;">
+            <input type="password" id="pass" style="background:none; border:none; color:var(--accent); width:100%; padding:15px; text-align:center; letter-spacing:5px; outline:none;" placeholder="ACCESS KEY">
         </div>
-        <button onclick="enterApp()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
+        <button onclick="enterApp()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
     <div id="main-app">
         <div class="header">
             <i class="fas fa-bars"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:30px; height:30px; border-radius:50%; background: url('https://i.pravatar.cc/100?u=8') center/cover; border:1px solid var(--accent);"></div>
+            <div style="width:30px; height:30px; border-radius:50%; background: #222; border:1px solid var(--accent);"></div>
         </div>
 
-        <div id="tab-home" class="main-content">
-            <div style="padding:15px; color:#333; font-family:'Cinzel'; text-align:center; margin-top:50px;">FEED ENCRYPTED</div>
-        </div>
-
-        <div id="tab-chats" class="main-content" style="display:none;">
-            <h2 style="padding:20px 20px 10px; font-family:'Cinzel'; margin:0;">MENSAJES</h2>
-            <div class="chat-list-item" onclick="openChat('Diamond User', 'https://i.pravatar.cc/100?u=1')">
-                <img src="https://i.pravatar.cc/100?u=1" class="chat-avatar">
-                <div class="chat-info">
-                    <h4>Diamond User</h4>
-                    <p>Envió una propina de $50.00 🔥</p>
+        <div id="tab-chats" class="main-content">
+            <h3 style="padding:20px; font-family:'Cinzel'; margin:0;">MENSAJES PRIVADOS</h3>
+            <div class="chat-item" onclick="openChat('Leo Dev', 'https://i.pravatar.cc/100?u=Leo')">
+                <img src="https://i.pravatar.cc/100?u=Leo" class="avatar">
+                <div style="flex:1">
+                    <h4 style="margin:0; font-size:14px;">Leo Dev</h4>
+                    <p style="margin:5px 0 0; font-size:12px; color:#666;">Te envió una propina de $100.00 🔥</p>
                 </div>
-                <div style="font-size:10px; color:#444;">12:45</div>
-            </div>
-            <div class="chat-list-item" onclick="openChat('Vip Creator', 'https://i.pravatar.cc/100?u=2')">
-                <img src="https://i.pravatar.cc/100?u=2" class="chat-avatar">
-                <div class="chat-info">
-                    <h4>Vip Creator</h4>
-                    <p>¿Viste mi última foto bloqueada?</p>
-                </div>
-                <div style="font-size:10px; color:#444;">Ayer</div>
-            </div>
-        </div>
-
-        <div id="tab-settings" class="main-content" style="display:none; padding:20px;">
-            <h2 style="font-family:'Cinzel';">SETTINGS</h2>
-            <div style="background:#0a0a0a; border-radius:15px; border:1px solid #1a1a1a; margin-top:20px;">
-                <div style="padding:20px; border-bottom:1px solid #111; display:flex; justify-content:space-between;"><span>Privacidad</span><i class="fas fa-lock"></i></div>
-                <div style="padding:20px; color:#ff4444;" onclick="location.reload()">Cerrar Sesión</div>
+                <div style="font-size:10px; color:var(--gold); font-weight:bold;">$</div>
             </div>
         </div>
 
         <nav>
-            <i class="fas fa-home" onclick="showTab('home', this)"></i>
-            <i class="fas fa-search"></i>
-            <div class="nav-add" onclick="document.getElementById('file-in').click()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" onclick="showTab('chats', this)"></i>
-            <i class="fas fa-cog" onclick="showTab('settings', this)"></i>
+            <i class="fas fa-home nav-btn"></i>
+            <i class="fas fa-search nav-btn"></i>
+            <i class="fas fa-envelope nav-btn active"></i>
+            <i class="fas fa-cog nav-btn"></i>
         </nav>
     </div>
 
     <div id="chat-window">
         <div class="chat-header">
             <i class="fas fa-chevron-left" onclick="closeChat()"></i>
-            <img id="chat-win-avatar" src="" style="width:35px; height:35px; border-radius:50%;">
-            <span id="chat-win-name" style="font-weight:bold;"></span>
+            <img id="win-avatar" src="" style="width:35px; height:35px; border-radius:50%;">
+            <span id="win-name" style="font-weight:bold;"></span>
         </div>
-        <div class="messages-area" id="msg-container">
-            <div class="msg in">Hola! Me encantó tu contenido de hoy 💎</div>
-            <div class="msg out">Muchas gracias! Tengo algo especial preparado para mañana...</div>
-            <div class="msg in">¿Es un post bloqueado?</div>
+        
+        <div class="messages-area" id="chat-msgs">
+            <div class="msg in">¡Hola! Me encantó el post que subiste hoy.</div>
+            
+            <div class="msg system-tip">
+                <i class="fas fa-hand-holding-usd"></i> ¡HAS RECIBIDO UNA PROPINA DE $50.00!
+            </div>
+            
+            <div class="msg out">¡Muchas gracias! Me alegra que te haya gustado 💎</div>
+            
+            <div class="msg system-tip" style="border-color: var(--accent); color: var(--accent); background: rgba(154,0,255,0.05);">
+                <i class="fas fa-unlock"></i> CONTENIDO DESBLOQUEADO POR $19.99
+            </div>
+            
+            <div class="msg in">¡Vale cada centavo! Sos increíble.</div>
         </div>
+
         <div class="chat-input-area">
-            <i class="fas fa-camera" style="font-size:20px; color:var(--accent);"></i>
+            <i class="fas fa-plus-circle" style="font-size:22px; color:#444;"></i>
             <input type="text" class="chat-input" placeholder="Escribe un mensaje...">
             <i class="fas fa-paper-plane" style="color:var(--accent);"></i>
         </div>
     </div>
 
-    <input type="file" id="file-in" hidden onchange="loadEditor(event)">
-
     <script>
-        function togglePass() {
-            const f = document.getElementById('pass-field');
-            f.type = f.type === 'password' ? 'text' : 'password';
-        }
-
         function enterApp() {
             document.getElementById('login-view').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
         }
 
-        function showTab(tab, el) {
-            document.getElementById('tab-home').style.display = 'none';
-            document.getElementById('tab-chats').style.display = 'none';
-            document.getElementById('tab-settings').style.display = 'none';
-            document.getElementById('tab-' + tab).style.display = 'block';
-            
-            document.querySelectorAll('nav i').forEach(i => i.classList.remove('active-icon'));
-            if(el) el.classList.add('active-icon');
-        }
-
         function openChat(name, avatar) {
-            document.getElementById('chat-win-name').innerText = name;
-            document.getElementById('chat-win-avatar').src = avatar;
+            document.getElementById('win-name').innerText = name;
+            document.getElementById('win-avatar').src = avatar;
             document.getElementById('chat-window').style.display = 'flex';
         }
 
         function closeChat() {
             document.getElementById('chat-window').style.display = 'none';
         }
-
-        function loadEditor(e) { alert("Editor abierto para subir contenido"); }
     </script>
 </body>
 </html>
