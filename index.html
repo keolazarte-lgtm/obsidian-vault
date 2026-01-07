@@ -7,71 +7,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #9A00FF; --bg: #000; }
-
-        body {
-            background: var(--bg); color: #fff; font-family: 'Inter', sans-serif;
-            margin: 0; display: flex; align-items: center; justify-content: center;
-            min-height: 100vh; overflow: hidden; position: relative;
-        }
-
-        /* FONDO ATMOSFÉRICO */
-        body::before {
-            content: ""; position: absolute; top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 50%, #15002a 0%, #000 50%);
-            animation: drift 20s linear infinite; z-index: -1; opacity: 0.6;
-        }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; position: relative; }
+        
+        /* FONDO ATMOSFÉRICO ANIMADO */
+        body::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, #15002a 0%, #000 50%); animation: drift 20s linear infinite; z-index: -1; opacity: 0.6; }
         @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* PANTALLA DE ACCESO */
-        #access-screen { text-align: center; z-index: 10; transition: all 1s ease; }
-
-        .gate-diamond {
-            width: 70px; height: 70px; border: 1px solid rgba(255,255,255,0.4);
-            transform: rotate(45deg); display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 40px; box-shadow: 0 0 40px rgba(154, 0, 255, 0.2);
-            animation: pulse-gate 3s infinite ease-in-out;
-        }
+        /* PANTALLA DE ACCESO (LOGIN) */
+        #access-screen { text-align: center; z-index: 10; transition: 0.8s; width: 100%; max-width: 400px; }
+        .gate-diamond { width: 70px; height: 70px; border: 1px solid rgba(255,255,255,0.4); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin: 0 auto 40px; box-shadow: 0 0 40px rgba(154, 0, 255, 0.2); animation: pulse 3s infinite; }
         .gate-diamond span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 30px; }
-
-        @keyframes pulse-gate { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        .access-input {
-            background: none; border: none; border-bottom: 1px solid #111;
-            color: var(--accent); font-family: 'JetBrains Mono', monospace;
-            text-align: center; font-size: 12px; letter-spacing: 4px;
-            width: 220px; padding: 10px; outline: none; transition: 0.4s;
-        }
-        .access-input:focus { border-color: var(--accent); width: 250px; }
-
-        /* DASHBOARD (OCULTO) */
-        #dashboard { display: none; text-align: center; opacity: 0; transition: opacity 1.5s ease; }
         
-        #balance {
-            font-size: clamp(70px, 12vw, 100px); font-weight: 900; letter-spacing: -4px;
-            background: linear-gradient(180deg, #fff 40%, #444 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 20px 0; line-height: 0.8;
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: rotate(45deg) scale(1); } 50% { opacity: 0.5; transform: rotate(45deg) scale(1.05); } }
+        
+        .access-input { background: none; border: none; border-bottom: 1px solid #111; color: var(--accent); font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 12px; letter-spacing: 4px; width: 100%; padding: 10px; outline: none; transition: 0.4s; }
+        .access-input:focus { border-color: var(--accent); }
 
-        .terminal {
-            width: 280px; font-family: 'JetBrains Mono', monospace; font-size: 8px;
-            color: #222; text-align: left; margin: 40px auto 0;
-            border-top: 1px solid #111; padding-top: 20px;
-        }
+        /* DASHBOARD (SALDO) */
+        #dashboard { display: none; text-align: center; opacity: 0; transition: 1s; width: 100%; }
+        .vault-label { font-size: 8px; letter-spacing: 6px; color: #444; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        #balance { font-size: clamp(60px, 15vw, 110px); font-weight: 900; letter-spacing: -4px; background: linear-gradient(180deg, #fff 40%, #444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 20px 0; line-height: 0.8; }
+        
+        /* TERMINAL DE LOGS */
+        .terminal { width: 280px; font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #222; text-align: left; margin: 40px auto 0; border-top: 1px solid #111; padding-top: 20px; }
         .log { margin-bottom: 5px; }
+        .log.new { color: var(--accent); }
+
+        /* BOTÓN LOGOUT */
+        .btn-logout { position: fixed; top: 30px; right: 30px; background: none; border: none; color: #333; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: 0.3s; z-index: 20; }
+        .btn-logout:hover { color: var(--accent); }
+
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
+    <button id="logout-btn" class="btn-logout hidden" onclick="lock()">Terminate Session</button>
+
     <div id="access-screen">
         <div class="gate-diamond"><span>Ω</span></div>
-        <input type="password" id="pass" class="access-input" placeholder="ENTER ACCESS KEY" onkeypress="checkKey(event)">
+        <input type="password" id="pass" class="access-input" placeholder="ENTER ACCESS KEY" onkeypress="handleKeyPress(event)">
     </div>
 
     <div id="dashboard">
-        <div class="vault-label" style="font-size: 8px; letter-spacing: 6px; color: #444; text-transform: uppercase;">Authenticated Vault</div>
+        <div class="logo-section" style="margin-bottom: 30px; opacity: 0.5;">
+            <div style="font-family: 'Cinzel', serif; letter-spacing: 10px; font-size: 14px;">OBSIDIAN</div>
+        </div>
+        <span class="vault-label" id="user-tag">Authenticating Vault...</span>
         <div id="balance">$0.00</div>
         <div class="terminal" id="logs"></div>
     </div>
@@ -81,20 +63,23 @@
         const SB_URL = 'https://yzvguhnugravgboaiykk.supabase.co';
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _obsidian = supabase.createClient(SB_URL, SB_KEY);
+        let currentTotal = 0;
 
-        async function checkKey(e) {
+        // Función para procesar el Enter
+        async function handleKeyPress(e) {
             if (e.key === 'Enter') {
-                const inputKey = document.getElementById('pass').value;
-                document.getElementById('pass').placeholder = "VALIDATING...";
+                const key = document.getElementById('pass').value;
+                document.getElementById('pass').placeholder = "VERIFYING...";
                 
-                // BUSCAR EN TU TABLA 'users' (Debes crearla en Supabase con columna 'access_key')
+                // Buscar usuario en tu tabla 'users'
                 const { data, error } = await _obsidian
                     .from('users')
                     .select('*')
-                    .eq('access_key', inputKey)
+                    .eq('access_key', key)
                     .single();
 
                 if (data) {
+                    document.getElementById('user-tag').innerText = `Welcome, ${data.user_name || 'Member'}`;
                     unlock();
                 } else {
                     document.getElementById('pass').value = "";
@@ -108,28 +93,48 @@
             setTimeout(() => {
                 document.getElementById('access-screen').classList.add('hidden');
                 document.getElementById('dashboard').style.display = "block";
-                setTimeout(() => {
-                    document.getElementById('dashboard').style.opacity = "1";
-                    sync();
+                document.getElementById('logout-btn').classList.remove('hidden');
+                setTimeout(() => { 
+                    document.getElementById('dashboard').style.opacity = "1"; 
+                    syncVault(); 
                 }, 100);
-            }, 800);
+            }, 600);
         }
 
-        async function sync() {
+        function lock() {
+            location.reload(); // La forma más segura de limpiar la sesión
+        }
+
+        async function syncVault() {
+            addLog("Syncing with core...");
             const { data } = await _obsidian.from('balances').select('creator_net');
             const total = data.reduce((acc, r) => acc + (r.creator_net || 0), 0);
-            animate(total);
+            
+            setTimeout(() => {
+                animateBalance(total);
+                addLog("Vault Integrity: 100%");
+                addLog(`Liquidity verified: $${total.toFixed(2)}`, true);
+            }, 500);
         }
 
-        function animate(target) {
+        function addLog(text, isNew = false) {
+            const logs = document.getElementById('logs');
+            const l = document.createElement('div');
+            l.className = isNew ? 'log new' : 'log';
+            l.innerText = `> ${text.toUpperCase()}`;
+            logs.prepend(l);
+            if(logs.children.length > 3) logs.lastChild.remove();
+        }
+
+        function animateBalance(target) {
             let start = 0;
-            const step = (t) => {
+            const step = () => {
                 start += target / 60;
                 if (start < target) {
                     document.getElementById('balance').innerText = "$" + start.toFixed(2);
                     requestAnimationFrame(step);
-                } else {
-                    document.getElementById('balance').innerText = "$" + target.toFixed(2);
+                } else { 
+                    document.getElementById('balance').innerText = "$" + target.toFixed(2); 
                 }
             };
             requestAnimationFrame(step);
