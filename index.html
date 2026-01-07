@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Elite Vault</title>
+    <title>OBSIDIAN | Private Kingdom</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --accent: #9A00FF; --bg: #000; --card: #0a0a0a; }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        /* VISTAS */
         .view { display: none; min-height: 100vh; padding-bottom: 90px; }
         .active-view { display: block; }
 
-        /* LOGIN REFORZADO */
+        /* LOGIN */
         #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); }
         .logo-diamond { width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154,0,255,0.3); }
         .logo-diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 32px; color: var(--accent); }
@@ -24,21 +23,15 @@
         .login-btn { background: none; border: none; color: var(--accent); font-size: 20px; cursor: pointer; padding: 10px; opacity: 0.3; transition: 0.3s; }
         .login-btn.active { opacity: 1; text-shadow: 0 0 10px var(--accent); }
 
-        /* CONFIGURACIÓN / MENÚ */
-        .settings-list { padding: 20px; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #080808; border: 1px solid #111; border-radius: 15px; margin-bottom: 10px; }
-        .setting-item i { color: var(--accent); margin-right: 15px; }
-        select { background: #000; color: var(--accent); border: 1px solid var(--accent); border-radius: 5px; padding: 5px; font-family: 'JetBrains Mono'; font-size: 10px; }
+        /* NAV DINÁMICA */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #111; z-index: 1000; }
+        .nav-item { font-size: 20px; color: #333; transition: 0.3s; cursor: pointer; }
+        .nav-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
 
         /* EDITOR MAESTRO */
         #upload-panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
         .canvas-area { position: relative; flex-grow: 1; background: #050505; display: flex; align-items: center; justify-content: center; touch-action: none; overflow: hidden; }
         #canvas-editor { max-width: 100%; max-height: 65vh; background: #000; }
-
-        /* NAV */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #111; z-index: 1000; }
-        .nav-item { font-size: 20px; color: #333; transition: 0.3s; cursor: pointer; }
-        .nav-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
 
         .hidden { display: none !important; }
         .loading-spin { animation: spin 1s linear infinite; }
@@ -49,7 +42,6 @@
 
     <div id="login-view" class="view active-view">
         <div class="logo-diamond"><span>Ω</span></div>
-        <div class="brand-name" style="font-family:'Cinzel'; letter-spacing:10px; margin-bottom:30px; font-size: 12px; color:#555;">OBSIDIAN PROTOCOL</div>
         <div class="login-box">
             <input type="password" id="pass" class="access-input" placeholder="••••••••" oninput="checkInput(this)" onkeypress="handleKey(event)">
             <button class="show-btn" onclick="togglePass()">Show</button>
@@ -74,20 +66,14 @@
 
         <div id="view-profile" class="view">
             <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">SETTINGS</h2></header>
-            <div class="settings-list">
-                <div class="setting-item">
-                    <span><i class="fas fa-language"></i> Language</span>
-                    <select id="lang-select">
+            <div style="padding:20px;">
+                <div style="background:#080808; padding:20px; border-radius:15px; border:1px solid #111;">
+                    <p id="user-role-label" style="font-size:10px; color:var(--accent); margin-bottom:5px;"></p>
+                    <select onchange="changeLang(this.value)" style="background:#000; color:#fff; border:1px solid #333; width:100%; padding:10px;">
                         <option value="es">Español</option>
                         <option value="en">English</option>
                     </select>
-                </div>
-                <div class="setting-item">
-                    <span><i class="fas fa-bell"></i> Notifications</span>
-                    <input type="checkbox" checked>
-                </div>
-                <div class="setting-item" onclick="location.reload()" style="border-color: #ff4444; color: #ff4444;">
-                    <span><i class="fas fa-sign-out-alt"></i> Logout</span>
+                    <button onclick="location.reload()" style="width:100%; margin-top:15px; background:none; border:1px solid #ff4444; color:#ff4444; padding:10px; border-radius:5px;">LOGOUT</button>
                 </div>
             </div>
         </div>
@@ -95,30 +81,23 @@
         <div id="upload-panel">
             <div style="display:flex; justify-content:space-between; padding:20px; background:#050505;">
                 <button onclick="toggleUpload()" style="background:none; border:none; color:#555;"><i class="fas fa-times"></i></button>
-                <button id="pub-btn" onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 25px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLICAR</button>
+                <button onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 25px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLICAR</button>
             </div>
-
-            <div class="canvas-area">
-                <canvas id="canvas-editor"></canvas>
-            </div>
-
+            <div class="canvas-area"><canvas id="canvas-editor"></canvas></div>
             <div style="padding:15px; background:#050505; display:flex; gap:15px; overflow-x:auto;">
-                <span style="font-size:24px;" onclick="addLayer('🔥')">🔥</span>
-                <span style="font-size:24px;" onclick="addLayer('😈')">😈</span>
-                <span style="font-size:24px;" onclick="addLayer('🔒')">🔒</span>
-                <button onclick="addLayer(prompt('Texto:'))" style="background:#1a1a1a; color:#fff; border:none; border-radius:5px; padding:5px 15px;">T</button>
+                <span onclick="addLayer('🔥')">🔥</span><span onclick="addLayer('😈')">😈</span><span onclick="addLayer('🔒')">🔒</span>
+                <button onclick="addLayer(prompt('Texto:'))">T</button>
             </div>
-
             <div style="padding:20px; background:#0a0a0a;">
-                <input type="file" id="file-upload" hidden accept="image/*" onchange="handleFile(event)">
-                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:15px; background:#111; border:1px solid #222; color:#fff; border-radius:10px; font-size:12px; margin-bottom:10px;"><i class="fas fa-images"></i> ELEGIR FOTO</button>
-                <input type="text" id="post-title" placeholder="Título del drop" style="width:100%; background:#000; border:1px solid #222; color:#fff; padding:12px; border-radius:8px;">
+                <input type="file" id="file-upload" hidden onchange="handleFile(event)">
+                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:15px; background:#111; color:#fff; border-radius:10px; margin-bottom:10px;">CARGAR FOTO</button>
+                <input type="text" id="post-title" placeholder="Título" style="width:100%; background:#000; border:1px solid #222; color:#fff; padding:12px;">
             </div>
         </div>
 
         <nav>
             <i class="fas fa-home nav-item active" onclick="showView('home', this)"></i>
-            <i class="fas fa-plus-circle nav-item" style="font-size:35px; color:#fff;" onclick="toggleUpload()"></i>
+            <i id="nav-upload" class="fas fa-plus-circle nav-item hidden" style="font-size:35px; color:#fff;" onclick="toggleUpload()"></i>
             <i class="fas fa-envelope nav-item" onclick="showView('msgs', this)"></i>
             <i class="fas fa-cog nav-item" onclick="showView('profile', this)"></i>
         </nav>
@@ -130,66 +109,42 @@
         const SB_KEY = 'sb_publishable_SRNetS2rHOqjhITdz9I3UQ_e0hMef0U';
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
-        const canvas = document.getElementById('canvas-editor');
-        const ctx = canvas.getContext('2d');
-        let img = new Image();
-        let layers = [];
-        let selectedLayer = null;
-        let isDragging = false;
-
-        // --- LOGIN LOGIC ---
-        function togglePass() {
-            const p = document.getElementById('pass');
-            const btn = event.target;
-            p.type = p.type === 'password' ? 'text' : 'password';
-            btn.innerText = p.type === 'password' ? 'Show' : 'Hide';
-        }
+        let userRole = 'user';
 
         function checkInput(el) { document.getElementById('enter-btn').style.opacity = el.value.length > 3 ? "1" : "0.3"; }
+        function togglePass() { const p = document.getElementById('pass'); p.type = p.type === 'password' ? 'text' : 'password'; }
         async function handleKey(e) { if (e.key === 'Enter') validateAccess(); }
 
         async function validateAccess() {
             const pass = document.getElementById('pass').value;
             const btn = document.getElementById('enter-btn');
             btn.innerHTML = '<i class="fas fa-spinner loading-spin"></i>';
+            
             const { data } = await _supabase.from('users').select('*').eq('access_key', pass).single();
+            
             if (data) {
+                userRole = data.role; // 'creator' o 'user'
+                setupInterface();
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 loadPosts();
             } else {
                 btn.innerHTML = '<i class="fas fa-arrow-right"></i>';
                 document.getElementById('login-error').innerText = "ACCESS DENIED";
-                setTimeout(() => document.getElementById('login-error').innerText = "", 2000);
             }
         }
 
-        // --- EDITOR LOGIC ---
-        function toggleUpload() { 
-            const p = document.getElementById('upload-panel');
-            p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
-            if(p.style.display === 'flex') { canvas.width = 1000; canvas.height = 1000; }
+        function setupInterface() {
+            // Mostrar botón de upload solo si es creador
+            if(userRole === 'creator') {
+                document.getElementById('nav-upload').classList.remove('hidden');
+                document.getElementById('user-role-label').innerText = "AUTHORIZED CREATOR";
+            } else {
+                document.getElementById('user-role-label').innerText = "AUTHORIZED SUBSCRIBER";
+            }
         }
 
-        function handleFile(e) {
-            const reader = new FileReader();
-            reader.onload = (f) => { img.onload = () => draw(); img.src = f.target.result; };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-
-        function addLayer(val) { if(val) { layers.push({val, x:500, y:500}); draw(); } }
-
-        function draw() {
-            ctx.clearRect(0,0,1000,1000);
-            if(img.src) ctx.drawImage(img, 0, 0, 1000, 1000);
-            layers.forEach(l => {
-                ctx.fillStyle = "white"; ctx.font = "bold 80px Inter"; ctx.textAlign = "center";
-                ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 20;
-                ctx.fillText(l.val, l.x, l.y);
-            });
-        }
-
-        // --- NAVEGACIÓN ---
+        // --- LÓGICA DE EDITOR Y FEED (Simplificada para el ejemplo) ---
         function showView(v, el) {
             document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
             document.getElementById('view-'+v).classList.add('active-view');
@@ -202,9 +157,34 @@
             const container = document.getElementById('feed-container');
             container.innerHTML = data.map(p => `
                 <div style="background:#0a0a0a; border-radius:15px; margin-bottom:20px; border:1px solid #111;">
-                    <div style="padding:15px; font-family:'Cinzel'; font-size:12px; color:var(--accent);">${p.title}</div>
+                    <div style="padding:15px; font-family:'Cinzel'; font-size:10px; color:var(--accent);">${p.title}</div>
                     <img src="${p.content_url}" style="width:100%; aspect-ratio:1/1; object-fit:cover;">
                 </div>`).join('');
+        }
+
+        // (Resto de funciones de editor como v3.4...)
+        const canvas = document.getElementById('canvas-editor');
+        const ctx = canvas.getContext('2d');
+        let img = new Image(); let layers = [];
+        function toggleUpload() { 
+            const p = document.getElementById('upload-panel'); 
+            p.style.display = p.style.display === 'flex' ? 'none' : 'flex'; 
+            if(p.style.display === 'flex') { canvas.width = 1000; canvas.height = 1000; }
+        }
+        function handleFile(e) {
+            const reader = new FileReader();
+            reader.onload = (f) => { img.onload = () => draw(); img.src = f.target.result; };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+        function addLayer(val) { if(val) { layers.push({val, x:500, y:500}); draw(); } }
+        function draw() {
+            ctx.clearRect(0,0,1000,1000);
+            if(img.src) ctx.drawImage(img, 0, 0, 1000, 1000);
+            layers.forEach(l => {
+                ctx.fillStyle = "white"; ctx.font = "bold 80px Inter"; ctx.textAlign = "center";
+                ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 20;
+                ctx.fillText(l.val, l.x, l.y);
+            });
         }
     </script>
 </body>
