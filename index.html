@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OBSIDIAN v34 | Titanium Shield</title>
+    <title>OBSIDIAN v35 | Messaging Gas</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,7 +12,7 @@
             --bg-deep: #05000a; 
             --border: rgba(154, 0, 255, 0.3); 
             --gold: #FFD700; 
-            --glass: rgba(15, 15, 15, 0.95); 
+            --glass: rgba(20, 20, 20, 0.9); 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -22,153 +22,112 @@
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden; position: fixed; width: 100%;
         }
 
-        /* --- LOGIN SHIELD --- */
-        #login-view { 
-            position: fixed; inset: 0; background: #000; z-index: 100000; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        }
-        .logo-container { position: relative; margin-bottom: 50px; }
-        .logo-glow { position: absolute; width: 140px; height: 140px; background: var(--accent); filter: blur(60px); opacity: 0.5; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 3s infinite; }
-        .diamond-logo { position: relative; width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 20px var(--accent); z-index: 2; }
-        .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
-        
-        .input-wrapper { position: relative; width: 280px; border-bottom: 1px solid var(--accent); margin-bottom: 30px; display: flex; align-items: center; }
-        #pass { background:none; border:none; color:var(--accent); text-align:center; padding:15px; letter-spacing:5px; outline:none; width: 100%; font-size: 16px; }
-        .btn-t { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; padding: 10px; z-index: 10; }
-
-        /* --- APP STRUCTURE --- */
+        /* --- UI ESTRUCTURA --- */
+        #login-view { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         #main-app { display: none; height: 100vh; flex-direction: column; opacity: 0; transition: opacity 0.5s; }
         .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); z-index: 1000; }
-        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; -webkit-overflow-scrolling: touch; }
-
-        /* --- COMPACT FEED --- */
-        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px auto; width: 92%; max-width: 380px; border-radius: 18px; overflow: hidden; }
-        .post-header { padding: 10px 15px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .post-img { width: 100%; aspect-ratio: 1/1; position: relative; background: #000; }
-        .post-img img { width: 100%; height: 100%; object-fit: cover; }
-        .locked { position: absolute; inset: 0; backdrop-filter: blur(25px); background: rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5; }
-        .post-actions { padding: 12px 15px; display: flex; gap: 20px; color: rgba(255,255,255,0.4); font-size: 18px; }
-
-        /* --- SIDEBAR SHIELD --- */
-        #sidebar { 
-            position: fixed; top: 70px; left: 15px; width: 230px; background: var(--glass); 
-            backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 15px; 
-            z-index: 50000; padding: 20px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0; visibility: hidden; transform: translateX(-20px) scale(0.9);
-        }
-        #sidebar.active { opacity: 1; visibility: visible; transform: translateX(0) scale(1); box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
-        .sidebar-item { padding: 12px 8px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: #eee; cursor: pointer; border-radius: 8px; transition: 0.2s; }
-        .sidebar-item:active { background: rgba(154, 0, 255, 0.2); }
-        .sidebar-item i { color: var(--accent); width: 20px; text-align: center; }
-        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 40000; backdrop-filter: blur(4px); }
-
-        /* --- NAV SHIELD --- */
-        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.95); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
-        .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-top: -30px; border: 5px solid #000; box-shadow: 0 0 20px var(--accent); cursor: pointer; }
         
-        @keyframes pulse { 0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.2); } }
+        /* --- CHAT MODULE (BLINDADO) --- */
+        #chat-view { display: none; flex: 1; flex-direction: column; background: transparent; }
+        .chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.4; position: relative; }
+        .msg-received { background: var(--glass); align-self: flex-start; border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 4px; }
+        .msg-sent { background: var(--accent); color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(154,0,255,0.3); }
+        
+        .msg-info { font-size: 9px; opacity: 0.6; margin-top: 5px; display: flex; justify-content: flex-end; gap: 4px; }
+        .msg-info i { color: var(--gold); }
+
+        .chat-input-area { 
+            padding: 15px; background: rgba(0,0,0,0.9); border-top: 1px solid var(--border); 
+            display: flex; align-items: center; gap: 12px; padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+        .chat-input { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 25px; padding: 10px 18px; color: #fff; outline: none; font-size: 14px; }
+        
+        /* --- OTROS --- */
+        .content { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+        .post-card { background: rgba(20, 20, 20, 0.4); border: 1px solid var(--border); margin: 15px auto; width: 92%; border-radius: 18px; overflow: hidden; }
+        nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.95); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-add { width: 55px; height: 55px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-top: -30px; border: 5px solid #000; box-shadow: 0 0 20px var(--accent); cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="login-view">
-        <div class="logo-container">
-            <div class="logo-glow"></div>
-            <div class="diamond-logo"><span>Ω</span></div>
-        </div>
-        <div class="input-wrapper">
-            <input type="password" id="pass" placeholder="ACCESS KEY" autocomplete="off">
-            <button class="btn-t" id="btn-t" onclick="togglePass()">SHOW</button>
-        </div>
-        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:50px; cursor:pointer;"><i class="fas fa-chevron-circle-right"></i></button>
-    </div>
-
-    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-    <div id="sidebar">
-        <div style="text-align:center; padding-bottom: 15px; border-bottom: 1px solid var(--border); margin-bottom: 10px;">
-            <p style="color:var(--accent); font-size:9px; letter-spacing: 1px; font-weight: bold;">AVAILABLE FUNDS</p>
-            <h2 style="margin:5px 0; font-family:'Cinzel'; color: #fff;">$ 1,240.50</h2>
-        </div>
-        <div class="sidebar-item"><i class="fas fa-gem"></i> VIP Area</div>
-        <div class="sidebar-item"><i class="fas fa-chart-line"></i> Analytics</div>
-        <div class="sidebar-item"><i class="fas fa-cog"></i> Settings</div>
-        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:10px 0;">
-        <div class="sidebar-item" onclick="location.reload()" style="color:#ff4444;"><i class="fas fa-power-off"></i> Logout</div>
+        <div style="font-family:'Cinzel'; font-size:40px; color:var(--accent); margin-bottom:40px;">Ω</div>
+        <input type="password" id="pass" placeholder="ACCESS KEY" style="background:none; border:none; border-bottom:1px solid var(--accent); color:var(--accent); text-align:center; padding:10px; outline:none; letter-spacing:5px;">
+        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:50px; cursor:pointer; margin-top:30px;"><i class="fas fa-chevron-circle-right"></i></button>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" onclick="toggleSidebar()" style="color:var(--accent); font-size:20px; cursor:pointer;"></i>
-            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
+            <i class="fas fa-bars" style="color:var(--accent); font-size:20px;"></i>
+            <span id="header-title" style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
             <div style="width:32px; height:32px; border-radius:50%; border:1px solid var(--accent); background:url('https://i.pravatar.cc/100?u=leo') center/cover;"></div>
         </div>
         
-        <div class="content">
+        <div id="feed-view" class="content">
             <div class="post-card">
-                <div class="post-header">Diamond_Girl</div>
-                <div class="post-img">
-                    <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=500">
-                    <div class="locked">
-                        <i class="fas fa-lock" style="color:var(--gold); font-size:24px;"></i>
-                        <button style="background:var(--gold); border:none; padding:8px 18px; border-radius:20px; margin-top:12px; font-weight:bold; font-size:11px; cursor:pointer; color: #000;">UNLOCK $15.00</button>
-                    </div>
+                <div style="padding:10px; font-size:12px; font-weight:600;">Diamond_Girl</div>
+                <div style="width:100%; aspect-ratio:1/1; background:url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=500') center/cover;"></div>
+                <div style="padding:15px; display:flex; gap:20px; color:rgba(255,255,255,0.4);"><i class="far fa-heart"></i><i class="far fa-comment"></i></div>
+            </div>
+        </div>
+
+        <div id="chat-view">
+            <div class="chat-container" id="chat-msgs">
+                <div class="msg msg-received">
+                    Hola Leo, ¿viste el último video del Vault? Está increíble.
+                    <div class="msg-info">10:42 PM</div>
                 </div>
-                <div class="post-actions">
-                    <i class="far fa-heart"></i>
-                    <i class="far fa-comment"></i>
-                    <i class="far fa-paper-plane"></i>
+                <div class="msg msg-sent">
+                    ¡Todavía no! Estoy terminando de blindar la interfaz.
+                    <div class="msg-info">10:43 PM <i class="fas fa-check-double"></i></div>
                 </div>
             </div>
-
-            <div class="post-card">
-                <div class="post-header">Obsidian_Admin</div>
-                <div class="post-img">
-                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=500">
-                </div>
-                <div class="post-actions">
-                    <i class="fas fa-heart" style="color:red;"></i>
-                    <i class="far fa-comment"></i>
-                    <i class="far fa-paper-plane"></i>
-                </div>
+            <div class="chat-input-area">
+                <i class="fas fa-paperclip" style="color:var(--accent); font-size:20px;"></i>
+                <input type="text" class="chat-input" placeholder="Escribe un mensaje secreto...">
+                <i class="fas fa-paper-plane" style="color:var(--accent); font-size:20px;"></i>
             </div>
         </div>
 
         <nav>
-            <i class="fas fa-home" style="color:var(--accent); font-size:22px;"></i>
+            <i class="fas fa-home" onclick="showView('feed')" id="nav-home" style="color:var(--accent); font-size:22px;"></i>
             <i class="fas fa-search" style="color:#555; font-size:22px;"></i>
             <div class="nav-add"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" style="color:#555; font-size:22px;"></i>
-            <i class="fas fa-cog" style="color:#555; font-size:22px;" onclick="toggleSidebar()"></i>
+            <i class="fas fa-envelope" onclick="showView('chat')" id="nav-chat" style="color:#555; font-size:22px;"></i>
+            <i class="fas fa-cog" style="color:#555; font-size:22px;"></i>
         </nav>
     </div>
 
     <script>
-        const passInput = document.getElementById('pass');
-        const btnToggle = document.getElementById('btn-t');
-        const loginView = document.getElementById('login-view');
-        const mainApp = document.getElementById('main-app');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-
-        function togglePass() {
-            const isPass = passInput.type === 'password';
-            passInput.type = isPass ? 'text' : 'password';
-            btnToggle.innerText = isPass ? 'HIDE' : 'SHOW';
-        }
-
         function enter() {
-            loginView.style.transition = 'opacity 0.5s';
-            loginView.style.opacity = '0';
-            setTimeout(() => {
-                loginView.style.display = 'none';
-                mainApp.style.display = 'flex';
-                setTimeout(() => mainApp.style.opacity = '1', 50);
-            }, 500);
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            setTimeout(() => document.getElementById('main-app').style.opacity = '1', 50);
         }
 
-        function toggleSidebar() {
-            const isActive = sidebar.classList.toggle('active');
-            overlay.style.display = isActive ? 'block' : 'none';
+        function showView(view) {
+            const feed = document.getElementById('feed-view');
+            const chat = document.getElementById('chat-view');
+            const title = document.getElementById('header-title');
+            const iconHome = document.getElementById('nav-home');
+            const iconChat = document.getElementById('nav-chat');
+
+            if(view === 'chat') {
+                feed.style.display = 'none';
+                chat.style.display = 'flex';
+                title.innerText = 'MESSAGES';
+                iconChat.style.color = 'var(--accent)';
+                iconHome.style.color = '#555';
+            } else {
+                feed.style.display = 'block';
+                chat.style.display = 'none';
+                title.innerText = 'OBSIDIAN';
+                iconHome.style.color = 'var(--accent)';
+                iconChat.style.color = '#555';
+            }
         }
     </script>
 </body>
