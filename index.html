@@ -17,7 +17,7 @@
             color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden;
         }
 
-        /* --- LOGIN CON LATIDO REAL --- */
+        /* --- LOGIN --- */
         #login-view { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .diamond-logo { 
             width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); 
@@ -26,36 +26,32 @@
         }
         .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
         @keyframes heartbeat {
-            0% { transform: rotate(45deg) scale(1); box-shadow: 0 0 10px var(--accent); }
-            14% { transform: rotate(45deg) scale(1.1); box-shadow: 0 0 30px var(--accent); }
-            28% { transform: rotate(45deg) scale(1); box-shadow: 0 0 10px var(--accent); }
-            42% { transform: rotate(45deg) scale(1.1); box-shadow: 0 0 30px var(--accent); }
-            70% { transform: rotate(45deg) scale(1); box-shadow: 0 0 10px var(--accent); }
+            0%, 28%, 70% { transform: rotate(45deg) scale(1); }
+            14%, 42% { transform: rotate(45deg) scale(1.1); }
         }
 
         .input-group { width: 280px; border-bottom: 1px solid #333; position: relative; display: flex; align-items: center; }
         .input-group input { background: none; border: none; color: var(--accent); width: 100%; padding: 15px; outline: none; text-align: center; font-size: 18px; letter-spacing: 5px; }
         .btn-toggle { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; cursor: pointer; position: absolute; right: 0; }
 
-        /* --- UI PRINCIPAL --- */
+        /* --- MAIN APP --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
         .header { height: 60px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; }
         
-        /* HISTORIAS */
-        .stories-container { display: flex; gap: 15px; padding: 15px; background: rgba(255,255,255,0.02); }
-        .story-circle { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); position: relative; padding: 2px; }
-        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .add-story { position: absolute; bottom: 0; right: 0; background: var(--accent); width: 20px; height: 20px; border-radius: 50%; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-
-        /* FEED */
+        /* FEED & CARDS */
         .feed { flex: 1; overflow-y: auto; padding-bottom: 100px; }
-        .post-card { background: var(--card); margin-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .post-card { background: var(--card); margin-bottom: 15px; border-bottom: 1px solid var(--border); position: relative; }
         .post-header { padding: 12px; display: flex; align-items: center; gap: 10px; }
+        .media-container { position: relative; width: 100%; overflow: hidden; }
         .post-img { width: 100%; display: block; }
-
-        /* CONFIGURACIÓN */
-        #settings-view { display: none; padding: 20px; }
-        .setting-item { background: #0a0a0a; padding: 20px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1a1a1a; display: flex; justify-content: space-between; }
+        
+        /* BLOQUEO PREMIUM */
+        .locked-overlay { 
+            position: absolute; inset: 0; background: rgba(0,0,0,0.4); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; 
+        }
+        .unlock-btn { background: #fff; color: #000; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
         /* EDITOR PRO */
         #editor-view { position: fixed; inset: 0; background: #000; z-index: 20000; display: none; flex-direction: column; }
@@ -63,7 +59,10 @@
         .editor-canvas { flex: 1; display: flex; align-items: center; justify-content: center; background: #050505; overflow: hidden; }
         #image-edit { max-width: 100%; }
 
-        /* BOTTOM NAV */
+        /* BOTONERA DE MONETIZACIÓN */
+        .monetize-bar { padding: 20px; background: #0a0a0a; border-top: 1px solid var(--border); }
+        .price-input { background: #1a1a1a; border: 1px solid #333; color: var(--accent); padding: 10px; border-radius: 8px; width: 80px; text-align: center; font-weight: bold; }
+
         nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-center { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
     </style>
@@ -81,33 +80,26 @@
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" onclick="alert('Menu Lateral en construcción')"></i>
+            <i class="fas fa-bars"></i>
             <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
             <img src="https://i.pravatar.cc/100?u=12" style="width:30px; border-radius:50%; border:1px solid var(--accent);">
         </div>
 
         <div id="home-view" class="feed">
-            <div class="stories-container">
-                <div class="story-circle" onclick="openFile()">
-                    <img src="https://i.pravatar.cc/100?u=12">
-                    <div class="add-story"><i class="fas fa-plus"></i></div>
-                </div>
-            </div>
             <div class="post-card">
                 <div class="post-header">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--accent);"></div>
-                    <span style="font-weight:bold; font-size:14px;">OBSIDIAN_OFFICIAL</span>
+                    <span style="font-weight:bold; font-size:13px;">MODEL_VIP_01</span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=800" class="post-img">
-                <div style="padding:15px; font-size:12px; color:#888;">Bienvenido al Vault privado.</div>
+                <div class="media-container">
+                    <div class="locked-overlay">
+                        <i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i>
+                        <span style="font-weight:bold;">CONTENIDO PREMIUM</span>
+                        <button class="unlock-btn" onclick="alert('Redirigiendo a pasarela de pago...')">DESBLOQUEAR POR $9.99</button>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800" class="post-img">
+                </div>
             </div>
-        </div>
-
-        <div id="settings-view">
-            <h2 style="font-family:'Cinzel'; margin-bottom:30px;">SETTINGS</h2>
-            <div class="setting-item"><span>Privacidad</span><i class="fas fa-shield-alt"></i></div>
-            <div class="setting-item"><span>Idioma</span><span>Español</span></div>
-            <div class="setting-item" onclick="location.reload()" style="color:#ff4444;"><span>Cerrar Sesión</span><i class="fas fa-power-off"></i></div>
         </div>
 
         <nav>
@@ -122,16 +114,26 @@
     <div id="editor-view">
         <div class="editor-header">
             <i class="fas fa-times" onclick="closeEditor()"></i>
-            <span style="font-family:'Cinzel'; font-size:12px;">EDITOR</span>
-            <button onclick="publish()" style="background:var(--accent); color:#fff; border:none; padding:8px 15px; border-radius:20px; font-weight:bold;">POST</button>
+            <span style="font-family:'Cinzel'; font-size:12px;">NUEVO POST</span>
+            <button onclick="publish()" style="background:var(--accent); color:#fff; border:none; padding:8px 20px; border-radius:20px; font-weight:bold;">SUBIR</button>
         </div>
         <div class="editor-canvas">
             <img id="image-edit" src="">
         </div>
-        <div style="padding:20px; display:flex; justify-content:space-around; background:#000;">
-            <i class="fas fa-crop-alt" style="font-size:22px;" onclick="initCropper()"></i>
-            <i class="fas fa-check" style="font-size:22px; color:var(--accent);" onclick="applyCrop()"></i>
-            <i class="fas fa-sun" style="font-size:22px;" onclick="alert('Brillo ajustado automáticamente')"></i>
+        
+        <div class="monetize-bar">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <span>Bloquear Contenido</span>
+                <input type="checkbox" id="is-premium" onchange="togglePrice(this)">
+            </div>
+            <div id="price-box" style="display:none; justify-content:space-between; align-items:center;">
+                <span style="font-size:13px; color:#888;">Precio del post (USD)</span>
+                <input type="number" class="price-input" id="post-price" value="5.00">
+            </div>
+            <div style="display:flex; justify-content:space-around; margin-top:20px;">
+                <i class="fas fa-crop-alt" onclick="initCropper()"></i>
+                <i class="fas fa-check" onclick="applyCrop()" style="color:var(--accent);"></i>
+            </div>
         </div>
     </div>
 
@@ -140,17 +142,10 @@
     <script>
         let myCropper;
 
-        // --- FUNCIONES DE LOGIN ---
         function togglePass() {
             const field = document.getElementById('pass-field');
-            const btn = document.querySelector('.btn-toggle');
-            if(field.type === 'password') {
-                field.type = 'text';
-                btn.innerText = 'HIDE';
-            } else {
-                field.type = 'password';
-                btn.innerText = 'SHOW';
-            }
+            field.type = field.type === 'password' ? 'text' : 'password';
+            document.querySelector('.btn-toggle').innerText = field.type === 'password' ? 'SHOW' : 'HIDE';
         }
 
         function enterApp() {
@@ -158,49 +153,45 @@
             document.getElementById('main-app').style.display = 'flex';
         }
 
-        // --- FUNCIONES DE NAVEGACIÓN ---
-        function showTab(tab) {
-            document.getElementById('home-view').style.display = tab === 'home' ? 'block' : 'none';
-            document.getElementById('settings-view').style.display = tab === 'settings' ? 'block' : 'none';
-        }
-
-        // --- FUNCIONES DEL EDITOR ---
         function openFile() { document.getElementById('input-file').click(); }
 
         function loadMedia(e) {
             const reader = new FileReader();
-            reader.onload = function(f) {
+            reader.onload = (f) => {
                 document.getElementById('image-edit').src = f.target.result;
                 document.getElementById('editor-view').style.display = 'flex';
             }
             reader.readAsDataURL(e.target.files[0]);
         }
 
+        function togglePrice(cb) {
+            document.getElementById('price-box').style.display = cb.checked ? 'flex' : 'none';
+        }
+
         function initCropper() {
             if(myCropper) myCropper.destroy();
-            myCropper = new Cropper(document.getElementById('image-edit'), {
-                aspectRatio: NaN,
-                viewMode: 1
-            });
+            myCropper = new Cropper(document.getElementById('image-edit'), { viewMode: 1 });
         }
 
         function applyCrop() {
             if(!myCropper) return;
-            const canvas = myCropper.getCroppedCanvas();
-            document.getElementById('image-edit').src = canvas.toDataURL();
+            document.getElementById('image-edit').src = myCropper.getCroppedCanvas().toDataURL();
             myCropper.destroy();
             myCropper = null;
         }
 
         function closeEditor() {
-            if(myCropper) myCropper.destroy();
             document.getElementById('editor-view').style.display = 'none';
         }
 
         function publish() {
-            alert("Publicando en tu Vault...");
+            const isLocked = document.getElementById('is-premium').checked;
+            const price = document.getElementById('post-price').value;
+            alert(isLocked ? `Publicado como PREMIUM por $${price}` : "Publicado GRATIS");
             closeEditor();
         }
+
+        function showTab(t) { /* Lógica de cambio de pestaña */ }
     </script>
 </body>
 </html>
