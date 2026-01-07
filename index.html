@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN v30 | Sublime Color</title>
+    <title>OBSIDIAN v31 | Premium Feed</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,6 +14,7 @@
             --border: rgba(154, 0, 255, 0.2); 
             --gold: #FFD700; 
             --glass: rgba(10, 10, 10, 0.75); 
+            --card-bg: rgba(15, 0, 25, 0.5); /* Fondo más oscuro para las tarjetas */
         }
 
         body, html { 
@@ -66,6 +67,54 @@
         }
         .content { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 
+        /* --- FEED MODULE --- */
+        .post-card { 
+            background: var(--card-bg); 
+            border: 1px solid rgba(255,255,255,0.08); /* Borde sutil */
+            margin: 15px; 
+            border-radius: 25px; /* Bordes más redondeados */
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Sombra más profunda */
+            position: relative;
+        }
+        .post-header { padding: 12px; display: flex; align-items: center; gap: 10px; }
+        .post-header img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .post-header span { font-weight: bold; font-size: 14px; color: #fff; }
+        
+        .post-img-container { width: 100%; aspect-ratio: 1/1; background: #111; position: relative; }
+        .post-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .post-locked-overlay { 
+            position: absolute; inset: 0; 
+            background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); /* Desenfoque más fuerte */
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            text-align: center; color: #fff;
+        }
+        .post-locked-overlay i { font-size: 40px; color: var(--gold); margin-bottom: 15px; }
+        .post-locked-overlay p { margin: 0; font-size: 14px; }
+        .btn-unlock { 
+            background: linear-gradient(to right, #FFD700, #FFA500); /* Degradado dorado */
+            color: #000; border: none; padding: 12px 25px; border-radius: 30px; 
+            font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 14px;
+            box-shadow: 0 5px 15px rgba(255,215,0,0.3); transition: 0.2s;
+        }
+        .btn-unlock:active { transform: translateY(2px) scale(0.98); box-shadow: 0 2px 10px rgba(255,215,0,0.5); }
+
+        .post-actions { 
+            padding: 15px; display: flex; gap: 25px; font-size: 22px; 
+            color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.05); /* Separador */
+        }
+        .post-actions i { cursor: pointer; transition: 0.2s; }
+        .post-actions i:active { transform: scale(0.9); color: var(--accent); }
+
+
+        /* --- STORIES (AJUSTES PARA VISUALIZACION) --- */
+        .stories-bar { display: flex; gap: 15px; padding: 20px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+        .story-circle { min-width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--accent); padding: 2px; position: relative; flex-shrink: 0; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .add-story-btn { position: absolute; bottom: 0; right: 0; background: var(--accent); width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--bg-deep); font-size: 12px; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; }
+
+
         /* --- NAV --- */
         nav { 
             position: fixed; bottom: 0; width: 100%; height: 75px; 
@@ -74,89 +123,10 @@
             z-index: 100; backdrop-filter: blur(10px);
         }
         .nav-add { 
-            width: 55px; height: 55px; background: #fff; color: #000; 
+            width: 60px; height: 60px; background: #fff; color: #000; 
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            font-size: 26px; margin-bottom: 30px; border: 4px solid #000; 
-            box-shadow: 0 0 30px rgba(154,0,255,0.6); cursor: pointer; 
+            font-size: 28px; margin-bottom: 35px; border: 5px solid #000; 
+            box-shadow: 0 0 35px rgba(154,0,255,0.7); cursor: pointer; 
         }
-        .nav-btn { color: rgba(255,255,255,0.3); font-size: 22px; cursor: pointer; }
-    </style>
-</head>
-<body>
-
-    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-    <div id="sidebar">
-        <div style="border-bottom: 1px solid var(--border); padding-bottom:15px; margin-bottom:15px; text-align:center;">
-            <p style="color:var(--accent); font-size:9px; letter-spacing:2px; font-weight:bold; margin:0;">OBSIDIAN VAULT</p>
-            <h3 style="font-family:'Cinzel'; margin: 8px 0; color:#fff;">$ 1,240.50</h3>
-        </div>
-        <div class="sidebar-item"><i class="fas fa-gem"></i> VIP Area</div>
-        <div class="sidebar-item"><i class="fas fa-history"></i> Transacciones</div>
-        <div class="sidebar-item" style="margin-top: 10px; color:#ff4444;" onclick="location.reload()">
-            <i class="fas fa-power-off"></i> Salir
-        </div>
-    </div>
-
-    <div id="login-view">
-        <div class="logo-container">
-            <div class="logo-glow"></div>
-            <div class="diamond-logo"><span>Ω</span></div>
-        </div>
-        <div style="width: 280px; border-bottom: 1px solid var(--accent); position: relative; display: flex; align-items: center; margin-bottom: 40px;">
-            <input type="password" id="pass" placeholder="ACCESS KEY" style="background:none; border:none; color:var(--accent); width:100%; padding:15px; text-align:center; letter-spacing:5px; outline:none; font-size:18px;">
-            <button onclick="togglePass()" id="btn-t" style="background:none; border:none; color:#555; font-size:10px; font-weight:bold; cursor:pointer; position:absolute; right:0; padding:10px;">SHOW</button>
-        </div>
-        <button onclick="enter()" style="background:none; border:none; color:var(--accent); font-size:50px; cursor:pointer;"><i class="fas fa-chevron-circle-right"></i></button>
-    </div>
-
-    <div id="main-app">
-        <div class="header">
-            <i class="fas fa-bars" onclick="toggleSidebar()" style="cursor:pointer; font-size:20px; color:var(--accent);"></i>
-            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
-            <div style="width:35px; height:35px; border-radius:50%; border:1px solid var(--accent); background:url('https://i.pravatar.cc/100?u=leo') center/cover;"></div>
-        </div>
-        
-        <div class="content">
-            <div style="padding:100px 40px; text-align:center;">
-                 <i class="fas fa-fingerprint" style="font-size:60px; color:var(--accent); opacity:0.1; margin-bottom:20px;"></i>
-                 <p style="color:rgba(154,0,255,0.2); font-family:'Cinzel'; font-size:12px; letter-spacing:4px;">Secure Environment</p>
-            </div>
-        </div>
-
-        <nav>
-            <i class="fas fa-home nav-btn" style="color:var(--accent)"></i>
-            <i class="fas fa-search nav-btn"></i>
-            <div class="nav-add" onclick="document.getElementById('f-up').click()"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope nav-btn"></i>
-            <i class="fas fa-cog nav-btn" onclick="toggleSidebar()"></i>
-        </nav>
-    </div>
-
-    <input type="file" id="f-up" hidden onchange="handleFile()">
-    <audio id="snd-cash" src="https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3"></audio>
-
-    <script>
-        function togglePass() {
-            const p = document.getElementById('pass');
-            const b = document.getElementById('btn-t');
-            p.type = p.type === 'password' ? 'text' : 'password';
-            b.innerText = p.type === 'password' ? 'SHOW' : 'HIDE';
-        }
-        function enter() {
-            document.getElementById('login-view').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-        }
-        function toggleSidebar() {
-            const side = document.getElementById('sidebar');
-            const over = document.getElementById('overlay');
-            const isActive = side.classList.contains('active');
-            side.classList.toggle('active');
-            over.style.display = isActive ? 'none' : 'block';
-        }
-        function handleFile() {
-            document.getElementById('snd-cash').play();
-            alert("✅ Secure upload complete.");
-        }
-    </script>
-</body>
-</html>
+        .nav-btn { color: rgba(255,255,255,0.4); font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .
