@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Private Kingdom</title>
+    <title>OBSIDIAN | Elite Vault</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,29 +14,30 @@
         .view { display: none; min-height: 100vh; padding-bottom: 90px; }
         .active-view { display: block; }
 
-        /* LOGIN FIX */
-        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); transition: 0.5s; }
+        /* LOGIN REFORZADO */
+        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); }
         .logo-diamond { width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154,0,255,0.3); }
         .logo-diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 32px; color: var(--accent); }
         .login-box { position: relative; width: 280px; border-bottom: 1px solid #333; display: flex; align-items: center; }
         .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono'; text-align: center; font-size: 18px; width: 100%; padding: 15px 0; outline: none; letter-spacing: 5px; }
-        .login-btn { background: none; border: none; color: var(--accent); font-size: 20px; cursor: pointer; padding: 10px; opacity: 0.5; transition: 0.3s; }
+        .show-btn { position: absolute; right: 40px; background: none; border: none; color: #444; font-size: 9px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
+        .login-btn { background: none; border: none; color: var(--accent); font-size: 20px; cursor: pointer; padding: 10px; opacity: 0.3; transition: 0.3s; }
         .login-btn.active { opacity: 1; text-shadow: 0 0 10px var(--accent); }
+
+        /* CONFIGURACIÓN / MENÚ */
+        .settings-list { padding: 20px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #080808; border: 1px solid #111; border-radius: 15px; margin-bottom: 10px; }
+        .setting-item i { color: var(--accent); margin-right: 15px; }
+        select { background: #000; color: var(--accent); border: 1px solid var(--accent); border-radius: 5px; padding: 5px; font-family: 'JetBrains Mono'; font-size: 10px; }
 
         /* EDITOR MAESTRO */
         #upload-panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
-        .canvas-area { position: relative; flex-grow: 1; background: #080808; display: flex; align-items: center; justify-content: center; touch-action: none; overflow: hidden; }
-        #canvas-editor { max-width: 100%; max-height: 70vh; background: #111; touch-action: none; }
-
-        /* CHAT */
-        .chat-container { height: calc(100vh - 160px); display: flex; flex-direction: column; padding: 15px; }
-        .msg-bubble { padding: 12px 18px; border-radius: 20px; margin-bottom: 10px; max-width: 80%; font-size: 14px; line-height: 1.4; }
-        .msg-received { background: #1a1a1a; align-self: flex-start; color: #ccc; }
-        .msg-sent { background: var(--accent); align-self: flex-end; color: #fff; }
+        .canvas-area { position: relative; flex-grow: 1; background: #050505; display: flex; align-items: center; justify-content: center; touch-action: none; overflow: hidden; }
+        #canvas-editor { max-width: 100%; max-height: 65vh; background: #000; }
 
         /* NAV */
         nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #111; z-index: 1000; }
-        .nav-item { font-size: 22px; color: #333; transition: 0.3s; }
+        .nav-item { font-size: 20px; color: #333; transition: 0.3s; cursor: pointer; }
         .nav-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
 
         .hidden { display: none !important; }
@@ -48,12 +49,13 @@
 
     <div id="login-view" class="view active-view">
         <div class="logo-diamond"><span>Ω</span></div>
-        <div class="brand-name" style="font-family:'Cinzel'; letter-spacing:10px; margin-bottom:30px; font-size: 14px;">OBSIDIAN</div>
+        <div class="brand-name" style="font-family:'Cinzel'; letter-spacing:10px; margin-bottom:30px; font-size: 12px; color:#555;">OBSIDIAN PROTOCOL</div>
         <div class="login-box">
             <input type="password" id="pass" class="access-input" placeholder="••••••••" oninput="checkInput(this)" onkeypress="handleKey(event)">
+            <button class="show-btn" onclick="togglePass()">Show</button>
             <button id="enter-btn" class="login-btn" onclick="validateAccess()"><i class="fas fa-arrow-right"></i></button>
         </div>
-        <div id="login-error" style="color: #ff4444; font-size: 10px; margin-top: 15px; letter-spacing: 1px;"></div>
+        <div id="login-error" style="color: #ff4444; font-size: 10px; margin-top: 20px; letter-spacing: 2px;"></div>
     </div>
 
     <div id="main-app" class="hidden">
@@ -66,25 +68,34 @@
         </div>
 
         <div id="view-msgs" class="view">
-            <header style="padding:20px; border-bottom:1px solid #111; display:flex; justify-content:space-between;">
-                <h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">INBOX</h2>
-                <i class="fas fa-ellipsis-v" style="color:#333;"></i>
-            </header>
-            <div class="chat-container">
-                <div class="msg-bubble msg-received">Bienvenido al Reino. Aquí podés hablar directamente con tus suscriptores.</div>
-                <div class="msg-bubble msg-sent">Perfecto, el sistema está online.</div>
-            </div>
-            <div style="padding:15px; display:flex; gap:10px;">
-                <input type="text" placeholder="Escribir mensaje..." style="flex-grow:1; background:#111; border:1px solid #222; border-radius:30px; padding:12px 20px; color:#fff;">
-                <button style="background:var(--accent); border:none; color:#fff; width:45px; height:45px; border-radius:50%;"><i class="fas fa-paper-plane"></i></button>
+            <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">INBOX</h2></header>
+            <div style="padding:40px; text-align:center; color:#333; font-size:12px;">NO RECENT MESSAGES</div>
+        </div>
+
+        <div id="view-profile" class="view">
+            <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">SETTINGS</h2></header>
+            <div class="settings-list">
+                <div class="setting-item">
+                    <span><i class="fas fa-language"></i> Language</span>
+                    <select id="lang-select">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <span><i class="fas fa-bell"></i> Notifications</span>
+                    <input type="checkbox" checked>
+                </div>
+                <div class="setting-item" onclick="location.reload()" style="border-color: #ff4444; color: #ff4444;">
+                    <span><i class="fas fa-sign-out-alt"></i> Logout</span>
+                </div>
             </div>
         </div>
 
         <div id="upload-panel">
             <div style="display:flex; justify-content:space-between; padding:20px; background:#050505;">
                 <button onclick="toggleUpload()" style="background:none; border:none; color:#555;"><i class="fas fa-times"></i></button>
-                <span style="font-family:'Cinzel'; font-size:12px; letter-spacing:3px;">EDITOR PRO</span>
-                <button id="pub-btn" onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 20px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLICAR</button>
+                <button id="pub-btn" onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 25px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLICAR</button>
             </div>
 
             <div class="canvas-area">
@@ -95,13 +106,12 @@
                 <span style="font-size:24px;" onclick="addLayer('🔥')">🔥</span>
                 <span style="font-size:24px;" onclick="addLayer('😈')">😈</span>
                 <span style="font-size:24px;" onclick="addLayer('🔒')">🔒</span>
-                <span style="font-size:24px;" onclick="addLayer('🔞')">🔞</span>
                 <button onclick="addLayer(prompt('Texto:'))" style="background:#1a1a1a; color:#fff; border:none; border-radius:5px; padding:5px 15px;">T</button>
             </div>
 
             <div style="padding:20px; background:#0a0a0a;">
                 <input type="file" id="file-upload" hidden accept="image/*" onchange="handleFile(event)">
-                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:15px; background:#111; border:1px solid #222; color:#fff; border-radius:10px; margin-bottom:10px;"><i class="fas fa-images"></i> ELEGIR FOTO</button>
+                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:15px; background:#111; border:1px solid #222; color:#fff; border-radius:10px; font-size:12px; margin-bottom:10px;"><i class="fas fa-images"></i> ELEGIR FOTO</button>
                 <input type="text" id="post-title" placeholder="Título del drop" style="width:100%; background:#000; border:1px solid #222; color:#fff; padding:12px; border-radius:8px;">
             </div>
         </div>
@@ -110,6 +120,7 @@
             <i class="fas fa-home nav-item active" onclick="showView('home', this)"></i>
             <i class="fas fa-plus-circle nav-item" style="font-size:35px; color:#fff;" onclick="toggleUpload()"></i>
             <i class="fas fa-envelope nav-item" onclick="showView('msgs', this)"></i>
+            <i class="fas fa-cog nav-item" onclick="showView('profile', this)"></i>
         </nav>
     </div>
 
@@ -126,36 +137,34 @@
         let selectedLayer = null;
         let isDragging = false;
 
-        // --- LÓGICA DE ACCESO REFORZADA ---
-        function checkInput(el) {
-            document.getElementById('enter-btn').classList.toggle('active', el.value.length > 3);
+        // --- LOGIN LOGIC ---
+        function togglePass() {
+            const p = document.getElementById('pass');
+            const btn = event.target;
+            p.type = p.type === 'password' ? 'text' : 'password';
+            btn.innerText = p.type === 'password' ? 'Show' : 'Hide';
         }
 
+        function checkInput(el) { document.getElementById('enter-btn').style.opacity = el.value.length > 3 ? "1" : "0.3"; }
         async function handleKey(e) { if (e.key === 'Enter') validateAccess(); }
 
         async function validateAccess() {
             const pass = document.getElementById('pass').value;
             const btn = document.getElementById('enter-btn');
-            const err = document.getElementById('login-error');
-            
             btn.innerHTML = '<i class="fas fa-spinner loading-spin"></i>';
-            const { data, error } = await _supabase.from('users').select('*').eq('access_key', pass).single();
-
+            const { data } = await _supabase.from('users').select('*').eq('access_key', pass).single();
             if (data) {
-                document.getElementById('login-view').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('login-view').classList.add('hidden');
-                    document.getElementById('main-app').classList.remove('hidden');
-                    loadPosts();
-                }, 500);
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                loadPosts();
             } else {
                 btn.innerHTML = '<i class="fas fa-arrow-right"></i>';
-                err.innerText = "ACCESO DENEGADO";
-                setTimeout(() => err.innerText = "", 2000);
+                document.getElementById('login-error').innerText = "ACCESS DENIED";
+                setTimeout(() => document.getElementById('login-error').innerText = "", 2000);
             }
         }
 
-        // --- LÓGICA DEL EDITOR ---
+        // --- EDITOR LOGIC ---
         function toggleUpload() { 
             const p = document.getElementById('upload-panel');
             p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
@@ -180,50 +189,6 @@
             });
         }
 
-        // DRAG & DROP TÁCTIL
-        const getMousePos = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return {
-                x: (clientX - rect.left) * (1000 / rect.width),
-                y: (clientY - rect.top) * (1000 / rect.height)
-            };
-        };
-
-        const start = (e) => {
-            const pos = getMousePos(e);
-            selectedLayer = layers.find(l => Math.abs(l.x - pos.x) < 60 && Math.abs(l.y - pos.y) < 60);
-            if(selectedLayer) isDragging = true;
-        };
-
-        const move = (e) => {
-            if(!isDragging || !selectedLayer) return;
-            const pos = getMousePos(e);
-            selectedLayer.x = pos.x; selectedLayer.y = pos.y;
-            draw();
-        };
-
-        canvas.addEventListener('mousedown', start);
-        canvas.addEventListener('mousemove', move);
-        window.addEventListener('mouseup', () => { isDragging = false; selectedLayer = null; });
-        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); start(e); });
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); move(e); });
-
-        async function publishPost() {
-            document.getElementById('pub-btn').innerText = "...";
-            canvas.toBlob(async (blob) => {
-                const name = `post_${Date.now()}.jpg`;
-                await _supabase.storage.from('post-files').upload(name, blob);
-                const { data: url } = _supabase.storage.from('post-files').getPublicUrl(name);
-                await _supabase.from('posts').insert([{
-                    title: document.getElementById('post-title').value || "OBSIDIAN",
-                    content_url: url.publicUrl
-                }]);
-                location.reload();
-            }, 'image/jpeg', 0.8);
-        }
-
         // --- NAVEGACIÓN ---
         function showView(v, el) {
             document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
@@ -236,7 +201,7 @@
             const { data } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
             const container = document.getElementById('feed-container');
             container.innerHTML = data.map(p => `
-                <div style="background:#0a0a0a; border-radius:15px; margin-bottom:25px; border:1px solid #111;">
+                <div style="background:#0a0a0a; border-radius:15px; margin-bottom:20px; border:1px solid #111;">
                     <div style="padding:15px; font-family:'Cinzel'; font-size:12px; color:var(--accent);">${p.title}</div>
                     <img src="${p.content_url}" style="width:100%; aspect-ratio:1/1; object-fit:cover;">
                 </div>`).join('');
