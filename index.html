@@ -3,47 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OBSIDIAN | Private Kingdom</title>
+    <title>OBSIDIAN</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <style>
-        :root { --accent: #9A00FF; --bg: #000; --sidebar: #0a0a0a; --border: #1a1a1a; }
+        :root { --accent: #9A00FF; --bg: #000; --border: #1a1a1a; }
         
+        /* FONDO RADIAL PREMIUM */
         body { 
             background: radial-gradient(circle at center, #1a0033 0%, #000 85%); 
-            color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh;
+            color: #fff; font-family: 'Inter', sans-serif; margin: 0; height: 100vh; overflow: hidden;
         }
 
-        /* LOGIN FUNCIONAL */
-        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; background: black; position: fixed; width: 100%; }
-        .diamond-logo { width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 50px; box-shadow: 0 0 20px rgba(154,0,255,0.4); }
-        .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
-        .access-box { width: 300px; border-bottom: 1px solid #333; position: relative; }
-        .access-input { background: none; border: none; color: var(--accent); text-align: center; width: 100%; padding: 15px; outline: none; letter-spacing: 8px; font-size: 18px; }
-        .show-btn { position: absolute; right: 0; top: 18px; background: none; border: none; color: #555; font-size: 10px; cursor: pointer; font-weight: bold; }
+        /* LOGIN CORREGIDO */
+        #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: black; position: fixed; width: 100%; z-index: 9999; }
+        .diamond-logo { width: 85px; height: 85px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 60px; box-shadow: 0 0 25px rgba(154,0,255,0.4); }
+        .diamond-logo span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 38px; color: var(--accent); }
+        .access-box { width: 300px; border-bottom: 1px solid #333; position: relative; padding-bottom: 5px; }
+        .access-input { background: none; border: none; color: var(--accent); text-align: center; width: 100%; padding: 10px; outline: none; letter-spacing: 6px; font-size: 18px; }
+        .show-btn { position: absolute; right: 0; top: 10px; background: none; border: none; color: #666; font-size: 10px; cursor: pointer; font-weight: bold; }
 
-        /* EDITOR AVANZADO */
+        /* EDITOR ESTILO OF */
         #editor-view { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
-        .canvas-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #050505; }
-        #preview-img { max-width: 100%; max-height: 70vh; transition: filter 0.3s; user-select: none; -webkit-user-drag: none; }
-        
-        .draggable-text { 
-            position: absolute; color: white; font-size: 24px; font-weight: bold; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); cursor: move; touch-action: none; 
-            padding: 10px; z-index: 10;
-        }
+        .canvas-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: #000; overflow: hidden; }
+        #preview-content { max-width: 100%; max-height: 80vh; object-fit: contain; }
+        .draggable-text { position: absolute; color: white; font-size: 26px; font-weight: bold; text-shadow: 2px 2px 8px #000; cursor: move; touch-action: none; z-index: 100; user-select: none; }
 
-        .editor-controls { background: #0a0a0a; padding: 20px; border-top: 1px solid #1a1a1a; }
-        .slider-group { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 12px; color: #888; }
-        input[type="range"] { flex: 1; accent-color: var(--accent); }
+        /* BARRA DE HERRAMIENTAS INFERIOR */
+        .editor-footer { background: rgba(0,0,0,0.9); padding: 20px; border-top: 1px solid var(--border); }
+        .tool-row { display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; }
+        .tool-btn { font-size: 22px; color: #fff; cursor: pointer; opacity: 0.8; }
+        .publish-btn { background: #fff; color: #000; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* NAV & UI */
-        .top-bar { position: fixed; top: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); z-index: 1000; box-sizing: border-box; }
-        nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; }
-        .nav-center { width: 50px; height: 50px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        /* UI PRINCIPAL */
+        .header { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.8); box-sizing: border-box; }
+        .stories-container { display: flex; gap: 15px; padding: 15px; margin-top: 65px; overflow-x: auto; }
+        .story-add { min-width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #333; display: flex; align-items: center; justify-content: center; position: relative; }
+        .story-add img { width: 100%; height: 100%; border-radius: 50%; opacity: 0.3; }
+        .plus-icon { position: absolute; background: var(--accent); width: 18px; height: 18px; border-radius: 50%; bottom: 0; right: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid #000; }
+
+        nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: #000; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; }
+        .btn-main { width: 45px; height: 45px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
         
-        .profile-thumb { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--accent); object-fit: cover; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -51,131 +53,84 @@
 
     <div id="login-view">
         <div class="diamond-logo"><span>Ω</span></div>
-        <h3 style="font-family:'Cinzel'; font-size:12px; letter-spacing:4px; margin-bottom:30px;">SECURITY CHECK</h3>
         <div class="access-box">
-            <input type="password" id="pass" class="access-input" placeholder="••••••••">
-            <button class="show-btn" id="toggleLoginPass" onclick="handleTogglePass()">SHOW</button>
+            <input type="password" id="pass" class="access-input" placeholder="ACCESS KEY">
+            <button class="show-btn" onclick="togglePass()">SHOW</button>
         </div>
-        <button onclick="login()" style="margin-top:40px; background:none; border:none; color:var(--accent); font-size:35px; cursor:pointer;"><i class="fas fa-arrow-right"></i></button>
+        <button onclick="access()" style="margin-top:50px; background:none; border:none; color:var(--accent); font-size:35px;"><i class="fas fa-arrow-right"></i></button>
     </div>
 
     <div id="app" class="hidden">
-        <div class="top-bar">
+        <div class="header">
             <i class="fas fa-bars"></i>
-            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent);">OBSIDIAN</span>
-            <img src="https://i.pravatar.cc/100?img=11" class="profile-thumb" id="my-profile-pic">
+            <span style="font-family:'Cinzel'; color:var(--accent); letter-spacing:4px;">OBSIDIAN</span>
+            <img src="https://i.pravatar.cc/100?u=me" style="width:30px; height:30px; border-radius:50%; border:1px solid var(--accent);">
         </div>
 
-        <div id="view-home" style="padding-top:80px; text-align:center;">
-            <div style="padding:50px; color:#333; font-family:'Cinzel';">NO CONTENT YET</div>
-        </div>
-
-        <div id="editor-view">
-            <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #111;">
-                <i class="fas fa-times" onclick="closeEditor()" style="font-size:20px;"></i>
-                <span style="font-family:'Cinzel'; font-size:12px;">EDITOR PRO</span>
-                <button onclick="publish()" style="background:var(--accent); color:white; border:none; padding:8px 20px; border-radius:20px; font-weight:bold;">PUBLICAR</button>
-            </div>
-
-            <div class="canvas-area" id="canvas">
-                <img id="preview-img" src="">
-                <div id="drag-text" class="draggable-text hidden">NUEVO TEXTO</div>
-            </div>
-
-            <div class="editor-controls">
-                <div class="slider-group">
-                    <i class="fas fa-sun"></i>
-                    <input type="range" id="brightness" min="50" max="150" value="100" oninput="applyFilters()">
-                </div>
-                <div class="slider-group">
-                    <i class="fas fa-adjust"></i>
-                    <input type="range" id="contrast" min="50" max="150" value="100" oninput="applyFilters()">
-                </div>
-                <div style="display:flex; justify-content:space-around; margin-top:15px;">
-                    <i class="fas fa-font" style="font-size:20px;" onclick="enableText()"></i>
-                    <i class="fas fa-smile" style="font-size:20px;" onclick="addEmoji('😈')"></i>
-                    <i class="fas fa-crop-alt" style="font-size:20px;" onclick="alert('Recorte automático 4:5 activado')"></i>
-                </div>
+        <div class="stories-container">
+            <div class="story-add" onclick="triggerUpload()">
+                <img src="https://i.pravatar.cc/100?u=me">
+                <div class="plus-icon"><i class="fas fa-plus"></i></div>
             </div>
         </div>
 
-        <input type="file" id="upload" hidden onchange="loadImg(event)">
+        <div style="margin-top:100px; text-align:center; color:#222; font-family:'Cinzel';">NO CONTENT YET</div>
 
         <nav>
             <i class="fas fa-home" onclick="location.reload()"></i>
             <i class="fas fa-search"></i>
-            <div class="nav-center" onclick="document.getElementById('upload').click()"><i class="fas fa-plus"></i></div>
+            <div class="btn-main" onclick="triggerUpload()"><i class="fas fa-plus"></i></div>
             <i class="fas fa-envelope"></i>
             <i class="fas fa-cog"></i>
         </nav>
     </div>
 
+    <div id="editor-view">
+        <div style="padding:15px; display:flex; justify-content:space-between;">
+            <i class="fas fa-times" onclick="closeEditor()" style="font-size:20px;"></i>
+            <span style="font-size:12px; opacity:0.5;">EDITAR MEDIA</span>
+            <i class="fas fa-check" style="color:var(--accent);"></i>
+        </div>
+
+        <div class="canvas-area" id="canvas">
+            <div id="media-holder"></div>
+            <div id="text-overlay" class="draggable-text hidden">NUEVO TEXTO</div>
+        </div>
+
+        <div class="editor-footer">
+            <div class="tool-row">
+                <i class="fas fa-font tool-btn" onclick="addText()"></i>
+                <i class="fas fa-smile tool-btn" onclick="openEmoji()"></i>
+                <i class="fas fa-sliders-h tool-btn" onclick="toggleFilters()"></i>
+                <i class="fas fa-crop-alt tool-btn"></i>
+            </div>
+            <div id="filter-box" class="hidden" style="margin-bottom:20px;">
+                <input type="range" id="bright" min="50" max="150" value="100" style="width:100%;" oninput="updateFilters()">
+            </div>
+            <button class="publish-btn" onclick="alert('Publicando...')">GUARDAR EN TU HISTORIA</button>
+        </div>
+    </div>
+
+    <input type="file" id="input-file" hidden accept="image/*,video/*" onchange="processFile(event)">
+
     <script>
-        // 1. FUNCION SHOW/HIDE PASSWORD
-        function handleTogglePass() {
+        function togglePass() {
             const p = document.getElementById('pass');
-            const btn = document.getElementById('toggleLoginPass');
-            if(p.type === 'password') {
-                p.type = 'text';
-                btn.innerText = 'HIDE';
-            } else {
-                p.type = 'password';
-                btn.innerText = 'SHOW';
-            }
+            p.type = p.type === 'password' ? 'text' : 'password';
         }
 
-        function login() {
+        function access() {
             document.getElementById('login-view').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
         }
 
-        // 2. EDITOR DE IMAGEN Y TEXTO
-        function loadImg(e) {
+        function triggerUpload() { document.getElementById('input-file').click(); }
+
+        function processFile(e) {
+            const file = e.target.files[0];
+            const holder = document.getElementById('media-holder');
+            holder.innerHTML = '';
+            
             const reader = new FileReader();
-            reader.onload = function(){
-                document.getElementById('preview-img').src = reader.result;
-                document.getElementById('editor-view').style.display = 'flex';
-            }
-            reader.readAsDataURL(e.target.files[0]);
-        }
-
-        function applyFilters() {
-            const b = document.getElementById('brightness').value;
-            const c = document.getElementById('contrast').value;
-            document.getElementById('preview-img').style.filter = `brightness(${b}%) contrast(${c}%)`;
-        }
-
-        function enableText() {
-            const val = prompt("Texto para la imagen:");
-            if(val) {
-                const el = document.getElementById('drag-text');
-                el.innerText = val;
-                el.classList.remove('hidden');
-            }
-        }
-
-        function addEmoji(e) {
-            const el = document.getElementById('drag-text');
-            el.innerText += " " + e;
-            el.classList.remove('hidden');
-        }
-
-        // 3. HACER EL TEXTO MOVIBLE (InteractJS) - Evita el azul y permite mover con el dedo
-        interact('.draggable-text').draggable({
-            listeners: {
-                move (event) {
-                    const target = event.target;
-                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                    target.style.transform = `translate(${x}px, ${y}px)`;
-                    target.setAttribute('data-x', x);
-                    target.setAttribute('data-y', y);
-                }
-            }
-        });
-
-        function closeEditor() { document.getElementById('editor-view').style.display = 'none'; }
-        function publish() { alert("Publicado con éxito!"); closeEditor(); }
-    </script>
-</body>
-</html>
+            reader.onload = function(f) {
+                if(file.type.includes('video')) {
