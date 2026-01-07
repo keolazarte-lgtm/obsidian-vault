@@ -13,25 +13,36 @@
         .view { display: none; min-height: 100vh; padding-bottom: 90px; }
         .active-view { display: block; }
 
-        /* LOGIN */
+        /* LOGIN CON "SHOW" RESTAURADO */
         #login-view { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #1a0033 0%, #000 100%); }
         .logo-diamond { width: 80px; height: 80px; border: 1px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; box-shadow: 0 0 30px rgba(154,0,255,0.3); }
         .logo-diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 32px; color: var(--accent); }
         .login-box { position: relative; width: 280px; border-bottom: 1px solid #333; display: flex; align-items: center; }
         .access-input { background: none; border: none; color: var(--accent); font-family: 'JetBrains Mono'; text-align: center; font-size: 18px; width: 100%; padding: 15px 0; outline: none; letter-spacing: 5px; }
-        .show-btn { position: absolute; right: 40px; background: none; border: none; color: #444; font-size: 9px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
+        .show-btn { position: absolute; right: 45px; background: none; border: none; color: #444; font-size: 9px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
         .login-btn { background: none; border: none; color: var(--accent); font-size: 20px; cursor: pointer; padding: 10px; opacity: 0.3; transition: 0.3s; }
         .login-btn.active { opacity: 1; text-shadow: 0 0 10px var(--accent); }
 
-        /* NAV DINÁMICA */
+        /* CONFIGURACIÓN EXPANDIDA */
+        .settings-container { padding: 20px; }
+        .settings-card { background: #080808; border-radius: 20px; border: 1px solid #111; overflow: hidden; margin-bottom: 20px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid #111; }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-info { display: flex; align-items: center; gap: 15px; }
+        .setting-info i { color: var(--accent); width: 20px; text-align: center; }
+        .setting-label { font-size: 13px; font-weight: 500; }
+        
+        select { background: #000; color: #fff; border: 1px solid #222; padding: 5px 10px; border-radius: 5px; font-size: 11px; outline: none; }
+
+        /* NAV CON ICONOS FIJOS */
         nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #111; z-index: 1000; }
-        .nav-item { font-size: 20px; color: #333; transition: 0.3s; cursor: pointer; }
+        .nav-item { font-size: 22px; color: #333; transition: 0.3s; cursor: pointer; }
         .nav-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
 
         /* EDITOR MAESTRO */
         #upload-panel { position: fixed; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
-        .canvas-area { position: relative; flex-grow: 1; background: #050505; display: flex; align-items: center; justify-content: center; touch-action: none; overflow: hidden; }
-        #canvas-editor { max-width: 100%; max-height: 65vh; background: #000; }
+        .canvas-area { position: relative; flex-grow: 1; background: #050505; display: flex; align-items: center; justify-content: center; touch-action: none; }
+        #canvas-editor { max-width: 100%; max-height: 60vh; background: #000; box-shadow: 0 0 50px rgba(0,0,0,1); }
 
         .hidden { display: none !important; }
         .loading-spin { animation: spin 1s linear infinite; }
@@ -44,7 +55,7 @@
         <div class="logo-diamond"><span>Ω</span></div>
         <div class="login-box">
             <input type="password" id="pass" class="access-input" placeholder="••••••••" oninput="checkInput(this)" onkeypress="handleKey(event)">
-            <button class="show-btn" onclick="togglePass()">Show</button>
+            <button class="show-btn" onclick="togglePass(this)">Show</button>
             <button id="enter-btn" class="login-btn" onclick="validateAccess()"><i class="fas fa-arrow-right"></i></button>
         </div>
         <div id="login-error" style="color: #ff4444; font-size: 10px; margin-top: 20px; letter-spacing: 2px;"></div>
@@ -61,37 +72,54 @@
 
         <div id="view-msgs" class="view">
             <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">INBOX</h2></header>
-            <div style="padding:40px; text-align:center; color:#333; font-size:12px;">NO RECENT MESSAGES</div>
+            <div style="padding:40px; text-align:center; color:#333; font-size:11px; letter-spacing:1px;">NO RECENT MESSAGES</div>
         </div>
 
-        <div id="view-profile" class="view">
+        <div id="view-settings" class="view">
             <header style="padding:20px; border-bottom:1px solid #111;"><h2 style="font-family:'Cinzel'; font-size:14px; margin:0;">SETTINGS</h2></header>
-            <div style="padding:20px;">
-                <div style="background:#080808; padding:20px; border-radius:15px; border:1px solid #111;">
-                    <p id="user-role-label" style="font-size:10px; color:var(--accent); margin-bottom:5px;"></p>
-                    <select onchange="changeLang(this.value)" style="background:#000; color:#fff; border:1px solid #333; width:100%; padding:10px;">
-                        <option value="es">Español</option>
-                        <option value="en">English</option>
-                    </select>
-                    <button onclick="location.reload()" style="width:100%; margin-top:15px; background:none; border:1px solid #ff4444; color:#ff4444; padding:10px; border-radius:5px;">LOGOUT</button>
+            <div class="settings-container">
+                <div class="settings-card">
+                    <div class="setting-row">
+                        <div class="setting-info"><i class="fas fa-user-shield"></i> <span class="setting-label">Account Type</span></div>
+                        <span id="role-tag" style="font-size:9px; background:var(--accent); padding:3px 8px; border-radius:10px; font-weight:bold;">USER</span>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info"><i class="fas fa-globe"></i> <span class="setting-label">Language</span></div>
+                        <select onchange="updateLang(this.value)">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info"><i class="fas fa-bell"></i> <span class="setting-label">Notifications</span></div>
+                        <input type="checkbox" checked>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="setting-row" onclick="location.reload()" style="color:#ff4444;">
+                        <div class="setting-info"><i class="fas fa-power-off"></i> <span class="setting-label">Logout</span></div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="upload-panel">
-            <div style="display:flex; justify-content:space-between; padding:20px; background:#050505;">
+            <div style="display:flex; justify-content:space-between; padding:20px; background:#000;">
                 <button onclick="toggleUpload()" style="background:none; border:none; color:#555;"><i class="fas fa-times"></i></button>
-                <button onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 25px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLICAR</button>
+                <button onclick="publishPost()" style="background:var(--accent); border:none; color:#fff; padding:8px 25px; border-radius:20px; font-weight:bold; font-size:10px;">PUBLISH</button>
             </div>
             <div class="canvas-area"><canvas id="canvas-editor"></canvas></div>
-            <div style="padding:15px; background:#050505; display:flex; gap:15px; overflow-x:auto;">
-                <span onclick="addLayer('🔥')">🔥</span><span onclick="addLayer('😈')">😈</span><span onclick="addLayer('🔒')">🔒</span>
-                <button onclick="addLayer(prompt('Texto:'))">T</button>
+            <div style="padding:15px; display:flex; gap:20px; justify-content:center; background:#000; border-top:1px solid #111;">
+                <span style="font-size:24px;" onclick="addLayer('🔥')">🔥</span>
+                <span style="font-size:24px;" onclick="addLayer('😈')">😈</span>
+                <span style="font-size:24px;" onclick="addLayer('🔒')">🔒</span>
+                <button onclick="addLayer(prompt('Texto:'))" style="background:#111; color:#fff; border:1px solid #333; border-radius:5px; padding:5px 15px;">T</button>
             </div>
-            <div style="padding:20px; background:#0a0a0a;">
+            <div style="padding:20px;">
                 <input type="file" id="file-upload" hidden onchange="handleFile(event)">
-                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:15px; background:#111; color:#fff; border-radius:10px; margin-bottom:10px;">CARGAR FOTO</button>
-                <input type="text" id="post-title" placeholder="Título" style="width:100%; background:#000; border:1px solid #222; color:#fff; padding:12px;">
+                <button onclick="document.getElementById('file-upload').click()" style="width:100%; padding:15px; background:#111; color:#fff; border:1px solid #222; border-radius:12px; margin-bottom:10px; font-size:12px;">SELECT FROM GALLERY</button>
+                <input type="text" id="post-title" placeholder="Drop Title" style="width:100%; background:#000; border:1px solid #222; color:#fff; padding:15px; border-radius:12px; box-sizing:border-box;">
             </div>
         </div>
 
@@ -99,7 +127,7 @@
             <i class="fas fa-home nav-item active" onclick="showView('home', this)"></i>
             <i id="nav-upload" class="fas fa-plus-circle nav-item hidden" style="font-size:35px; color:#fff;" onclick="toggleUpload()"></i>
             <i class="fas fa-envelope nav-item" onclick="showView('msgs', this)"></i>
-            <i class="fas fa-cog nav-item" onclick="showView('profile', this)"></i>
+            <i class="fas fa-cog nav-item" onclick="showView('settings', this)"></i>
         </nav>
     </div>
 
@@ -111,8 +139,15 @@
 
         let userRole = 'user';
 
+        // --- LOGIN LOGIC ---
         function checkInput(el) { document.getElementById('enter-btn').style.opacity = el.value.length > 3 ? "1" : "0.3"; }
-        function togglePass() { const p = document.getElementById('pass'); p.type = p.type === 'password' ? 'text' : 'password'; }
+        
+        function togglePass(btn) { 
+            const p = document.getElementById('pass'); 
+            p.type = p.type === 'password' ? 'text' : 'password';
+            btn.innerText = p.type === 'password' ? 'Show' : 'Hide';
+        }
+
         async function handleKey(e) { if (e.key === 'Enter') validateAccess(); }
 
         async function validateAccess() {
@@ -123,7 +158,7 @@
             const { data } = await _supabase.from('users').select('*').eq('access_key', pass).single();
             
             if (data) {
-                userRole = data.role; // 'creator' o 'user'
+                userRole = data.role;
                 setupInterface();
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
@@ -131,20 +166,17 @@
             } else {
                 btn.innerHTML = '<i class="fas fa-arrow-right"></i>';
                 document.getElementById('login-error').innerText = "ACCESS DENIED";
+                setTimeout(() => document.getElementById('login-error').innerText = "", 2000);
             }
         }
 
         function setupInterface() {
-            // Mostrar botón de upload solo si es creador
             if(userRole === 'creator') {
                 document.getElementById('nav-upload').classList.remove('hidden');
-                document.getElementById('user-role-label').innerText = "AUTHORIZED CREATOR";
-            } else {
-                document.getElementById('user-role-label').innerText = "AUTHORIZED SUBSCRIBER";
+                document.getElementById('role-tag').innerText = "CREATOR";
             }
         }
 
-        // --- LÓGICA DE EDITOR Y FEED (Simplificada para el ejemplo) ---
         function showView(v, el) {
             document.querySelectorAll('.view').forEach(x => x.classList.remove('active-view'));
             document.getElementById('view-'+v).classList.add('active-view');
@@ -152,31 +184,25 @@
             el.classList.add('active');
         }
 
-        async function loadPosts() {
-            const { data } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
-            const container = document.getElementById('feed-container');
-            container.innerHTML = data.map(p => `
-                <div style="background:#0a0a0a; border-radius:15px; margin-bottom:20px; border:1px solid #111;">
-                    <div style="padding:15px; font-family:'Cinzel'; font-size:10px; color:var(--accent);">${p.title}</div>
-                    <img src="${p.content_url}" style="width:100%; aspect-ratio:1/1; object-fit:cover;">
-                </div>`).join('');
-        }
-
-        // (Resto de funciones de editor como v3.4...)
+        // (Lógica de Editor y Feed mantenida de v3.5...)
         const canvas = document.getElementById('canvas-editor');
         const ctx = canvas.getContext('2d');
         let img = new Image(); let layers = [];
+        
         function toggleUpload() { 
             const p = document.getElementById('upload-panel'); 
             p.style.display = p.style.display === 'flex' ? 'none' : 'flex'; 
             if(p.style.display === 'flex') { canvas.width = 1000; canvas.height = 1000; }
         }
+
         function handleFile(e) {
             const reader = new FileReader();
             reader.onload = (f) => { img.onload = () => draw(); img.src = f.target.result; };
             reader.readAsDataURL(e.target.files[0]);
         }
+
         function addLayer(val) { if(val) { layers.push({val, x:500, y:500}); draw(); } }
+
         function draw() {
             ctx.clearRect(0,0,1000,1000);
             if(img.src) ctx.drawImage(img, 0, 0, 1000, 1000);
@@ -185,6 +211,16 @@
                 ctx.shadowColor = "rgba(0,0,0,0.8)"; ctx.shadowBlur = 20;
                 ctx.fillText(l.val, l.x, l.y);
             });
+        }
+
+        async function loadPosts() {
+            const { data } = await _supabase.from('posts').select('*').order('created_at', { ascending: false });
+            const container = document.getElementById('feed-container');
+            container.innerHTML = data.map(p => `
+                <div style="background:#0a0a0a; border-radius:20px; margin-bottom:25px; border:1px solid #111; overflow:hidden;">
+                    <div style="padding:15px; font-family:'Cinzel'; font-size:10px; color:var(--accent); letter-spacing:2px;">${p.title}</div>
+                    <img src="${p.content_url}" style="width:100%; aspect-ratio:1/1; object-fit:cover;">
+                </div>`).join('');
         }
     </script>
 </body>
