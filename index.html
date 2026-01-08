@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OBSIDIAN v43 | Security & Stories</title>
+    <title>OBSIDIAN v43.1 | Fix & Content</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --accent: #9A00FF; --bg-deep: #000; --border: rgba(154, 0, 255, 0.2); 
-            --gold: #FFD700; --glass: rgba(15, 15, 15, 0.95); 
+            --accent: #9A00FF; --bg-deep: #000; --border: rgba(154, 0, 255, 0.3); 
+            --gold: #FFD700; --glass: rgba(20, 20, 20, 0.98); 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -18,138 +18,140 @@
             height: 100vh; width: 100vw; overflow: hidden; position: fixed;
         }
 
-        /* --- LOGIN CON CONTRASEÑA --- */
+        /* --- LOGIN (FIXED) --- */
         #login-view { 
             position: fixed; inset: 0; background: #000; z-index: 100000; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
         }
-        .logo-box { position: relative; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
+        .logo-box { position: relative; margin-bottom: 30px; }
+        .diamond-glow { position: absolute; inset: -20px; background: var(--accent); filter: blur(40px); opacity: 0.5; animation: pulse 2s infinite; }
         .diamond { 
-            position: relative; width: 70px; height: 70px; border: 2px solid var(--accent); 
+            position: relative; width: 80px; height: 80px; border: 2px solid var(--accent); 
             transform: rotate(45deg); display: flex; align-items: center; justify-content: center; 
-            background: #000; box-shadow: 0 0 25px var(--accent);
+            background: #000; box-shadow: 0 0 20px var(--accent);
         }
-        .diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
+        .diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 40px; color: var(--accent); }
         
+        .pass-container { text-align: center; width: 100%; max-width: 250px; }
         .pass-input {
             background: transparent; border: none; border-bottom: 2px solid var(--accent);
-            color: white; text-align: center; font-size: 18px; letter-spacing: 5px;
-            margin: 20px 0; padding: 10px; width: 200px; outline: none;
+            color: white; text-align: center; font-size: 24px; letter-spacing: 8px;
+            margin: 20px 0; padding: 10px; width: 100%; outline: none;
         }
         .btn-access { 
-            background: var(--accent); border: none; color: white; padding: 12px 35px; 
-            border-radius: 25px; font-weight: bold; cursor: pointer; letter-spacing: 2px;
+            background: var(--accent); border: none; color: white; padding: 15px 40px; 
+            border-radius: 30px; font-weight: bold; cursor: pointer; letter-spacing: 2px;
+            box-shadow: 0 0 15px var(--accent); transition: 0.3s;
         }
+        .btn-access:active { transform: scale(0.9); }
 
-        /* --- ESTRUCTURA --- */
+        /* --- APP STRUCTURE --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
-        .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+        .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: #000; }
 
         /* --- HISTORIAS --- */
-        .stories-container {
-            display: flex; gap: 15px; padding: 15px; overflow-x: auto;
-            border-bottom: 1px solid var(--border); scrollbar-width: none;
-        }
-        .stories-container::-webkit-scrollbar { display: none; }
-        .story-circle {
-            width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent);
-            padding: 2px; flex-shrink: 0;
-        }
-        .story-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .stories-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+        .stories-bar::-webkit-scrollbar { display: none; }
+        .story-circle { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); padding: 2px; flex-shrink: 0; }
+        .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
         /* --- FEED CHICO --- */
-        #feed-view { flex: 1; overflow-y: auto; padding: 10px; display: block; }
-        .card-small { 
-            border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; 
-            background: #080808; overflow: hidden; max-width: 400px; margin-left: auto; margin-right: auto;
+        #feed-view { flex: 1; overflow-y: auto; padding: 15px; }
+        .feed-card { 
+            background: #0a0a0a; border: 1px solid var(--border); border-radius: 15px; 
+            margin-bottom: 20px; overflow: hidden; max-width: 350px; margin-inline: auto;
         }
-        .card-img-small { width: 100%; aspect-ratio: 16/9; background: #111; display: flex; align-items: center; justify-content: center; }
+        .card-header { padding: 10px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--accent); font-weight: bold; }
+        .card-img { width: 100%; aspect-ratio: 1/1; background: linear-gradient(45deg, #111, #000); display: flex; align-items: center; justify-content: center; }
 
-        /* --- CHAT --- */
-        #chat-view { flex: 1; display: none; flex-direction: column; position: relative; }
-        #chat-scroll { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
-        .msg-row { display: flex; align-items: center; gap: 8px; max-width: 85%; }
+        /* --- CHAT (MESSAGES) --- */
+        #chat-view { flex: 1; display: none; flex-direction: column; position: relative; background: #000; }
+        #chat-scroll { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 90px; }
+        .msg-row { display: flex; align-items: flex-end; gap: 8px; max-width: 85%; }
         .msg-sent-row { align-self: flex-end; flex-direction: row-reverse; }
-        .bubble { padding: 10px 14px; border-radius: 15px; font-size: 13px; }
-        .bubble-sent { background: var(--accent); }
-        .bubble-recv { background: #1a1a1a; border: 1px solid var(--border); }
+        .bubble { padding: 12px 16px; border-radius: 20px; font-size: 14px; line-height: 1.4; }
+        .bubble-recv { background: #1a1a1a; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+        .bubble-sent { background: var(--accent); border-bottom-right-radius: 4px; }
 
-        .footer-chat { position: absolute; bottom: 0; width: 100%; padding: 10px; background: #000; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-        .input-chat { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 20px; padding: 8px 15px; color: white; outline: none; }
+        .chat-footer { position: absolute; bottom: 0; width: 100%; padding: 15px; background: rgba(0,0,0,0.9); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .input-box { flex: 1; background: #111; border: 1px solid var(--border); border-radius: 25px; padding: 10px 15px; color: white; outline: none; }
 
         /* --- NAV --- */
-        .nav-bottom { height: 70px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; }
-        .plus-btn { width: 45px; height: 45px; background: #fff; border-radius: 50%; color: #000; display: flex; align-items: center; justify-content: center; margin-top: -25px; border: 4px solid #000; box-shadow: 0 0 10px var(--accent); }
+        .nav-bottom { height: 75px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; }
+        .plus-btn { width: 50px; height: 50px; background: #fff; border-radius: 50%; color: #000; display: flex; align-items: center; justify-content: center; margin-top: -35px; border: 5px solid #000; box-shadow: 0 0 15px var(--accent); }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
     </style>
 </head>
 <body>
 
     <div id="login-view">
-        <div class="logo-box"><div class="diamond"><span>Ω</span></div></div>
-        <div style="font-family:'Cinzel'; color:var(--accent); letter-spacing:3px;">ACCESS KEY</div>
-        <input type="password" id="pass-field" class="pass-input" placeholder="••••">
-        <button class="btn-access" onclick="checkPass()">ENTER VAULT</button>
+        <div class="logo-box">
+            <div class="diamond-glow"></div>
+            <div class="diamond"><span>Ω</span></div>
+        </div>
+        <div class="pass-container">
+            <p style="font-family:'Cinzel'; color:var(--accent); letter-spacing:3px; font-size:12px;">ENCRYPTION KEY</p>
+            <input type="password" id="pass-field" class="pass-input" placeholder="••••" autofocus>
+            <button class="btn-access" onclick="unlock()">ENTER VAULT</button>
+        </div>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" style="color:var(--accent);"></i>
-            <span id="header-title" style="font-family:'Cinzel'; letter-spacing:3px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:30px; height:30px; border-radius:50%; background:url('https://i.pravatar.cc/100?u=leo') center/cover; border:1px solid var(--accent);"></div>
+            <i class="fas fa-bars" style="color:var(--accent); font-size:20px;"></i>
+            <span id="header-title" style="font-family:'Cinzel'; letter-spacing:4px; color:var(--accent);">OBSIDIAN</span>
+            <div style="width:32px; height:32px; border-radius:50%; background:url('https://i.pravatar.cc/100?u=leo') center/cover; border:1px solid var(--accent);"></div>
         </div>
 
         <div id="feed-view">
-            <div class="stories-container">
-                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=1" class="story-img"></div>
-                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=2" class="story-img"></div>
-                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=3" class="story-img"></div>
-                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=4" class="story-img"></div>
-                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=5" class="story-img"></div>
+            <div class="stories-bar">
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=1"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=2"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=3"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=4"></div>
+                <div class="story-circle"><img src="https://i.pravatar.cc/100?u=5"></div>
             </div>
 
-            <div class="card-small">
-                <div style="padding:10px; font-size:11px; color:var(--accent); font-weight:bold;">@Diamond_Girl</div>
-                <div class="card-img-small"><i class="fas fa-lock" style="color:var(--gold); font-size:30px; opacity:0.3;"></i></div>
-                <div style="padding:10px; font-size:12px; color:#888;">Contenido exclusivo de hoy...</div>
-            </div>
-            <div class="card-small">
-                <div style="padding:10px; font-size:11px; color:var(--accent); font-weight:bold;">@Sasha_Vault</div>
-                <div class="card-img-small"><i class="fas fa-play" style="color:white; font-size:30px; opacity:0.3;"></i></div>
-                <div style="padding:10px; font-size:12px; color:#888;">Nuevo video en el vault privado.</div>
+            <div class="feed-card">
+                <div class="card-header">@Diamond_Girl</div>
+                <div class="card-img"><i class="fas fa-lock" style="color:var(--gold); font-size:40px; opacity:0.3;"></i></div>
+                <div style="padding:12px; font-size:12px; color:#666;">Private content unlocked.</div>
             </div>
         </div>
 
         <div id="chat-view">
             <div id="chat-scroll">
                 <div class="msg-row">
-                    <img src="https://i.pravatar.cc/100?u=nina" style="width:25px; height:25px; border-radius:50%;">
-                    <div class="bubble bubble-recv">Sistemas blindados, Leo. ¿Todo listo?</div>
+                    <img src="https://i.pravatar.cc/100?u=nina" style="width:30px; height:30px; border-radius:50%; border:1px solid var(--accent);">
+                    <div class="bubble bubble-recv">Sistemas blindados, Leo. El vault está operativo.</div>
                 </div>
             </div>
-            <div class="footer-chat">
-                <i class="fas fa-plus-circle" style="color:white; font-size:20px;"></i>
-                <input type="text" id="msg-input" class="input-chat" placeholder="Escribe un mensaje...">
-                <i class="fas fa-paper-plane" onclick="sendMsg()" style="color:var(--accent); font-size:20px;"></i>
+            <div class="chat-footer">
+                <i class="fas fa-paperclip" style="color:white; font-size:20px;"></i>
+                <input type="text" id="msg-input" class="input-box" placeholder="Mensaje seguro...">
+                <i class="fas fa-paper-plane" onclick="sendMsg()" style="color:var(--accent); font-size:22px;"></i>
             </div>
         </div>
 
         <nav class="nav-bottom">
-            <i class="fas fa-home" id="nav-h" onclick="showTab('home')" style="color:var(--accent); font-size:20px;"></i>
-            <i class="fas fa-search" style="color:#333; font-size:20px;"></i>
+            <i class="fas fa-home" id="nav-h" onclick="showTab('home')" style="color:var(--accent); font-size:22px;"></i>
+            <i class="fas fa-search" style="color:#333; font-size:22px;"></i>
             <div class="plus-btn"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" id="nav-c" onclick="showTab('chat')" style="color:#333; font-size:20px;"></i>
-            <i class="fas fa-cog" style="color:#333; font-size:20px;"></i>
+            <i class="fas fa-envelope" id="nav-c" onclick="showTab('chat')" style="color:#333; font-size:22px;"></i>
+            <i class="fas fa-cog" style="color:#333; font-size:22px;"></i>
         </nav>
     </div>
 
     <script>
-        function checkPass() {
-            // Contraseña simple para Leo: 1234 (puedes cambiarla)
-            if(document.getElementById('pass-field').value === "1234") {
+        function unlock() {
+            const val = document.getElementById('pass-field').value;
+            // CLAVE: 1234
+            if(val === "1234") {
                 document.getElementById('login-view').style.display = 'none';
                 document.getElementById('main-app').style.display = 'flex';
             } else {
-                alert("ACCESS DENIED");
+                alert("ACCESS DENIED - Clave incorrecta");
             }
         }
 
@@ -173,6 +175,11 @@
                 scroll.scrollTop = scroll.scrollHeight;
             }
         }
+        
+        // Permitir entrar con la tecla Enter
+        document.getElementById('pass-field').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') unlock();
+        });
     </script>
 </body>
 </html>
