@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OBSIDIAN v42 | Final Polish</title>
+    <title>OBSIDIAN v42.1 | Insta-Access</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -18,69 +18,73 @@
             height: 100vh; width: 100vw; overflow: hidden; position: fixed;
         }
 
-        /* --- INICIO (FIXED) --- */
+        /* --- INICIO (LOGIN) --- */
         #login-view { 
             position: fixed; inset: 0; background: #000; z-index: 100000; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
         }
-        .logo-box { position: relative; margin-bottom: 40px; display: flex; align-items: center; justify-content: center; }
-        .glow-effect { position: absolute; width: 120px; height: 120px; background: var(--accent); filter: blur(50px); opacity: 0.6; animation: heartbeat-glow 2s infinite; }
+        .logo-box { position: relative; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; }
+        .glow-effect { position: absolute; width: 140px; height: 140px; background: var(--accent); filter: blur(50px); opacity: 0.6; animation: heartbeat-glow 2s infinite; }
         .diamond { 
-            position: relative; width: 75px; height: 75px; border: 2px solid var(--accent); 
+            position: relative; width: 85px; height: 85px; border: 2px solid var(--accent); 
             transform: rotate(45deg); display: flex; align-items: center; justify-content: center; 
-            background: #000; box-shadow: 0 0 20px var(--accent); animation: pulse-scale 2s infinite;
+            background: #000; box-shadow: 0 0 25px var(--accent); animation: pulse-scale 2s infinite;
         }
-        .diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
+        .diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 40px; color: var(--accent); }
         
         .btn-access { 
-            background: var(--accent); border: none; color: white; padding: 14px 40px; 
-            border-radius: 30px; font-weight: bold; cursor: pointer; letter-spacing: 2px;
-            font-size: 14px; box-shadow: 0 4px 15px rgba(154, 0, 255, 0.4);
+            background: var(--accent); border: none; color: white; padding: 16px 45px; 
+            border-radius: 35px; font-weight: bold; cursor: pointer; letter-spacing: 2px;
+            font-size: 14px; box-shadow: 0 0 20px rgba(154, 0, 255, 0.5);
+            transition: transform 0.2s;
         }
+        .btn-access:active { transform: scale(0.95); }
 
-        @keyframes heartbeat-glow { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.3); } }
-        @keyframes pulse-scale { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.08); } }
+        @keyframes heartbeat-glow { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.2); } }
+        @keyframes pulse-scale { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.05); } }
 
-        /* --- APP STRUCTURE --- */
-        #main-app { display: none; height: 100vh; flex-direction: column; }
+        /* --- ESTRUCTURA PRINCIPAL --- */
+        #main-app { display: none; height: 100vh; flex-direction: column; opacity: 0; transition: opacity 0.4s ease; }
         .header { 
             height: 60px; border-bottom: 1px solid var(--border); display: flex; 
             align-items: center; justify-content: space-between; padding: 0 15px; background: #000; 
         }
         .nav-bottom { 
-            height: 70px; background: #000; border-top: 1px solid var(--border); 
-            display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px;
+            height: 75px; background: #000; border-top: 1px solid var(--border); 
+            display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- CHAT ENGINE (FIXED) --- */
-        #chat-view { flex: 1; display: none; flex-direction: column; position: relative; background: #000; overflow: hidden; }
-        #chat-scroll { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        /* --- CHAT ENGINE --- */
+        #chat-view { flex: 1; display: none; flex-direction: column; position: relative; background: #000; }
+        #chat-scroll { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 100px; }
         
-        .msg-row { display: flex; align-items: flex-end; gap: 8px; max-width: 85%; }
+        .msg-row { display: flex; align-items: flex-end; gap: 10px; max-width: 85%; animation: msgSlide 0.3s ease; }
         .msg-sent-row { align-self: flex-end; flex-direction: row-reverse; }
         
-        .chat-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent); flex-shrink: 0; object-fit: cover; }
+        .chat-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--accent); flex-shrink: 0; object-fit: cover; }
         
-        .bubble { padding: 10px 14px; border-radius: 18px; font-size: 13px; line-height: 1.4; }
-        .bubble-recv { background: #1a1a1a; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
-        .bubble-sent { background: var(--accent); border-bottom-right-radius: 2px; }
+        .bubble { padding: 12px 16px; border-radius: 20px; font-size: 13.5px; line-height: 1.4; }
+        .bubble-recv { background: #151515; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+        .bubble-sent { background: var(--accent); border-bottom-right-radius: 4px; color: white; }
 
-        .chat-input-area { 
-            padding: 10px 15px; background: #080808; border-top: 1px solid var(--border);
+        .chat-footer { 
+            position: absolute; bottom: 0; width: 100%; padding: 15px; 
+            background: rgba(0,0,0,0.95); border-top: 1px solid var(--border);
             display: flex; align-items: center; gap: 10px;
         }
         .input-box { 
-            flex: 1; background: #151515; border: 1px solid var(--border); 
-            border-radius: 20px; padding: 8px 15px; color: #fff; outline: none; font-size: 14px;
+            flex: 1; background: #111; border: 1px solid var(--border); 
+            border-radius: 25px; padding: 10px 18px; color: #fff; outline: none; font-size: 14px;
         }
 
-        .btn-circle { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .btn-plus { background: #fff; color: #000; }
-        .btn-send { color: var(--accent); font-size: 18px; }
+        .btn-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .btn-plus { background: #fff; color: #000; font-size: 18px; }
+        
+        @keyframes msgSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- FEED/HOME --- */
+        /* --- FEED --- */
         #feed-view { flex: 1; overflow-y: auto; padding: 15px; display: block; }
-        .post-card { border: 1px solid var(--border); border-radius: 15px; margin-bottom: 20px; overflow: hidden; }
+        .card { border: 1px solid var(--border); border-radius: 15px; margin-bottom: 20px; overflow: hidden; background: #080808; }
     </style>
 </head>
 <body>
@@ -90,29 +94,93 @@
             <div class="glow-effect"></div>
             <div class="diamond"><span>Ω</span></div>
         </div>
-        <button class="btn-access" onclick="enterApp()">ACCESS VAULT</button>
+        <button class="btn-access" onclick="enterVault()">ACCESS VAULT</button>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" style="color:var(--accent);"></i>
-            <span id="header-title" style="font-family:'Cinzel'; letter-spacing:3px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:30px; height:30px; border-radius:50%; background:url('https://i.pravatar.cc/100?u=me') center/cover;"></div>
+            <i class="fas fa-bars" style="color:var(--accent); font-size:20px;"></i>
+            <span id="header-title" style="font-family:'Cinzel'; letter-spacing:4px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
+            <div style="width:32px; height:32px; border-radius:50%; background:url('https://i.pravatar.cc/100?u=leo') center/cover; border:1px solid var(--accent);"></div>
         </div>
 
         <div id="feed-view">
-            <div class="post-card">
-                <div style="padding:10px; font-size:12px; color:var(--accent);">@Diamond_Girl</div>
-                <div style="width:100%; aspect-ratio:1/1; background: linear-gradient(45deg, #222, #050505); display:flex; align-items:center; justify-content:center;">
-                    <i class="fas fa-lock" style="color:var(--gold); font-size:30px;"></i>
+            <div class="card">
+                <div style="padding:12px; font-size:12px; font-weight:600; color:var(--accent);">@Diamond_Girl</div>
+                <div style="width:100%; aspect-ratio:1/1; background: linear-gradient(135deg, #1a0033 0%, #05000a 100%); display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-lock" style="color:var(--gold); font-size:40px; opacity:0.5;"></i>
                 </div>
+                <div style="padding:12px; font-size:11px; color:#555;">POSTED 2 HOURS AGO</div>
             </div>
         </div>
 
         <div id="chat-view">
             <div id="chat-scroll">
                 <div class="msg-row">
-                    <img src="https://i.pravatar.cc/100?u=girl" class="chat-avatar">
+                    <img src="https://i.pravatar.cc/100?u=nina" class="chat-avatar">
                     <div class="bubble bubble-recv">Sistemas blindados, Leo. ¿Qué mensaje quieres enviar?</div>
                 </div>
             </div>
+            
+            <div class="chat-footer">
+                <div class="btn-circle btn-plus"><i class="fas fa-plus"></i></div>
+                <input type="text" id="msg-input" class="input-box" placeholder="Escribe un mensaje...">
+                <i class="fas fa-paper-plane" onclick="sendMsg()" style="color:var(--accent); font-size:22px; cursor:pointer;"></i>
+            </div>
+        </div>
+
+        <nav class="nav-bottom">
+            <i class="fas fa-home" id="nav-h" onclick="showTab('home')" style="color:var(--accent); font-size:22px;"></i>
+            <i class="fas fa-search" style="color:#333; font-size:22px;"></i>
+            <div class="btn-circle" style="background:#fff; color:#000; margin-top:-30px; border:4px solid #000; box-shadow: 0 0 15px var(--accent);"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope" id="nav-c" onclick="showTab('chat')" style="color:#333; font-size:22px;"></i>
+            <i class="fas fa-cog" style="color:#333; font-size:22px;"></i>
+        </nav>
+    </div>
+
+    <script>
+        function enterVault() {
+            document.getElementById('login-view').style.display = 'none';
+            const app = document.getElementById('main-app');
+            app.style.display = 'flex';
+            setTimeout(() => { app.style.opacity = '1'; }, 50);
+        }
+
+        function showTab(tab) {
+            const feed = document.getElementById('feed-view');
+            const chat = document.getElementById('chat-view');
+            const navH = document.getElementById('nav-h');
+            const navC = document.getElementById('nav-c');
+            const title = document.getElementById('header-title');
+
+            if(tab === 'chat') {
+                feed.style.display = 'none'; chat.style.display = 'flex';
+                navC.style.color = 'var(--accent)'; navH.style.color = '#333';
+                title.innerText = 'VAULT CHAT';
+            } else {
+                feed.style.display = 'block'; chat.style.display = 'none';
+                navH.style.color = 'var(--accent)'; navC.style.color = '#333';
+                title.innerText = 'OBSIDIAN';
+            }
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('msg-input');
+            const scroll = document.getElementById('chat-scroll');
+            if(input.value.trim() !== "") {
+                const row = document.createElement('div');
+                row.className = 'msg-row msg-sent-row';
+                row.innerHTML = `
+                    <img src="https://i.pravatar.cc/100?u=leo" class="chat-avatar">
+                    <div class="bubble bubble-sent">${input.value}</div>
+                `;
+                scroll.appendChild(row);
+                input.value = "";
+                scroll.scrollTop = scroll.scrollHeight;
+            }
+        }
+
+        document.getElementById('msg-input').onkeypress = (e) => { if(e.key === 'Enter') sendMsg(); };
+    </script>
+</body>
+</html>
