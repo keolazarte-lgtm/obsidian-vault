@@ -3,163 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OBSIDIAN v44 | Desktop Optimized</title>
+    <title>OBSIDIAN v45 | The Full Experience</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
             --accent: #9A00FF; --bg-deep: #000; --border: rgba(154, 0, 255, 0.3); 
-            --glass: rgba(15, 15, 15, 0.98); 
+            --glass: rgba(15, 15, 15, 0.98); --gold: #FFD700;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body, html { 
-            background: #000; color: #fff; font-family: 'Inter', sans-serif; 
-            height: 100vh; width: 100vw; overflow: hidden;
-        }
+        body, html { background: #000; color: #fff; font-family: 'Inter', sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
 
-        /* --- FONDO INICIO CON DEGRADADO VIOLETA --- */
+        /* --- LOGIN & LOADER --- */
         #login-view { 
             position: fixed; inset: 0; z-index: 100000; 
             background: radial-gradient(circle at center, #2a004a 0%, #000 70%);
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
         }
+        #loader-view {
+            position: fixed; inset: 0; z-index: 100001; background: #000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .progress-bar { width: 200px; height: 4px; background: #222; border-radius: 10px; margin-top: 20px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: var(--accent); box-shadow: 0 0 15px var(--accent); transition: width 2s linear; }
 
         /* --- SIDEBAR --- */
         #sidebar {
             position: fixed; left: -280px; top: 0; width: 280px; height: 100%;
             background: var(--glass); border-right: 1px solid var(--border);
-            z-index: 99999; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 20px;
+            z-index: 99999; transition: 0.4s; padding: 20px;
         }
-        #sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
-        .sidebar-item { padding: 15px; border-bottom: 1px solid var(--border); color: #ccc; cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        .sidebar-overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 99998; 
-        }
+        #sidebar.active { left: 0; }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 99998; }
 
-        /* --- LAYOUT TIPO ONLYFANS (3 COLUMNAS) --- */
+        /* --- STORY VIEWER --- */
+        #story-viewer {
+            position: fixed; inset: 0; background: #000; z-index: 200000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .story-progress { position: absolute; top: 20px; width: 90%; height: 3px; background: #333; border-radius: 5px; overflow: hidden; }
+        .story-fill { width: 0%; height: 100%; background: #fff; transition: width 5s linear; }
+
+        /* --- LAYOUT 3 COLUMNAS --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
-        .app-content { 
-            flex: 1; display: grid; grid-template-columns: 1fr 600px 1fr; 
-            overflow: hidden; background: #000;
-        }
+        .app-content { flex: 1; display: grid; grid-template-columns: 1fr 600px 1fr; overflow: hidden; }
 
-        /* Columna Izquierda y Derecha (Para que no queden vacíos en PC) */
-        .side-panel { padding: 20px; border-right: 1px solid var(--border); display: block; }
-        .right-panel { border-right: none; border-left: 1px solid var(--border); }
+        #feed-scroll { grid-column: 2; overflow-y: auto; border-right: 1px solid var(--border); border-left: 1px solid var(--border); scrollbar-width: none; }
+        @media (max-width: 1000px) { .app-content { grid-template-columns: 1fr; } #feed-scroll { grid-column: 1; border: none; } .side-panel { display: none; } }
 
-        /* --- FEED CENTRAL --- */
-        #feed-scroll { 
-            grid-column: 2; overflow-y: auto; scrollbar-width: none; 
-            border-right: 1px solid var(--border); border-left: 1px solid var(--border);
-        }
-        @media (max-width: 1000px) {
-            .app-content { grid-template-columns: 1fr; }
-            #feed-scroll { grid-column: 1; border: none; }
-            .side-panel { display: none; }
-        }
+        .side-panel { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* --- COMPONENTES --- */
-        .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: #000; z-index: 100; }
+        /* --- COMPONENTS --- */
+        .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: #000; }
         .stories-bar { display: flex; gap: 15px; padding: 15px; overflow-x: auto; border-bottom: 1px solid var(--border); }
-        .story-circle { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); flex-shrink: 0; padding: 2px; }
+        .story-circle { width: 62px; height: 62px; border-radius: 50%; border: 2px solid var(--accent); flex-shrink: 0; padding: 2px; cursor: pointer; }
         .story-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
-        .feed-card { background: #080808; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-        .card-img { width: 100%; aspect-ratio: 1/1; background: #111; display: flex; align-items: center; justify-content: center; }
-
-        .nav-bottom { height: 70px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: #000; }
-        .plus-btn { width: 50px; height: 50px; background: #fff; border-radius: 50%; color: #000; display: flex; align-items: center; justify-content: center; margin-top: -30px; border: 4px solid #000; }
-
-        /* Login Elements */
-        .diamond { width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 30px var(--accent); margin-bottom: 40px;}
-        .diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 40px; color: var(--accent); }
-        .pass-input { background: transparent; border: none; border-bottom: 2px solid var(--accent); color: white; text-align: center; font-size: 24px; letter-spacing: 8px; margin-bottom: 20px; outline: none; width: 200px; }
-    </style>
-</head>
-<body>
-
-    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
-    <div id="sidebar">
-        <div style="font-family:'Cinzel'; color:var(--accent); font-size:20px; margin-bottom:30px;">MENU</div>
-        <div class="sidebar-item"><i class="fas fa-user"></i> Mi Perfil</div>
-        <div class="sidebar-item"><i class="fas fa-wallet"></i> Billetera ($0.00)</div>
-        <div class="sidebar-item"><i class="fas fa-shield-alt"></i> Seguridad</div>
-        <div class="sidebar-item" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Bloquear Vault</div>
-    </div>
-
-    <div id="login-view">
-        <div class="diamond"><span>Ω</span></div>
-        <input type="password" id="pass-field" class="pass-input" placeholder="••••">
-        <button onclick="unlock()" style="background:var(--accent); border:none; color:white; padding:12px 40px; border-radius:25px; font-weight:bold; cursor:pointer;">ACCESS VAULT</button>
-    </div>
-
-    <div id="main-app">
-        <div class="header">
-            <i class="fas fa-bars" onclick="toggleSidebar()" style="color:var(--accent); font-size:20px; cursor:pointer;"></i>
-            <span id="header-title" style="font-family:'Cinzel'; letter-spacing:4px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:35px; height:35px; border-radius:50%; background:url('https://i.pravatar.cc/100?u=leo') center/cover; border:1px solid var(--accent);"></div>
-        </div>
-
-        <div class="app-content">
-            <div class="side-panel">
-                <div style="color:#444; font-size:12px; margin-bottom:15px;">SUGERENCIAS</div>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                    <div style="width:40px; height:40px; border-radius:50%; background:#222;"></div>
-                    <div style="font-size:13px;">@Sasha_Grey</div>
-                </div>
-            </div>
-
-            <div id="feed-scroll">
-                <div class="stories-bar">
-                    <div class="story-circle"><img src="https://i.pravatar.cc/100?u=a1"></div>
-                    <div class="story-circle"><img src="https://i.pravatar.cc/100?u=a2"></div>
-                    <div class="story-circle"><img src="https://i.pravatar.cc/100?u=a3"></div>
-                    <div class="story-circle"><img src="https://i.pravatar.cc/100?u=a4"></div>
-                </div>
-
-                <div class="feed-card">
-                    <div style="padding:15px; font-size:13px; font-weight:bold; color:var(--accent);">@Diamond_Girl</div>
-                    <div class="card-img"><i class="fas fa-lock" style="color:rgba(154,0,255,0.2); font-size:50px;"></i></div>
-                    <div style="padding:15px; font-size:13px; color:#888;">Contenido exclusivo de hoy...</div>
-                </div>
-            </div>
-
-            <div class="side-panel right-panel">
-                <div style="background:#0a0a0a; border:1px solid var(--border); padding:15px; border-radius:15px;">
-                    <p style="font-size:12px; color:var(--accent);">BALANCE</p>
-                    <p style="font-size:24px; font-weight:bold;">$ 1,250.00</p>
-                </div>
-            </div>
-        </div>
-
-        <nav class="nav-bottom">
-            <i class="fas fa-home" style="color:var(--accent); font-size:22px;"></i>
-            <i class="fas fa-search" style="color:#333; font-size:22px;"></i>
-            <div class="plus-btn"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" style="color:#333; font-size:22px;"></i>
-            <i class="fas fa-cog" style="color:#333; font-size:22px;"></i>
-        </nav>
-    </div>
-
-    <script>
-        function unlock() {
-            if(document.getElementById('pass-field').value === "1234") {
-                document.getElementById('login-view').style.display = 'none';
-                document.getElementById('main-app').style.display = 'flex';
-            } else { alert("ACCESS DENIED"); }
-        }
-
-        function toggleSidebar() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('sidebar-overlay');
-            sb.classList.toggle('active');
-            ov.style.display = sb.classList.contains('active') ? 'block' : 'none';
-        }
-
-        document.getElementById('pass-field').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') unlock();
-        });
-    </script>
-</body>
-</html>
+        .feed-card { background: #080808; border-bottom: 1
