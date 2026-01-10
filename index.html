@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OBSIDIAN v45.1 | Fixed & Secure</title>
+    <title>OBSIDIAN v45.2 | Phoenix Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -15,130 +15,151 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body, html { background: #000; color: #fff; font-family: 'Inter', sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
 
-        /* --- LOGIN (CORREGIDO) --- */
+        /* --- LOGIN & BACKGROUND --- */
         #login-view { 
             position: fixed; inset: 0; z-index: 100000; 
-            background: radial-gradient(circle at center, #2a004a 0%, #000 80%);
+            background: radial-gradient(circle at center, #2a004a 0%, #000 85%);
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
         }
 
-        .pass-wrapper { position: relative; width: 220px; margin-bottom: 25px; border-bottom: 2px solid var(--accent); }
-        .pass-input { 
-            background: transparent; border: none; color: white; text-align: center; 
-            font-size: 24px; letter-spacing: 4px; outline: none; width: 100%; padding: 10px 0;
-        }
-        .toggle-password { 
-            position: absolute; right: 0; top: 12px; color: var(--accent); cursor: pointer; opacity: 0.7; 
-        }
+        .diamond { width: 80px; height: 80px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 30px var(--accent); margin-bottom: 40px;}
+        .diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 40px; color: var(--accent); }
 
-        /* --- LOADER --- */
+        .pass-container { position: relative; width: 240px; margin-bottom: 30px; }
+        .pass-input { 
+            width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--accent);
+            color: white; text-align: center; font-size: 24px; letter-spacing: 4px; padding: 10px; outline: none;
+        }
+        .eye-icon { position: absolute; right: 0; top: 15px; color: var(--accent); cursor: pointer; font-size: 18px; }
+
+        .btn-access { 
+            background: var(--accent); border: none; color: white; padding: 14px 45px; 
+            border-radius: 30px; font-weight: bold; cursor: pointer; letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(154, 0, 255, 0.5); transition: 0.3s;
+        }
+        .btn-access:active { transform: scale(0.95); }
+
+        /* --- DECRYPTING LOADER --- */
         #loader-view {
             position: fixed; inset: 0; z-index: 100001; background: #000;
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
-        .progress-bar { width: 200px; height: 4px; background: #222; border-radius: 10px; margin-top: 20px; overflow: hidden; }
+        .progress-bar { width: 220px; height: 3px; background: #111; border-radius: 10px; margin-top: 25px; overflow: hidden; }
         .progress-fill { width: 0%; height: 100%; background: var(--accent); box-shadow: 0 0 15px var(--accent); transition: width 2s linear; }
 
-        /* --- LAYOUT 3 COLUMNAS --- */
+        /* --- MAIN APP STRUCTURE --- */
         #main-app { display: none; height: 100vh; flex-direction: column; }
         .app-content { flex: 1; display: grid; grid-template-columns: 1fr 600px 1fr; overflow: hidden; }
-        #feed-scroll { grid-column: 2; overflow-y: auto; border-right: 1px solid var(--border); border-left: 1px solid var(--border); scrollbar-width: none; }
-        
-        @media (max-width: 1000px) {
-            .app-content { grid-template-columns: 1fr; }
-            #feed-scroll { grid-column: 1; border: none; }
-            .side-panel { display: none; }
-        }
 
+        #feed-scroll { grid-column: 2; overflow-y: auto; border-left: 1px solid var(--border); border-right: 1px solid var(--border); scrollbar-width: none; }
+        @media (max-width: 1000px) { .app-content { grid-template-columns: 1fr; } #feed-scroll { grid-column: 1; border: none; } .side-panel { display: none; } }
+
+        /* --- COMPONENTS --- */
+        .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
         .side-panel { padding: 25px; display: flex; flex-direction: column; gap: 20px; }
-        .diamond { width: 75px; height: 75px; border: 2px solid var(--accent); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; background: #000; box-shadow: 0 0 30px var(--accent); margin-bottom: 40px;}
-        .diamond span { transform: rotate(-45deg); font-family: 'Cinzel'; font-size: 35px; color: var(--accent); }
+        .nav-bottom { height: 75px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px; }
         
-        /* Botones y UI */
-        .btn-main { background: var(--accent); border: none; color: white; padding: 12px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px var(--accent); }
-        .header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: #000; }
-        .nav-bottom { height: 75px; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; background: #000; }
+        .plus-center { width: 50px; height: 50px; background: #fff; border-radius: 50%; color: #000; display: flex; align-items: center; justify-content: center; margin-top: -35px; border: 4px solid #000; font-size: 20px; }
     </style>
 </head>
 <body>
 
     <div id="login-view">
         <div class="diamond"><span>Ω</span></div>
-        <div class="pass-wrapper">
+        <div style="font-family:'Cinzel'; color:var(--accent); font-size:12px; letter-spacing:3px; margin-bottom:10px;">ENCRYPTION KEY</div>
+        <div class="pass-container">
             <input type="password" id="pass-field" class="pass-input" placeholder="••••">
-            <i class="fas fa-eye toggle-password" id="toggle-eye" onclick="togglePassView()"></i>
+            <i class="fas fa-eye eye-icon" id="eye-toggle" onclick="toggleVisibility()"></i>
         </div>
-        <button type="button" class="btn-main" onclick="startUnlock()">ACCESS VAULT</button>
+        <button class="btn-access" onclick="handleAccess()">ACCESS VAULT</button>
     </div>
 
     <div id="loader-view">
-        <div style="font-family:'Cinzel'; color:var(--accent); letter-spacing:5px;">DECRYPTING...</div>
+        <div style="font-family:'Cinzel'; color:var(--accent); letter-spacing:5px; font-size:14px;">DECRYPTING SYSTEM...</div>
         <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
     </div>
 
     <div id="main-app">
         <div class="header">
-            <i class="fas fa-bars" style="color:var(--accent);"></i>
-            <span style="font-family:'Cinzel'; letter-spacing:4px; color:var(--accent);">OBSIDIAN</span>
-            <div style="width:32px; height:32px; border-radius:50%; background:#222; border:1px solid var(--accent);"></div>
+            <i class="fas fa-bars" style="color:var(--accent); font-size:20px;"></i>
+            <span style="font-family:'Cinzel'; letter-spacing:5px; color:var(--accent); font-size:18px;">OBSIDIAN</span>
+            <div style="width:35px; height:35px; border-radius:50%; background:#222; border:1px solid var(--accent);"></div>
         </div>
 
         <div class="app-content">
             <div class="side-panel">
-                <div style="background:#0a0a0a; padding:15px; border-radius:10px; border:1px solid var(--border); font-size:12px;">SYSTEM ONLINE</div>
-            </div>
-            <div id="feed-scroll">
-                <div style="padding:20px; text-align:center; color:#444; font-family:'Cinzel';">Vault Feed Loaded</div>
+                <div style="background:#0a0a0a; padding:20px; border-radius:15px; border:1px solid var(--border);">
+                    <p style="font-size:11px; color:var(--accent);">VAULT STATUS</p>
+                    <p style="font-size:14px; margin-top:5px; color:#0f0;">● SECURE ONLINE</p>
                 </div>
+            </div>
+
+            <div id="feed-scroll">
+                <div style="padding:40px; text-align:center; color:#333; font-family:'Cinzel';">
+                    <i class="fas fa-shield-alt" style="font-size:40px; margin-bottom:15px; opacity:0.2;"></i>
+                    <p>Feed is Encrypted</p>
+                </div>
+            </div>
+
             <div class="side-panel">
-                <div style="background:#0a0a0a; padding:15px; border-radius:10px; border:1px solid var(--border); font-size:12px;">$ 1,250.00</div>
+                <div style="background:#0a0a0a; padding:20px; border-radius:15px; border:1px solid var(--border);">
+                    <p style="font-size:11px; color:var(--accent);">ACCOUNT BALANCE</p>
+                    <p style="font-size:22px; font-weight:bold; margin-top:5px;">$ 1,250.00</p>
+                </div>
             </div>
         </div>
 
         <nav class="nav-bottom">
             <i class="fas fa-home" style="color:var(--accent); font-size:22px;"></i>
-            <i class="fas fa-search" style="color:#333;"></i>
-            <div style="width:45px; height:45px; background:#fff; border-radius:50%; margin-top:-30px; display:flex; align-items:center; justify-content:center; color:#000;"><i class="fas fa-plus"></i></div>
-            <i class="fas fa-envelope" style="color:#333;"></i>
-            <i class="fas fa-cog" style="color:#333;"></i>
+            <i class="fas fa-search" style="color:#333; font-size:22px;"></i>
+            <div class="plus-center"><i class="fas fa-plus"></i></div>
+            <i class="fas fa-envelope" style="color:#333; font-size:22px;"></i>
+            <i class="fas fa-cog" style="color:#333; font-size:22px;"></i>
         </nav>
     </div>
 
     <script>
-        // Función de desbloqueo blindada
-        function startUnlock() {
-            const pass = document.getElementById('pass-field').value;
-            if(pass === "1234") {
-                document.getElementById('login-view').style.display = 'none';
-                document.getElementById('loader-view').style.display = 'flex';
-                setTimeout(() => { document.getElementById('progress-fill').style.width = '100%'; }, 100);
+        // Función de acceso forzada y directa
+        function handleAccess() {
+            const input = document.getElementById('pass-field');
+            const login = document.getElementById('login-view');
+            const loader = document.getElementById('loader-view');
+            const main = document.getElementById('main-app');
+            const fill = document.getElementById('progress-fill');
+
+            if(input.value === "1234") {
+                login.style.display = 'none';
+                loader.style.display = 'flex';
+                
+                // Iniciar animación de carga
+                setTimeout(() => { fill.style.width = '100%'; }, 50);
+
+                // Entrar a la app después de 2.2 segundos
                 setTimeout(() => {
-                    document.getElementById('loader-view').style.display = 'none';
-                    document.getElementById('main-app').style.display = 'flex';
+                    loader.style.display = 'none';
+                    main.style.display = 'flex';
                 }, 2200);
             } else {
-                alert("ACCESS DENIED");
+                alert("KEY INCORRECTA - Acceso denegado");
             }
         }
 
-        // Función Show/Hide Contraseña
-        function togglePassView() {
-            const field = document.getElementById('pass-field');
-            const eye = document.getElementById('toggle-eye');
-            if (field.type === "password") {
-                field.type = "text";
-                eye.classList.remove('fa-eye');
-                eye.classList.add('fa-eye-slash');
+        // Función para mostrar/ocultar contraseña
+        function toggleVisibility() {
+            const input = document.getElementById('pass-field');
+            const icon = document.getElementById('eye-toggle');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
-                field.type = "password";
-                eye.classList.remove('fa-eye-slash');
-                eye.classList.add('fa-eye');
+                input.type = "password";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
 
-        // Enter para entrar
-        document.getElementById('pass-field').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') startUnlock();
+        // Soporte para tecla Enter
+        document.getElementById('pass-field').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleAccess();
         });
     </script>
 </body>
